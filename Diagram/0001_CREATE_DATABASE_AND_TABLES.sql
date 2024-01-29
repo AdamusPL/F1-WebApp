@@ -1,0 +1,83 @@
+
+CREATE DATABASE TyperF1;
+GO
+
+USE TyperF1;
+GO
+
+CREATE TABLE Season(
+    Id INT UNIQUE NOT NULL,
+    Year INT NOT NULL,
+    PRIMARY KEY(Id)
+)
+
+SELECT * FROM Season;
+
+CREATE TABLE GrandPrix(
+    Id INT UNIQUE NOT NULL,
+    Name VARCHAR(255) NOT NULL,
+	SeasonId INT NOT NULL,
+    PRIMARY KEY(Id),
+    FOREIGN KEY(SeasonId) REFERENCES Season(Id)
+);
+
+SELECT * FROM GrandPrix;
+
+CREATE TABLE Track(
+	Id INT UNIQUE NOT NULL,
+	Continent VARCHAR(255) NOT NULL,
+	Country VARCHAR(255) NOT NULL,
+	IsStreet BIT NOT NULL,
+	GrandPrixId INT NOT NULL,
+	PRIMARY KEY(Id),
+	FOREIGN KEY(GrandPrixId) REFERENCES GrandPrix(Id)
+);
+
+SELECT * FROM Track;
+
+CREATE TABLE Session(
+	Id INT UNIQUE NOT NULL,
+	SessionName INT NOT NULL,
+	GrandPrixId INT NOT NULL,
+	PRIMARY KEY(Id),
+	FOREIGN KEY(GrandPrixId) REFERENCES GrandPrix(Id)
+);
+
+SELECT * FROM Session;
+
+CREATE TABLE Stats(
+	IsRainy BIT NOT NULL,
+	IsFastestLapGuessed BIT NOT NULL,
+	IsWinnerGuessed BIT NOT NULL,
+	SessionId INT NOT NULL,
+	FOREIGN KEY(SessionId) REFERENCES Session(Id)
+);
+
+SELECT * FROM Stats;
+
+CREATE TABLE Participant(
+	Id INT UNIQUE NOT NULL,
+	Name VARCHAR(255),
+	Surname VARCHAR(255),
+	PRIMARY KEY(Id)
+);
+
+
+CREATE TABLE Points(
+	Id INT UNIQUE NOT NULL,
+	Number INT NOT NULL,
+	ParticipantId INT NOT NULL,
+	SessionId INT NOT NULL,
+	PRIMARY KEY(Id),
+	FOREIGN KEY(SessionId) REFERENCES Session(Id),
+	FOREIGN KEY(ParticipantId) REFERENCES Participant(Id)
+
+);
+
+CREATE TABLE Joker(
+	Id INT UNIQUE NOT NULL,
+	ParticipantId INT NOT NULL,
+	GrandPrixId INT NOT NULL,
+	FOREIGN KEY(ParticipantId) REFERENCES Participant(Id),
+	FOREIGN KEY(GrandPrixId) REFERENCES GrandPrix(Id)
+);
