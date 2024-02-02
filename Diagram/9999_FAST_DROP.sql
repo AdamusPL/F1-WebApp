@@ -1,0 +1,11 @@
+USE TyperF1;
+GO
+
+DROP TABLE Stats;
+DROP TABLE Points;
+DROP TABLE Joker;
+DROP TABLE Track;
+DROP TABLE Participant;
+DROP TABLE Session;
+DROP TABLE GrandPrix;
+DROP TABLE Season;
