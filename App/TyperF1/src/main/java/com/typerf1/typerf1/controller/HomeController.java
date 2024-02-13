@@ -4,6 +4,7 @@ import com.typerf1.typerf1.model.Participant;
 import com.typerf1.typerf1.service.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -20,9 +21,9 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    @ResponseBody
-    public List<Participant> home() {
-        return participantService.getAllParticipants();
+    public String home(Model model) {
+        model.addAttribute("participants", participantService.getAllParticipants());
+        return "home";
     }
 
 }
