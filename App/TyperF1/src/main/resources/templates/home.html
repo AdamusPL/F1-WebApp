@@ -7,7 +7,9 @@
     <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
         <div class="col-md-3 mb-2 mb-md-0">
             <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none">
-                <svg class="bi" width="40" height="32" role="img"><img src="logo.png" alt="logo"></svg>
+                <svg class="bi" width="75" height="75" role="img">
+                    <image xlink:href="http://localhost:8080/images/logo.png" width="75" height="75" alt="logo" />
+                </svg>
             </a>
         </div>
 
@@ -37,7 +39,7 @@
             <li th:each="participant : ${participants}">
             <div class="col">
                 <div class="card shadow-sm">
-                    <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
+                    <img class = "card-img-top" src = "http://localhost:8080/images/${participant.name}${participant.surname}.jpg">
                     <div class="card-body">
                         <p class="card-text">The most famous Polish F1 commentator</p>
                         <div class="d-flex justify-content-between align-items-center">
@@ -45,7 +47,7 @@
                                 <button type="button" class="btn btn-sm btn-outline-secondary">About</button>
                                 <button type="button" class="btn btn-sm btn-outline-secondary">Report</button>
                             </div>
-                            <small class="text-body-secondary" span th:text="${participant.Name}"></small>
+                            <small class="text-body-secondary" span th:text="${participant.name}"></small>
                         </div>
                     </div>
                 </div>
