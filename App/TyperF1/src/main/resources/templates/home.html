@@ -39,7 +39,7 @@
             <li th:each="participant : ${participants}">
             <div class="col">
                 <div class="card shadow-sm">
-                    <img class = "card-img-top" src = "http://localhost:8080/images/${participant.name}${participant.surname}.jpg">
+                    <img class = "card-img-top" th:src = "@{'/images/' + ${participant.name + participant.surname + '.jpg'}}">
                     <div class="card-body">
                         <p class="card-text">The most famous Polish F1 commentator</p>
                         <div class="d-flex justify-content-between align-items-center">
