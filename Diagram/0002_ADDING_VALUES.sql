@@ -36,10 +36,10 @@ INSERT INTO GrandPrix VALUES('Abu Dhabi', 5);
 
 SELECT * FROM GrandPrix;
 
-INSERT INTO Participant VALUES('Andrzej', 'Borowczyk');
-INSERT INTO Participant VALUES('Mikolaj', 'Sokol');
-INSERT INTO Participant VALUES('Maciej', 'Jermakow');
-INSERT INTO Participant VALUES('Cezary', 'Gutowski');
+INSERT INTO Participant VALUES('Andrzej', 'Borowczyk', 'The most famous Polish F1 commentator. He is distinguished by the fact that he places stress on every syllable while talking.');
+INSERT INTO Participant VALUES('Mikolaj', 'Sokol', 'Sports commentator. "All-F1-Knower".');
+INSERT INTO Participant VALUES('Maciej', 'Jermakow', 'Journalist who specialises in automotive.');
+INSERT INTO Participant VALUES('Cezary', 'Gutowski', 'Formula 1 specialist. He thinks about it 24/7. He has a nose with finding talents. He published texts about Robert Kubica while he was an unknown driver.');
 
 SELECT * FROM Participant;
 

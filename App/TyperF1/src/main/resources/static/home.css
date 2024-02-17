@@ -1,0 +1,69 @@
+.me-2 {
+    color: red; /* Text color */
+    background-color: #ffffff; /* Background color */
+    border-color: red; /* Border color */
+}
+
+.me-2:hover{
+    color: darkred;
+    background-color: #ffffff; /* Background color */
+    border-color: darkred; /* Border color */
+}
+
+.me-2:active:focus{
+    color: black;
+    background-color: #ffffff; /* Background color */
+    border-color: black; /* Border color */
+}
+
+/* Define the hover effect */
+.btn-primary {
+    color: #ffffff; /* Text color on hover */
+    background-color: red; /* Background color on hover */
+    border-color: red; /* Border color on hover */
+}
+
+.btn-primary:hover{
+    color: #ffffff; /* Text color on hover */
+    background-color: darkred; /* Background color on hover */
+    border-color: darkred; /* Border color on hover */
+}
+
+.btn-primary:active:focus{
+    color: #ffffff; /* Text color on hover */
+    background-color: black;/* Background color on hover */
+    border-color: black; /* Border color on hover */
+}
+
+.nav-link{
+    color: red;
+}
+
+.nav-link:hover{
+    color: darkred;
+}
+
+.nav-link:focus{
+    color: black;
+}
+
+h1, h2, h3{
+    text-align: center;
+}
+
+h2{
+    color: red;
+}
+
+h3{
+    color: darkred;
+}
+
+h4{
+    color: red;
+}
+
+svg{
+   display: block;
+    margin: auto;
+}

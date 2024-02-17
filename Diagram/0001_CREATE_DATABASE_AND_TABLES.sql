@@ -59,6 +59,7 @@ CREATE TABLE Participant(
 	Id INT UNIQUE NOT NULL IDENTITY(1,1),
 	Name VARCHAR(255),
 	Surname VARCHAR(255),
+	Description VARCHAR(255),
 	PRIMARY KEY(Id)
 );
 
