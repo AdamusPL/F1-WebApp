@@ -16,4 +16,5 @@ public class Participant {
     Integer Id;
     String name;
     String surname;
+    String description;
 }
