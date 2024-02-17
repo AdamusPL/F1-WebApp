@@ -13,16 +13,8 @@ import java.util.List;
 @Controller
 public class HomeController {
 
-    private final ParticipantService participantService;
-
-    @Autowired
-    public HomeController(ParticipantService participantService){
-        this.participantService = participantService;
-    }
-
     @GetMapping("/")
-    public String home(Model model) {
-        model.addAttribute("participants", participantService.getAllParticipants());
+    public String home() {
         return "home";
     }
 
