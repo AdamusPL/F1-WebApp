@@ -46,3 +46,19 @@
 .nav-link:focus{
     color: black;
 }
+
+h1, h2, h3{
+    text-align: center;
+}
+
+h2{
+    color: red;
+}
+
+h3{
+    color: darkred;
+}
+
+h4{
+    color: red;
+}
