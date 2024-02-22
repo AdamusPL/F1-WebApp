@@ -36,10 +36,20 @@ INSERT INTO GrandPrix VALUES('Abu Dhabi', 5);
 
 SELECT * FROM GrandPrix;
 
-INSERT INTO Participant VALUES('Andrzej', 'Borowczyk', 'The most famous Polish F1 commentator. He is distinguished by the fact that he places stress on every syllable while talking.');
-INSERT INTO Participant VALUES('Mikolaj', 'Sokol', 'Sports commentator. "All-F1-Knower".');
-INSERT INTO Participant VALUES('Maciej', 'Jermakow', 'Journalist who specialises in automotive.');
-INSERT INTO Participant VALUES('Cezary', 'Gutowski', 'Formula 1 specialist. He thinks about it 24/7. He has a nose with finding talents. He published texts about Robert Kubica while he was an unknown driver.');
+INSERT INTO Email VALUES('planeta.michal.02@gmail.com');
+INSERT INTO Email VALUES('jakub.imianowski2002@gmail.com');
+INSERT INTO Email VALUES('adam.czekalski.szczecin@gmail.com');
+INSERT INTO Email VALUES('purbaniak917@gmail.com');
+
+INSERT INTO ParticipantLoginData VALUES('aborowczyk123', 'sledz123');
+INSERT INTO ParticipantLoginData VALUES('jimianowski123', 'sledz123');
+INSERT INTO ParticipantLoginData VALUES('aczekalski123', 'sledz123');
+INSERT INTO ParticipantLoginData VALUES('purbaniak123', 'sledz123');
+
+INSERT INTO Participant VALUES('Andrzej', 'Borowczyk', 'The most famous Polish F1 commentator. He is distinguished by the fact that he places stress on every syllable while talking.', 1, 1);
+INSERT INTO Participant VALUES('Mikolaj', 'Sokol', 'Sports commentator. "All-F1-Knower".', 2, 2);
+INSERT INTO Participant VALUES('Maciej', 'Jermakow', 'Journalist who specialises in automotive.', 3, 3);
+INSERT INTO Participant VALUES('Cezary', 'Gutowski', 'Formula 1 specialist. He thinks about it 24/7. He has a nose with finding talents. He published texts about Robert Kubica while he was an unknown driver.', 4 , 4);
 
 SELECT * FROM Participant;
 

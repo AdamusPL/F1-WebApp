@@ -11,10 +11,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Participant {
+public class UserLoginData {
     @jakarta.persistence.Id
     Integer id;
-    String name;
-    String surname;
-    String description;
+    String login;
+    String password;
 }
+
