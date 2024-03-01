@@ -22,4 +22,5 @@ function submitForm() {
         .catch(error => {
             console.error('Error:', error);
         });
+    return false;
 }

@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class UserLoginData {
+public class ParticipantLoginData {
     @jakarta.persistence.Id
     Integer id;
     String login;

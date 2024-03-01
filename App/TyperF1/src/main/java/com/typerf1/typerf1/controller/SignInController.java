@@ -1,9 +1,8 @@
 package com.typerf1.typerf1.controller;
 
-import com.typerf1.typerf1.model.UserLoginData;
-import com.typerf1.typerf1.service.UserLoginDataService;
+import com.typerf1.typerf1.service.ParticipantLoginDataService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -11,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class SignInController {
 
-    public final UserLoginDataService userLoginDataService;
+    public final ParticipantLoginDataService participantLoginDataService;
 
-    public SignInController(UserLoginDataService userLoginDataService){
-        this.userLoginDataService = userLoginDataService;
+    public SignInController(ParticipantLoginDataService participantLoginDataService){
+        this.participantLoginDataService = participantLoginDataService;
     }
 
     @GetMapping("/sign-in")
@@ -23,13 +22,15 @@ public class SignInController {
     }
 
     @PostMapping("/sign-in")
-    public String login(@RequestParam("username") String username, @RequestParam("password") String password) {
-        // Here you can perform authentication logic, such as checking the credentials against a database
-        // For simplicity, we're just printing the credentials to console
-        System.out.println("Username: " + username);
-        System.out.println("Password: " + password);
+    public String login(@RequestParam("username") String username, @RequestParam("password") String password, HttpSession httpSession) {
+        boolean login = participantLoginDataService.isLoginAndPasswordCorrect(username, password);
 
         // Redirect to another page after successful login
-        return "redirect:/"; // Assuming you have a /home endpoint mapped
+        if(login) {
+            return "redirect:/home";
+        }
+        else{
+            return "redirect:/sign-in";
+        }
     }
 }
