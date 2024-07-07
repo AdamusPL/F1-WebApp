@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en" data-bs-theme="auto">
-<head><script src="../assets/js/color-modes.js"></script>
+<head>
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -98,9 +98,9 @@
 
 
   <!-- Custom styles for this template -->
-  <link href="sign-in.css" rel="stylesheet">
-  <script src="sign-in.js"></script>
-  <link rel="stylesheet" href="home.css">
+  <link href="css/sign-in.css" rel="stylesheet">
+  <script src="js/sign-in.js"></script>
+  <link rel="stylesheet" href="css/home.css">
 </head>
 <body class="d-flex align-items-center py-4 bg-body-tertiary">
 <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
@@ -156,12 +156,12 @@
 
 
 <main class="form-signin w-100 m-auto">
-  <form>
+  <form onsubmit="submitForm()">
     <img class="mb-4" src="/images/logo.png" alt="" width="72" height="72">
     <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
     <div class="form-floating">
-      <input type="login" class="form-control" id="floatingInput" placeholder="name@example.com">
+      <input type="search" class="form-control" id="floatingInput" placeholder="name@example.com">
       <label for="floatingInput">Login</label>
     </div>
     <div class="form-floating">
@@ -175,11 +175,13 @@
         Remember me
       </label>
     </div>
-    <button class="btn btn-primary w-100 py-2" type="submit" onclick="submitForm()">Sign in</button>
-    <p class="mt-5 mb-3 text-body-secondary">&copy; 2017–2023</p>
+
+    <p id="error"></p>
+
+    <button class="btn btn-primary w-100 py-2">Sign in</button>
+    <p class="mt-5 mb-3 text-body-secondary">&copy; 2020–2024</p>
   </form>
 </main>
-<script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

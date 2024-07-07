@@ -17,11 +17,11 @@ public class ParticipantLoginDataService {
         this.participantLoginDataRepository = participantLoginDataRepository;
     }
 
-    public boolean isLoginAndPasswordCorrect(String username, String password){
-        List<ParticipantLoginData> participantLoginData = participantLoginDataRepository.findAll();
+    public boolean isLoginAndPasswordCorrect(ParticipantLoginData participantLoginData){
+        List<ParticipantLoginData> participantLoginDataList = participantLoginDataRepository.findAll();
 
-        for (ParticipantLoginData data : participantLoginData) {
-            if (data.getLogin().equals(username) && data.getPassword().equals(password)) {
+        for (ParticipantLoginData data : participantLoginDataList) {
+            if (data.getUsername().equals(participantLoginData.getUsername()) && data.getPassword().equals(participantLoginData.getPassword())) {
                 return true;
             }
         }

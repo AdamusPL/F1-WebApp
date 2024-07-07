@@ -14,7 +14,7 @@ import lombok.Setter;
 public class ParticipantLoginData {
     @jakarta.persistence.Id
     Integer id;
-    String login;
+    String username;
     String password;
 }
 

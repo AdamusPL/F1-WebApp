@@ -1,9 +1,11 @@
 USE TyperF1;
 GO
 
+DROP TABLE ParticipantLoginData;
 DROP TABLE Stats;
 DROP TABLE Points;
 DROP TABLE Joker;
+DROP TABLE Email;
 DROP TABLE Track;
 DROP TABLE Participant;
 DROP TABLE Session;

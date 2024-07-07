@@ -1,6 +1,8 @@
 ﻿USE TyperF1;
 GO
 
+SELECT * FROM ParticipantLoginData;
+
 INSERT INTO Season VALUES(2020);
 INSERT INTO Season VALUES(2021);
 INSERT INTO Season VALUES(2022);
