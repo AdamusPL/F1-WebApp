@@ -1,4 +1,5 @@
-function submitForm() {
+function submitForm(e) {
+    e.preventDefault();
     debugger;
     try {
         const username = document.getElementById('floatingInput').value;
@@ -20,7 +21,7 @@ function submitForm() {
                 localStorage.setItem('user', JSON.stringify(formData));
                 window.location.href = '/';
             } else {
-                document.getElementById("error").innerText = "Wrong username or password"
+                document.getElementById("error").innerText = "Error: Wrong username or password"
             }
         })
     }

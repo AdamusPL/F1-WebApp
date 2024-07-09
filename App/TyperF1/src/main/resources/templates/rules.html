@@ -3,97 +3,93 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-  <link rel="stylesheet" href="css/home.css">
-  <title>Rules</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/home.css">
+    <script src="js/navbar.js"></script>
+    <title>Rules</title>
 </head>
 
 <header>
-  <div class="container">
-    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-      <div class="col-md-3 mb-2 mb-md-0">
-        <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none">
-          <svg class="bi" width="75" height="75" role="img">
-            <image xlink:href="http://localhost:8080/images/logo.png" width="75" height="75" alt="logo" />
-          </svg>
-        </a>
-      </div>
+    <div class="container">
+        <header id="navbar-header"
+                class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+            <div class="col-md-3 mb-2 mb-md-0">
+                <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none">
+                    <svg class="bi" width="75" height="75" role="img">
+                        <image xlink:href="http://localhost:8080/images/logo.png" width="75" height="75" alt="logo"/>
+                    </svg>
+                </a>
+            </div>
 
-      <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-        <li><a  class="nav-link px-2" href="/">Home</a></li>
-        <li><a href="#" class="nav-link px-2">Statistics</a></li>
-        <li><a href="#" class="nav-link px-2">Season</a></li>
-        <li><a class="nav-link px-2" href="participants">Participants</a></li>
-        <li><a class="nav-link px-2 link-secondary" href="rules">Rules</a></li>
-        <li><a class="nav-link px-2" href="about">About</a></li>
-        <!--    Widoczne dopiero jak User się zaloguje!        -->
-        <li><a href="#" class="nav-link px-2">Bet</a></li>
-      </ul>
-
-      <div class="col-md-3 text-end">
-        <button type="button" class="btn btn-outline-primary me-2">Login</button>
-        <button type="button" class="btn btn-primary">Sign-up</button>
-      </div>
-    </header>
-  </div>
+            <ul id="navbar-elements" class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+                <li><a class="nav-link px-2" href="/">Home</a></li>
+                <li><a class="nav-link px-2 link-secondary" href="rules">Rules</a></li>
+                <li><a class="nav-link px-2" href="about">About</a></li>
+            </ul>
+        </header>
+    </div>
 </header>
 
-<body>
+<body onload="printNavbar()">
 <div class="album py-5 bg-body-tertiary">
-  <div class="container">
-<h4>Rules of betting:</h4>
-<br>
-<h5>Betting driver positions:</h5>
-<ul>
-  <li class="lead">
-    Participants bet positions of all drivers taking part in specific Formula 1 session,
-    which consists of: Qualifying and Race in standard weekend; and additionally:
-    Sprint Shootout and Sprint in sprint race weekend.
-  </li>
-</ul>
-<h5>Points:</h5>
-<ul>
-  <li class="lead">
-    Precise bet: If participant guessed the exact position of driver, he/she receives 2 points
-  </li>
-  <li class="lead">
-    Bet missed by one position: If participant's bet differentiate by 1 position, he/she receives 1 point
-  </li>
-</ul>
+    <div class="container">
+        <h4>Rules of betting:</h4>
+        <br>
+        <h5>Betting driver positions:</h5>
+        <ul>
+            <li class="lead">
+                Participants bet positions of all drivers taking part in specific Formula 1 session,
+                which consists of: Qualifying and Race in standard weekend; and additionally:
+                Sprint Shootout and Sprint in sprint race weekend.
+            </li>
+        </ul>
+        <h5>Points:</h5>
+        <ul>
+            <li class="lead">
+                Precise bet: If participant guessed the exact position of driver, he/she receives 2 points
+            </li>
+            <li class="lead">
+                Bet missed by one position: If participant's bet differentiate by 1 position, he/she receives 1 point
+            </li>
+        </ul>
 
-<br>
-<h6>Additional points for podium:</h6>
-<ul>
-  <li class="lead">
-    First place: Additional 3 points for guessing exact driver on the first place
-  </li>
-  <li class="lead">
-    Second place: Additional 2 points for guessing exact driver on the second place
-  </li>
-  <li class="lead">
-    Third place: Additional 1 point for guessing exact driver on the third place
-  </li>
-</ul>
-<p class="lead">Participants have to guess the fastest lap additionally in race session. They can get 1 point for that.</p>
+        <br>
+        <h6>Additional points for podium:</h6>
+        <ul>
+            <li class="lead">
+                First place: Additional 3 points for guessing exact driver on the first place
+            </li>
+            <li class="lead">
+                Second place: Additional 2 points for guessing exact driver on the second place
+            </li>
+            <li class="lead">
+                Third place: Additional 1 point for guessing exact driver on the third place
+            </li>
+        </ul>
+        <p class="lead">Participants have to guess the fastest lap additionally in race session. They can get 1 point
+            for that.</p>
 
-<br>
-<h5>Weights of sessions:</h5>
-<ul>
-  <li class="lead">
-    Qualifying: x1
-  </li>
-  <li class="lead">
-    Sprint Shootout: x0.5
-  </li>
-  <li class="lead">
-    Sprint: x1
-  </li>
-  <li class="lead">
-    Race: x2
-  </li>
-</ul>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-</div>
+        <br>
+        <h5>Weights of sessions:</h5>
+        <ul>
+            <li class="lead">
+                Qualifying: x1
+            </li>
+            <li class="lead">
+                Sprint Shootout: x0.5
+            </li>
+            <li class="lead">
+                Sprint: x1
+            </li>
+            <li class="lead">
+                Race: x2
+            </li>
+        </ul>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+                crossorigin="anonymous"></script>
+    </div>
 </div>
 </body>
 </html>
