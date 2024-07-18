@@ -6,7 +6,7 @@ function getScores(year) {
                 if (!response.ok) {
                     throw new Error('Error');
                 }
-                return response.json(); // Parse JSON response
+                return response.json();
             })
             .then(data => {
                 debugger;

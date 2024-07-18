@@ -1,0 +1,14 @@
+.body-container{
+    display: flex;
+    justify-content: center;
+}
+
+.statistics-container{
+    display: flex;
+    justify-content: center;
+}
+
+li{
+    display: flex;
+    justify-content: center;
+}
