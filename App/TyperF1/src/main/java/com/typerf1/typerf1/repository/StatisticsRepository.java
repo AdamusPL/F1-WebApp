@@ -18,7 +18,8 @@ public interface StatisticsRepository extends JpaRepository<Points, Integer> {
             "JOIN pt.session ses " +
             "JOIN ses.grandPrix gp " +
             "JOIN gp.season s " +
-            "WHERE s.year = :year")
+            "WHERE s.year = :year " +
+            "ORDER BY ses.id, pt.number DESC")
     List<Score> findSeasonScores(@Param("year") Integer year);
 
 }
