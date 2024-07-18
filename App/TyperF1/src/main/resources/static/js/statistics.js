@@ -1,5 +1,13 @@
 function getScores(year) {
     debugger;
+    const div = document.getElementById("statistics");
+    if(div !== null){
+        div.remove()
+    }
+    const statistics = document.createElement("statistics");
+    statistics.id = "statistics";
+    document.getElementById("statistics-container").appendChild(statistics);
+    
     try {
         fetch(`/get-season-scores?year=${year}`)
             .then(response => {
