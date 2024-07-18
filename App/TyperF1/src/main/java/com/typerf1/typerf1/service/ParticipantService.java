@@ -1,5 +1,6 @@
 package com.typerf1.typerf1.service;
 
+import com.typerf1.typerf1.dto.Score;
 import com.typerf1.typerf1.model.Participant;
 import com.typerf1.typerf1.repository.ParticipantRepository;
 import org.springframework.beans.factory.annotation.Autowired;

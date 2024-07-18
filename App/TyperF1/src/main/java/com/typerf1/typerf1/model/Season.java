@@ -1,27 +1,18 @@
 package com.typerf1.typerf1.model;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Entity
-public class Participant {
+public class Season {
     @jakarta.persistence.Id
     Integer id;
-    String name;
-    String surname;
-    String description;
-
-    @OneToMany(mappedBy = "participant")
-    private List<Points> points;
-
+    Integer year;
 }

@@ -1,7 +1,6 @@
 package com.typerf1.typerf1.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,14 +13,16 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-public class Participant {
+public class GrandPrix {
     @jakarta.persistence.Id
     Integer id;
     String name;
-    String surname;
-    String description;
 
-    @OneToMany(mappedBy = "participant")
-    private List<Points> points;
+    @ManyToOne
+    @JoinColumn(name = "SeasonId")
+    Season season;
+
+    @OneToMany(mappedBy = "grandPrix")
+    private List<Session> session;
 
 }

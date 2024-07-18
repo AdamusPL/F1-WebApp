@@ -106,3 +106,30 @@ INSERT INTO Track VALUES('Asia', 'Abu Dhabi', 0, 24);
 
 SELECT * FROM Track;
 
+INSERT INTO Points VALUES(16, 3, 1);
+INSERT INTO Points VALUES(15, 1, 1); 
+INSERT INTO Points VALUES(13, 4, 1); 
+INSERT INTO Points VALUES(10, 2, 1);
+INSERT INTO Points VALUES(36, 1, 2);
+INSERT INTO Points VALUES(32, 2, 2); 
+INSERT INTO Points VALUES(28, 3, 2); 
+INSERT INTO Points VALUES(30, 4, 2);
+
+INSERT INTO Points VALUES(8, 1, 3);
+INSERT INTO Points VALUES(17, 2, 3);
+INSERT INTO Points VALUES(22, 3, 3);
+INSERT INTO Points VALUES(10, 4, 3);
+INSERT INTO Points VALUES(44, 1, 4);
+INSERT INTO Points VALUES(36, 2, 4);
+INSERT INTO Points VALUES(28, 3, 4);
+INSERT INTO Points VALUES(32, 4, 4);
+
+SELECT * FROM Points;
+SELECT * FROM Session;
+
+SELECT Season.Year, GrandPrix.Name, Session.Name, Participant.Name, Participant.Surname, Points.Number FROM Participant
+INNER JOIN Points ON Participant.Id = Points.ParticipantId
+INNER JOIN Session ON Points.SessionId = Session.Id
+INNER JOIN GrandPrix ON Session.GrandPrixId = GrandPrix.Id
+INNER JOIN Season ON GrandPrix.SeasonId = Season.Id
+WHERE Season.Year=2024;
