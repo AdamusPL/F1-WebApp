@@ -7,8 +7,6 @@ INSERT INTO Season VALUES(2022);
 INSERT INTO Season VALUES(2023);
 INSERT INTO Season VALUES(2024);
 
-SELECT * FROM Season;
-
 INSERT INTO GrandPrix VALUES('Bahrain', 5);
 INSERT INTO GrandPrix VALUES('Saudi Arabia', 5);
 INSERT INTO GrandPrix VALUES('Australia', 5);
@@ -34,14 +32,20 @@ INSERT INTO GrandPrix VALUES('Las Vegas', 5);
 INSERT INTO GrandPrix VALUES('Qatar', 5);
 INSERT INTO GrandPrix VALUES('Abu Dhabi', 5);
 
-SELECT * FROM GrandPrix;
+INSERT INTO Email VALUES('planeta.michal.02@gmail.com');
+INSERT INTO Email VALUES('jakub.imianowski2002@gmail.com');
+INSERT INTO Email VALUES('adam.czekalski.szczecin@gmail.com');
+INSERT INTO Email VALUES('purbaniak917@gmail.com');
 
-INSERT INTO Participant VALUES('Andrzej', 'Borowczyk', 'The most famous Polish F1 commentator. He is distinguished by the fact that he places stress on every syllable while talking.');
-INSERT INTO Participant VALUES('Mikolaj', 'Sokol', 'Sports commentator. "All-F1-Knower".');
-INSERT INTO Participant VALUES('Maciej', 'Jermakow', 'Journalist who specialises in automotive.');
-INSERT INTO Participant VALUES('Cezary', 'Gutowski', 'Formula 1 specialist. He thinks about it 24/7. He has a nose with finding talents. He published texts about Robert Kubica while he was an unknown driver.');
+INSERT INTO ParticipantLoginData VALUES('aborowczyk123', 'sledz123');
+INSERT INTO ParticipantLoginData VALUES('jimianowski123', 'sledz123');
+INSERT INTO ParticipantLoginData VALUES('aczekalski123', 'sledz123');
+INSERT INTO ParticipantLoginData VALUES('purbaniak123', 'sledz123');
 
-SELECT * FROM Participant;
+INSERT INTO Participant VALUES('Andrzej', 'Borowczyk', 'The most famous Polish F1 commentator. He is distinguished by the fact that he places stress on every syllable while talking.', 1, 1);
+INSERT INTO Participant VALUES('Mikolaj', 'Sokol', 'Sports commentator. "All-F1-Knower".', 2, 2);
+INSERT INTO Participant VALUES('Maciej', 'Jermakow', 'Journalist who specialises in automotive.', 3, 3);
+INSERT INTO Participant VALUES('Cezary', 'Gutowski', 'Formula 1 specialist. He thinks about it 24/7. He has a nose with finding talents. He published texts about Robert Kubica while he was an unknown driver.', 4 , 4);
 
 DECLARE @counter INT;
 SET @counter = 1;
@@ -64,8 +68,6 @@ BEGIN
 
     SET @counter = @counter + 1;
 END;
-
-SELECT * FROM Session;
 
 INSERT INTO Track VALUES('Asia', 'Bahrain', 0, 1);
 INSERT INTO Track VALUES('Asia', 'Saudi Arabia', 0, 2);
@@ -92,5 +94,25 @@ INSERT INTO Track VALUES('North America', 'United States', 0, 22);
 INSERT INTO Track VALUES('Asia', 'Qatar', 0, 23);
 INSERT INTO Track VALUES('Asia', 'Abu Dhabi', 0, 24);
 
-SELECT * FROM Track;
+INSERT INTO Points VALUES(16, 3, 1);
+INSERT INTO Points VALUES(15, 1, 1); 
+INSERT INTO Points VALUES(13, 4, 1); 
+INSERT INTO Points VALUES(10, 2, 1);
+INSERT INTO Points VALUES(36, 1, 2);
+INSERT INTO Points VALUES(32, 2, 2); 
+INSERT INTO Points VALUES(28, 3, 2); 
+INSERT INTO Points VALUES(30, 4, 2);
+
+INSERT INTO Points VALUES(8, 1, 3);
+INSERT INTO Points VALUES(17, 2, 3);
+INSERT INTO Points VALUES(22, 3, 3);
+INSERT INTO Points VALUES(10, 4, 3);
+INSERT INTO Points VALUES(44, 1, 4);
+INSERT INTO Points VALUES(36, 2, 4);
+INSERT INTO Points VALUES(28, 3, 4);
+INSERT INTO Points VALUES(32, 4, 4);
+
+INSERT INTO Joker VALUES(1,2);
+INSERT INTO Joker VALUES(3, 1);
+INSERT INTO Joker VALUES(3, 2);
 
