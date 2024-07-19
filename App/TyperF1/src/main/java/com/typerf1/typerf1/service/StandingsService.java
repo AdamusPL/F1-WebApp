@@ -1,7 +1,7 @@
 package com.typerf1.typerf1.service;
 
 import com.typerf1.typerf1.dto.*;
-import com.typerf1.typerf1.repository.StatisticsRepository;
+import com.typerf1.typerf1.repository.StandingsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,17 +9,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class StatisticsService {
-    private final StatisticsRepository statisticsRepository;
+public class StandingsService {
+    private final StandingsRepository standingsRepository;
 
     @Autowired
-    public StatisticsService(StatisticsRepository statisticsRepository){
-        this.statisticsRepository=statisticsRepository;
+    public StandingsService(StandingsRepository standingsRepository){
+        this.standingsRepository=standingsRepository;
     }
 
     public List<ScoreWithJokers> getScores(Integer year){
-        List<Score> scoreList = statisticsRepository.findSeasonScores(year);
-        List<JokersUsage> usedJokersGPList = statisticsRepository.findJokerUsageInSeasonScores(year);
+        List<Score> scoreList = standingsRepository.findSeasonScores(year);
+        List<JokersUsage> usedJokersGPList = standingsRepository.findJokerUsageInSeasonScores(year);
         List<ScoreWithJokers> scoreWithJokersList = new ArrayList<>();
 
         for (Score score : scoreList) {
@@ -37,8 +37,8 @@ public class StatisticsService {
     }
 
     public List<GrandPrixScoreWithJokers> getGrandPrixSummaryScores(Integer year, String grandPrixName){
-        List<GrandPrixScore> grandPrixScoreList = statisticsRepository.findGrandPrixSummaryScores(year, grandPrixName);
-        List<UsedJokersGP> usedJokersGPList = statisticsRepository.findJokersUsedOnGPs(year, grandPrixName);
+        List<GrandPrixScore> grandPrixScoreList = standingsRepository.findGrandPrixSummaryScores(year, grandPrixName);
+        List<UsedJokersGP> usedJokersGPList = standingsRepository.findJokersUsedOnGPs(year, grandPrixName);
         List<GrandPrixScoreWithJokers> grandPrixScoreWithJokersList = new ArrayList<>();
 
         for (GrandPrixScore score : grandPrixScoreList) {
