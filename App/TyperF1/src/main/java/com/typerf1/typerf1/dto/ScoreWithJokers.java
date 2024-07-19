@@ -11,19 +11,23 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class GrandPrixScore {
+public class ScoreWithJokers {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    String grandPrixName;
+    int id;
     String sessionName;
+    String grandPrixName;
     String participantName;
     String participantSurname;
-    Long pointsSum;
+    int points;
+    Long numberOfJokersUsed;
 
-    public GrandPrixScore(String grandPrixName, String participantName, String participantSurname, Long pointsSum) {
+    public ScoreWithJokers(String grandPrixName, String sessionName, String participantName, String participantSurname, int points, Long numberOfJokersUsed) {
         this.grandPrixName = grandPrixName;
+        this.sessionName = sessionName;
         this.participantName = participantName;
         this.participantSurname = participantSurname;
-        this.pointsSum = pointsSum;
+        this.points = points;
+        this.numberOfJokersUsed = numberOfJokersUsed;
     }
 }

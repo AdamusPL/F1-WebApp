@@ -1,7 +1,9 @@
 package com.typerf1.typerf1.repository;
 
 import com.typerf1.typerf1.dto.GrandPrixScore;
+import com.typerf1.typerf1.dto.JokersUsage;
 import com.typerf1.typerf1.dto.Score;
+import com.typerf1.typerf1.dto.UsedJokersGP;
 import com.typerf1.typerf1.model.GrandPrix;
 import com.typerf1.typerf1.model.Points;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,15 +26,34 @@ public interface StatisticsRepository extends JpaRepository<Points, Integer> {
             "ORDER BY ses.id, pt.number DESC")
     List<Score> findSeasonScores(@Param("year") Integer year);
 
-    @Query("SELECT new com.typerf1.typerf1.dto.GrandPrixScore(gp.id, p.name, p.surname, SUM(pt.number)) " +
+    @Query("SELECT new com.typerf1.typerf1.dto.JokersUsage(gp.name, p.name, p.surname) " +
+            "FROM Joker j " +
+            "JOIN j.grandPrix gp " +
+            "JOIN j.participant p " +
+            "JOIN gp.season s " +
+            "WHERE s.year = :year " +
+            "GROUP BY gp.name, p.name, p.surname")
+    List<JokersUsage> findJokerUsageInSeasonScores(@Param("year") Integer year);
+
+    @Query("SELECT new com.typerf1.typerf1.dto.GrandPrixScore(gp.name, p.name, p.surname, SUM(pt.number)) " +
             "FROM Points pt " +
             "JOIN pt.participant p " +
             "JOIN pt.session ses " +
             "JOIN ses.grandPrix gp " +
             "JOIN gp.season s " +
             "WHERE s.year = :year AND gp.name LIKE :grandPrixName " +
-            "GROUP BY gp.id, p.name, p.surname " +
-            "ORDER BY gp.id, SUM(pt.number) DESC")
+            "GROUP BY gp.name, p.name, p.surname " +
+            "ORDER BY gp.name, SUM(pt.number) DESC")
     List<GrandPrixScore> findGrandPrixSummaryScores(@Param("year") Integer year, @Param("grandPrixName") String grandPrixName);
+
+    @Query("SELECT new com.typerf1.typerf1.dto.UsedJokersGP(gp.name, p.name, p.surname, SUM(j.id)) " +
+            "FROM Joker j " +
+            "JOIN j.participant p " +
+            "JOIN j.grandPrix gp " +
+            "JOIN gp.season s " +
+            "WHERE s.year = :year AND gp.name LIKE :grandPrixName " +
+            "GROUP BY gp.name, p.name, p.surname " +
+            "ORDER BY gp.name, SUM(j.id) DESC")
+    List<UsedJokersGP> findJokersUsedOnGPs(@Param("year") Integer year, @Param("grandPrixName") String grandPrixName);
 
 }

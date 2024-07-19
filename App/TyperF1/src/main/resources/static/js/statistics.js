@@ -42,6 +42,9 @@ function getScores(year) {
                                 sumData.forEach(sumItem => {
                                     const li = document.createElement("li");
                                     li.innerText = sumItem.participantName + " " + sumItem.participantSurname + " " + sumItem.pointsSum;
+                                    if(sumItem.numberOfJokersUsed > 0){
+                                        li.innerText += " J";
+                                    }
                                     ol.appendChild(li);
                                 });
                             })
@@ -58,6 +61,9 @@ function getScores(year) {
                     }
                     const li = document.createElement("li");
                     li.innerText = item.participantName + " " + item.participantSurname + " " + item.points;
+                    if(item.numberOfJokersUsed > 0){
+                        li.innerText += " J";
+                    }
                     document.getElementById(grandPrix + " " + session).appendChild(li);
                 });
             })
