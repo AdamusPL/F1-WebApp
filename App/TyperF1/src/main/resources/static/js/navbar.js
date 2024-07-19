@@ -10,7 +10,7 @@ function printNavbar() {
         if(window.location.pathname === '/statistics'){
             a.classList.add("link-secondary");
         }
-        a.innerText = "Statistics";
+        a.innerText = "Results";
         statistics.appendChild(a);
         navbarElements.appendChild(statistics);
 
@@ -21,9 +21,31 @@ function printNavbar() {
         if(window.location.pathname === '/season'){
             aSeason.classList.add("link-secondary");
         }
-        aSeason.innerText = "Season";
+        aSeason.innerText = "Standings";
         season.appendChild(aSeason);
         navbarElements.appendChild(season);
+
+        const worldRecords = document.createElement("li");
+        const aWR = document.createElement("a");
+        aWR.setAttribute('href', 'world-records');
+        aWR.classList.add("nav-link", "px-2");
+        if(window.location.pathname === '/world-records'){
+            aSeason.classList.add("link-secondary");
+        }
+        aWR.innerText = "WorldRecords";
+        worldRecords.appendChild(aWR);
+        navbarElements.appendChild(worldRecords);
+
+        const personalBest = document.createElement("li");
+        const aPB = document.createElement("a");
+        aPB.setAttribute('href', 'personal-best');
+        aPB.classList.add("nav-link", "px-2");
+        if(window.location.pathname === '/personal-best'){
+            aSeason.classList.add("link-secondary");
+        }
+        aPB.innerText = "Personal Best";
+        personalBest.appendChild(aPB);
+        navbarElements.appendChild(personalBest);
 
         const participants = document.createElement("li");
         const aParticipants = document.createElement("a");
