@@ -1,5 +1,6 @@
 package com.typerf1.typerf1.controller;
 
+import com.typerf1.typerf1.dto.GrandPrixScore;
 import com.typerf1.typerf1.dto.Score;
 import com.typerf1.typerf1.service.StatisticsService;
 import org.springframework.stereotype.Controller;
@@ -7,7 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class StatisticsController {
@@ -26,5 +29,10 @@ public class StatisticsController {
     @GetMapping("/get-season-scores")
     public @ResponseBody List<Score> scores(@RequestParam Integer year){
         return statisticsService.getScores(year);
+    }
+
+    @GetMapping("/get-grandprix-summary")
+    public @ResponseBody List<GrandPrixScore> scores(@RequestParam Integer year, @RequestParam String grandPrixName){
+        return statisticsService.getGrandPrixSummaryScores(year, grandPrixName);
     }
 }

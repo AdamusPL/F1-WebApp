@@ -18,6 +18,7 @@ function getScores(year) {
             })
             .then(data => {
                 debugger;
+
                 const statistics = document.getElementById("statistics");
                 var grandPrix = "";
                 var session = "";
@@ -27,6 +28,25 @@ function getScores(year) {
                         const h1 = document.createElement("h1");
                         h1.innerText = item.grandPrixName;
                         statistics.appendChild(h1);
+                        const h2 = document.createElement("h2");
+                        h2.innerText = "Summary";
+                        statistics.appendChild(h2);
+                        const ol = document.createElement("ol");
+                        fetch(`/get-grandprix-summary?year=${year}&grandPrixName=${item.grandPrixName}`)
+                            .then(insideResponse => {
+                                if (!insideResponse.ok) {
+                                    throw new Error('Error');
+                                }
+                                return insideResponse.json();
+                            })
+                            .then(sumData => {
+                                sumData.forEach(sumItem => {
+                                    const li = document.createElement("li");
+                                    li.innerText = sumItem.participantName + " " + sumItem.participantSurname + " " + sumItem.pointsSum;
+                                    ol.appendChild(li);
+                                });
+                            })
+                        statistics.appendChild(ol);
                     }
                     if (item.sessionName !== session) {
                         session = item.sessionName;
@@ -45,4 +65,5 @@ function getScores(year) {
     } catch (e) {
 
     }
+
 }

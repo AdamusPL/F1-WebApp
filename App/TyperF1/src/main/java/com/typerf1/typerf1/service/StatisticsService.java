@@ -1,5 +1,6 @@
 package com.typerf1.typerf1.service;
 
+import com.typerf1.typerf1.dto.GrandPrixScore;
 import com.typerf1.typerf1.dto.Score;
 import com.typerf1.typerf1.repository.StatisticsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,5 +19,9 @@ public class StatisticsService {
 
     public List<Score> getScores(Integer year){
         return statisticsRepository.findSeasonScores(year);
+    }
+
+    public List<GrandPrixScore> getGrandPrixSummaryScores(Integer year, String grandPrixName){
+        return statisticsRepository.findGrandPrixSummaryScores(year, grandPrixName);
     }
 }

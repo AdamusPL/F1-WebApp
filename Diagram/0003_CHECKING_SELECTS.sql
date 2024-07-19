@@ -23,7 +23,7 @@ INNER JOIN Points ON Participant.Id = Points.ParticipantId
 INNER JOIN Session ON Points.SessionId = Session.Id
 INNER JOIN GrandPrix ON Session.GrandPrixId = GrandPrix.Id
 INNER JOIN Season ON GrandPrix.SeasonId = Season.Id
-WHERE Season.Year=2024
+WHERE Season.Year=2024 AND GrandPrix.Name LIKE 'Bahrain'
 GROUP BY GrandPrix.Id, Participant.Name, Participant.Surname
 ORDER BY GrandPrix.Id, SUM(Points.Number) DESC;
 
