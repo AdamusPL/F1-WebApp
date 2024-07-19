@@ -1,8 +1,6 @@
 window.addEventListener('load', getParticipantStandings);
 
 function getParticipantStandings(){
-    debugger;
-
     try {
         fetch('/get-participant-standings')
             .then(response => {
@@ -16,7 +14,10 @@ function getParticipantStandings(){
                 const standings = document.getElementById("standings");
                 data.forEach(item => {
                     const li = document.createElement("li");
-                    li.innerText = item.participantName + " " + item.participantSurname + " " + item.pointsSum;
+                    li.innerText = item.participantName + " " + item.participantSurname + " " + item.pointsSum + " ";
+                    for(var i = 0; i < item.numberOfJokersUsed; i++){
+                        li.innerText += "J";
+                    }
                     standings.appendChild(li);
                 });
             })

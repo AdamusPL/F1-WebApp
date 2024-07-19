@@ -1,7 +1,6 @@
 window.addEventListener('load', printNavbar);
 
 function printNavbar() {
-    debugger;
     if (localStorage.getItem('user') !== null){
         const navbarElements = document.getElementById("navbar-elements");
         const statistics = document.createElement("li");

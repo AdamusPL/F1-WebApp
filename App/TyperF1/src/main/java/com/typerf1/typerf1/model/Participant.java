@@ -24,4 +24,7 @@ public class Participant {
     @OneToMany(mappedBy = "participant")
     private List<Points> points;
 
+    @OneToMany(mappedBy = "participant")
+    private List<Joker> jokers;
+
 }

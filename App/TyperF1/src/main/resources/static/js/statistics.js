@@ -18,7 +18,6 @@ function getScores(year) {
             })
             .then(data => {
                 debugger;
-
                 const statistics = document.getElementById("statistics");
                 var grandPrix = "";
                 var session = "";

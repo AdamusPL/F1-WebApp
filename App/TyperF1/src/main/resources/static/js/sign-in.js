@@ -1,6 +1,5 @@
 function submitForm(e) {
     e.preventDefault();
-    debugger;
     try {
         const username = document.getElementById('floatingInput').value;
         const password = document.getElementById('floatingPassword').value;

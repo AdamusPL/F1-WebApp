@@ -1,6 +1,6 @@
 package com.typerf1.typerf1.controller;
 
-import com.typerf1.typerf1.dto.SeasonScore;
+import com.typerf1.typerf1.dto.SeasonScoreWithJokers;
 import com.typerf1.typerf1.service.SeasonService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +22,7 @@ public class SeasonController {
     }
 
     @GetMapping("/get-participant-standings")
-    public @ResponseBody List<SeasonScore> standings(){
-        return seasonService.getParticipantStandings();
+    public @ResponseBody List<SeasonScoreWithJokers> standings(){
+        return seasonService.getParticipantStandings(2024);
     }
 }
