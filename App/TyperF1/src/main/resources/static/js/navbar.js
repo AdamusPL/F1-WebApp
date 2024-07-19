@@ -5,9 +5,9 @@ function printNavbar() {
         const navbarElements = document.getElementById("navbar-elements");
         const statistics = document.createElement("li");
         const a = document.createElement("a");
-        a.setAttribute('href', 'statistics');
+        a.setAttribute('href', 'results');
         a.classList.add("nav-link", "px-2");
-        if(window.location.pathname === '/statistics'){
+        if(window.location.pathname === '/results'){
             a.classList.add("link-secondary");
         }
         a.innerText = "Results";
@@ -16,9 +16,9 @@ function printNavbar() {
 
         const season = document.createElement("li");
         const aSeason = document.createElement("a");
-        aSeason.setAttribute('href', 'season');
+        aSeason.setAttribute('href', 'standings');
         aSeason.classList.add("nav-link", "px-2");
-        if(window.location.pathname === '/season'){
+        if(window.location.pathname === '/standings'){
             aSeason.classList.add("link-secondary");
         }
         aSeason.innerText = "Standings";

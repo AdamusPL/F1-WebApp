@@ -9,16 +9,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 
 @Controller
-public class SeasonController {
+public class ResultsController {
     public final SeasonService seasonService;
 
-    public SeasonController(SeasonService seasonService){
+    public ResultsController(SeasonService seasonService){
         this.seasonService = seasonService;
     }
 
-    @GetMapping("/season")
-    public String statistics() {
-        return "season";
+    @GetMapping("/results")
+    public String results() {
+        return "results";
     }
 
     @GetMapping("/get-participant-standings")
