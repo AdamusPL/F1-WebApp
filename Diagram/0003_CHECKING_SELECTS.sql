@@ -59,12 +59,3 @@ INNER JOIN Season ON Season.Id = GrandPrix.SeasonId
 WHERE Season.Year = 2024
 GROUP BY Participant.Name, Participant.Surname) t2
 ON t1.Name = t2.Name;
-
-SELECT Participant.Name, Participant.Surname, SUM(Points.Number), COUNT(Joker.Id) FROM Participant
-INNER JOIN Points ON Participant.Id = Points.ParticipantId
-INNER JOIN Session ON Points.SessionId = Session.Id
-INNER JOIN GrandPrix ON Session.GrandPrixId = GrandPrix.Id
-INNER JOIN Season ON GrandPrix.SeasonId = Season.Id
-LEFT JOIN Joker ON Joker.ParticipantId = Participant.Id AND Joker.GrandPrixId = GrandPrix.Id
-WHERE Season.Year = 2024
-GROUP BY Participant.Name, Participant.Surname;
