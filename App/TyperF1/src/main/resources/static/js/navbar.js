@@ -1,3 +1,5 @@
+window.addEventListener('load', printNavbar);
+
 function printNavbar() {
     debugger;
     if (localStorage.getItem('user') !== null){

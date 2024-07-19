@@ -1,15 +1,11 @@
 ﻿USE TyperF1;
 GO
 
-SELECT * FROM ParticipantLoginData;
-
 INSERT INTO Season VALUES(2020);
 INSERT INTO Season VALUES(2021);
 INSERT INTO Season VALUES(2022);
 INSERT INTO Season VALUES(2023);
 INSERT INTO Season VALUES(2024);
-
-SELECT * FROM Season;
 
 INSERT INTO GrandPrix VALUES('Bahrain', 5);
 INSERT INTO GrandPrix VALUES('Saudi Arabia', 5);
@@ -36,8 +32,6 @@ INSERT INTO GrandPrix VALUES('Las Vegas', 5);
 INSERT INTO GrandPrix VALUES('Qatar', 5);
 INSERT INTO GrandPrix VALUES('Abu Dhabi', 5);
 
-SELECT * FROM GrandPrix;
-
 INSERT INTO Email VALUES('planeta.michal.02@gmail.com');
 INSERT INTO Email VALUES('jakub.imianowski2002@gmail.com');
 INSERT INTO Email VALUES('adam.czekalski.szczecin@gmail.com');
@@ -52,8 +46,6 @@ INSERT INTO Participant VALUES('Andrzej', 'Borowczyk', 'The most famous Polish F
 INSERT INTO Participant VALUES('Mikolaj', 'Sokol', 'Sports commentator. "All-F1-Knower".', 2, 2);
 INSERT INTO Participant VALUES('Maciej', 'Jermakow', 'Journalist who specialises in automotive.', 3, 3);
 INSERT INTO Participant VALUES('Cezary', 'Gutowski', 'Formula 1 specialist. He thinks about it 24/7. He has a nose with finding talents. He published texts about Robert Kubica while he was an unknown driver.', 4 , 4);
-
-SELECT * FROM Participant;
 
 DECLARE @counter INT;
 SET @counter = 1;
@@ -76,8 +68,6 @@ BEGIN
 
     SET @counter = @counter + 1;
 END;
-
-SELECT * FROM Session;
 
 INSERT INTO Track VALUES('Asia', 'Bahrain', 0, 1);
 INSERT INTO Track VALUES('Asia', 'Saudi Arabia', 0, 2);
@@ -104,8 +94,6 @@ INSERT INTO Track VALUES('North America', 'United States', 0, 22);
 INSERT INTO Track VALUES('Asia', 'Qatar', 0, 23);
 INSERT INTO Track VALUES('Asia', 'Abu Dhabi', 0, 24);
 
-SELECT * FROM Track;
-
 INSERT INTO Points VALUES(16, 3, 1);
 INSERT INTO Points VALUES(15, 1, 1); 
 INSERT INTO Points VALUES(13, 4, 1); 
@@ -123,13 +111,3 @@ INSERT INTO Points VALUES(44, 1, 4);
 INSERT INTO Points VALUES(36, 2, 4);
 INSERT INTO Points VALUES(28, 3, 4);
 INSERT INTO Points VALUES(32, 4, 4);
-
-SELECT * FROM Points;
-SELECT * FROM Session;
-
-SELECT Season.Year, GrandPrix.Name, Session.Name, Participant.Name, Participant.Surname, Points.Number FROM Participant
-INNER JOIN Points ON Participant.Id = Points.ParticipantId
-INNER JOIN Session ON Points.SessionId = Session.Id
-INNER JOIN GrandPrix ON Session.GrandPrixId = GrandPrix.Id
-INNER JOIN Season ON GrandPrix.SeasonId = Season.Id
-WHERE Season.Year=2024;

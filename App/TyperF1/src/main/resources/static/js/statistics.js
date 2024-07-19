@@ -7,7 +7,7 @@ function getScores(year) {
     const statistics = document.createElement("statistics");
     statistics.id = "statistics";
     document.getElementById("statistics-container").appendChild(statistics);
-    
+
     try {
         fetch(`/get-season-scores?year=${year}`)
             .then(response => {
