@@ -21,7 +21,7 @@ public class WorldRecordController {
         return "world-records";
     }
 
-    @GetMapping("/get-highest")
+    @GetMapping("/get-records")
     public @ResponseBody Map<String, Record> getRecords(){
         return worldRecordService.getRecords();
     }

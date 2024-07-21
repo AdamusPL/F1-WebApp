@@ -2,7 +2,7 @@ window.addEventListener('load', getWorldRecords);
 
 function getWorldRecords() {
     debugger;
-    fetch('/get-highest')
+    fetch('/get-records')
         .then(response => {
             debugger;
             if (!response.ok) {
