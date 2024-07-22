@@ -1,6 +1,7 @@
 package com.typerf1.typerf1.service;
 
 import com.typerf1.typerf1.dto.Record;
+import com.typerf1.typerf1.dto.RecordLong;
 import com.typerf1.typerf1.repository.WorldRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -37,6 +38,10 @@ public class WorldRecordService {
         putRecordJoker(recordList, false, "Race", "lowest-race-joker");
         putRecordJoker(recordList, false, "Qualifying", "lowest-qualifying-joker");
 
+        //weekend with joker
+        putRecordWeekendJoker(recordList, true, "highest-non-sprint-weekend-joker");
+        putRecordWeekendJoker(recordList, false, "lowest-non-sprint-weekend-joker");
+
         return recordList;
     }
 
@@ -65,6 +70,23 @@ public class WorldRecordService {
         }
         if(!toFind.isEmpty()){
             recordList.put(key, toFind.get(0));
+        }
+    }
+
+    void putRecordWeekendJoker(Map<String, Record> recordList, boolean highest, String key){
+        Pageable pageable = PageRequest.of(0,1);
+        List<RecordLong> toFind;
+
+        if(highest) {
+            toFind = worldRecordRepository.findHighestWeekendJoker(pageable);
+        }
+        else{
+            toFind = worldRecordRepository.findLowestWeekendJoker(pageable);
+        }
+        if(!toFind.isEmpty()){
+            RecordLong recordLong = toFind.get(0);
+            Record record = new Record(recordLong.getParticipantName(), recordLong.getParticipantSurname(), recordLong.getGrandPrixName(), recordLong.getYear(), Math.toIntExact(recordLong.getPoints()));
+            recordList.put(key, record);
         }
     }
 
