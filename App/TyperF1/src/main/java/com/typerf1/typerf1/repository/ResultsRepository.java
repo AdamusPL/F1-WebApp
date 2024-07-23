@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface SeasonRepository extends JpaRepository<Points, Integer> {
+public interface ResultsRepository extends JpaRepository<Points, Integer> {
 
     @Query("SELECT new com.typerf1.typerf1.dto.SeasonScore(s.id, p.name, p.surname, SUM(pt.number)) " +
             "FROM Points pt " +

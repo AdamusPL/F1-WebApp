@@ -66,6 +66,7 @@ function getScores(year) {
                     }
                     document.getElementById(grandPrix + " " + session).appendChild(li);
                 });
+                document.getElementById("season-year").innerText = year;
             })
     } catch (e) {
 

@@ -25,4 +25,7 @@ public class GrandPrix {
     @OneToMany(mappedBy = "grandPrix")
     private List<Session> session;
 
+    @OneToOne(mappedBy = "grandPrix")
+    Joker joker;
+
 }
