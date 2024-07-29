@@ -18,10 +18,10 @@ public class RecordLong {
     String participantName;
     String participantSurname;
     String grandPrixName;
-    int year;
-    Long points;
+    Integer year;
+    Integer points;
 
-    public RecordLong(String participantName, String participantSurname, String grandPrixName, int year, Long points) {
+    public RecordLong(String participantName, String participantSurname, String grandPrixName, Integer year, Integer points) {
         this.year = year;
         this.grandPrixName = grandPrixName;
         this.participantName = participantName;
