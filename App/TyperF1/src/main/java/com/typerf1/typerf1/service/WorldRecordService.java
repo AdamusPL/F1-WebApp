@@ -37,9 +37,13 @@ public class WorldRecordService {
         putRecordJoker(recordList, false, "Race", "lowest-race-joker");
         putRecordJoker(recordList, false, "Qualifying", "lowest-qualifying-joker");
 
-        //weekend with joker
+        //weekend without joker
         putRecordWeekend(recordList, true, "highest-weekend");
         putRecordWeekend(recordList, false, "lowest-weekend");
+
+        //weekend with joker
+        putRecordSprintWeekendJoker(recordList, true, "highest-sprint-weekend-joker");
+        putRecordSprintWeekendJoker(recordList, false, "lowest-sprint-weekend-joker");
 
         return recordList;
     }
@@ -78,6 +82,27 @@ public class WorldRecordService {
             results = worldRecordRepository.findHighestWeekend(pageable);
         } else {
             results = worldRecordRepository.findLowestWeekend(pageable);
+        }
+        if (!results.isEmpty()) {
+            Object[] result = results.get(0);
+            String name = (String) result[0];
+            String surname = (String) result[1];
+            String grandPrixName = (String) result[2];
+            Integer year = (Integer) result[3];
+            Integer pointsSum = ((Number) result[4]).intValue();
+            Record record = new Record(name, surname, grandPrixName, year, pointsSum);
+            recordList.put(key, record);
+        }
+    }
+
+    void putRecordSprintWeekendJoker(Map<String, Record> recordList, boolean highest, String key) {
+        Pageable pageable = PageRequest.of(0, 1);
+        List<Object[]> results;
+
+        if (highest) {
+            results = worldRecordRepository.findHighestSprintWeekendJoker(pageable);
+        } else {
+            results = worldRecordRepository.findLowestSprintWeekendJoker(pageable);
         }
         if (!results.isEmpty()) {
             Object[] result = results.get(0);

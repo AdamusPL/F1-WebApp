@@ -1,7 +1,6 @@
 package com.typerf1.typerf1.repository;
 
 import com.typerf1.typerf1.dto.Record;
-import com.typerf1.typerf1.dto.RecordLong;
 import com.typerf1.typerf1.model.Points;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -162,33 +161,37 @@ public interface WorldRecordRepository extends JpaRepository<Points, Integer> {
     List<Object[]> findLowestWeekend(Pageable pageable);
 
     @Query(
-            value = "SELECT p.name AS name, p.surname AS surname, gp.name AS grandPrixName, se.year AS seasonYear, SUM(po.number) AS pointsSum " +
+            value = "SELECT p.Name, p.Surname, gp.Name AS GrandPrixName, s.Year, SUM(pt.Number) AS PointsSum " +
                     "FROM Participant p " +
-                    "INNER JOIN Points po ON p.id = po.participantId " +
-                    "INNER JOIN Session ss ON po.sessionId = ss.id " +
-                    "INNER JOIN GrandPrix gp ON ss.grandPrixId = gp.id " +
-                    "INNER JOIN Season se ON gp.seasonId = se.id " +
-                    "INNER JOIN Joker j ON p.id = j.participantId " +
-                    "WHERE gp.id != ( " +
-                    "    SELECT j2.grandPrixId FROM Joker j2 " +
-                    "    INNER JOIN GrandPrix gp2 ON gp2.id = j2.grandPrixId " +
+                    "INNER JOIN Points pt ON p.Id = pt.ParticipantId " +
+                    "INNER JOIN Session ses ON pt.SessionId = ses.Id " +
+                    "INNER JOIN GrandPrix gp ON ses.GrandPrixId = gp.Id " +
+                    "INNER JOIN Season s ON gp.SeasonId = s.Id " +
+                    "INNER JOIN Joker j ON p.Id = j.ParticipantId " +
+                    "WHERE gp.Id = ( " +
+                    "    SELECT jgp.Id FROM Joker j " +
+                    "    INNER JOIN GrandPrix jgp ON jgp.Id = j.GrandPrixId " +
                     ") " +
-                    "GROUP BY gp.name, p.name, p.surname, se.year " +
-                    "HAVING SUM(po.number) = ( " +
-                    "    SELECT MAX(subQuery.pointsSum) FROM ( " +
-                    "        SELECT gp3.id AS grandPrixId, p3.id AS participantId, SUM(po3.number) AS pointsSum " +
+                    "GROUP BY gp.Name, p.Name, p.Surname, s.Year " +
+                    "HAVING SUM(pt.Number) = ( " +
+                    "    SELECT MAX(PointsSum) FROM ( " +
+                    "        SELECT jgp.Id, p3.Id AS ParticipantId, SUM(pt3.Number) AS PointsSum " +
                     "        FROM Participant p3 " +
-                    "        INNER JOIN Points po3 ON p3.id = po3.participantId " +
-                    "        INNER JOIN Session ss3 ON po3.sessionId = ss3.id " +
-                    "        INNER JOIN GrandPrix gp3 ON ss3.grandPrixId = gp3.id " +
-                    "        INNER JOIN Season se3 ON gp3.seasonId = se3.id " +
-                    "        INNER JOIN Joker j3 ON p3.id = j3.participantId " +
-                    "        GROUP BY gp3.id, p3.id " +
-                    "    ) AS subQuery " +
+                    "        INNER JOIN Points pt3 ON p3.Id = pt3.ParticipantId " +
+                    "        INNER JOIN Session ses3 ON pt3.SessionId = ses3.Id " +
+                    "        INNER JOIN GrandPrix jgp ON ses3.GrandPrixId = jgp.Id " +
+                    "        INNER JOIN Season s3 ON jgp.SeasonId = s3.Id " +
+                    "        INNER JOIN Joker j3 ON p3.Id = j3.ParticipantId " +
+                    "        WHERE jgp.Id = ( " +
+                    "            SELECT jgp2.Id FROM Joker j2 " +
+                    "            INNER JOIN GrandPrix jgp2 ON jgp2.Id = j2.GrandPrixId " +
+                    "        ) " +
+                    "        GROUP BY jgp.Id, p3.Id " +
+                    "    ) AS SubQuery " +
                     ")",
             nativeQuery = true
     )
-    List<Object[]> findHighestWeekendJoker(Pageable pageable);
+    List<Object[]> findHighestSprintWeekendJoker(Pageable pageable);
 
     @Query(
             value = "SELECT p.Name, p.Surname, gp.Name AS GrandPrixName, s.Year, SUM(pt.Number) AS PointsSum " +
@@ -197,44 +200,35 @@ public interface WorldRecordRepository extends JpaRepository<Points, Integer> {
                     "INNER JOIN Session ses ON pt.SessionId = ses.Id " +
                     "INNER JOIN GrandPrix gp ON ses.GrandPrixId = gp.Id " +
                     "INNER JOIN Season s ON gp.SeasonId = s.Id " +
-                    "LEFT JOIN Joker j ON p.Id = j.ParticipantId AND j.GrandPrixId = gp.Id " +
-                    "WHERE ses.Name != 'Sprint' " +
-                    "AND gp.Id IN ( " +
-                    "    SELECT DISTINCT gp2.Id " +
-                    "    FROM GrandPrix gp2 " +
-                    "    INNER JOIN Session ses2 ON gp2.Id = ses2.GrandPrixId " +
-                    "    INNER JOIN Joker j2 ON gp2.Id = j2.GrandPrixId " +
-                    "    WHERE ses2.Name = 'Sprint' " +
+                    "INNER JOIN Joker j ON p.Id = j.ParticipantId " +
+                    "WHERE gp.Id = ( " +
+                    "    SELECT jgp.Id FROM Joker j " +
+                    "    INNER JOIN GrandPrix jgp ON jgp.Id = j.GrandPrixId " +
                     ") " +
-                    "GROUP BY p.Name, p.Surname, gp.Name, s.Year " +
+                    "GROUP BY gp.Name, p.Name, p.Surname, s.Year " +
                     "HAVING SUM(pt.Number) = ( " +
-                    "    SELECT MIN(PointsSum) " +
-                    "    FROM ( " +
-                    "        SELECT gp3.Id, p3.Id AS ParticipantId, SUM(pt3.Number) AS PointsSum " +
+                    "    SELECT MIN(PointsSum) FROM ( " +
+                    "        SELECT jgp.Id, p3.Id AS ParticipantId, SUM(pt3.Number) AS PointsSum " +
                     "        FROM Participant p3 " +
                     "        INNER JOIN Points pt3 ON p3.Id = pt3.ParticipantId " +
                     "        INNER JOIN Session ses3 ON pt3.SessionId = ses3.Id " +
-                    "        INNER JOIN GrandPrix gp3 ON ses3.GrandPrixId = gp3.Id " +
-                    "        INNER JOIN Season s3 ON gp3.SeasonId = s3.Id " +
-                    "        LEFT JOIN Joker j3 ON p3.Id = j3.ParticipantId AND j3.GrandPrixId = gp3.Id " +
-                    "        WHERE ses3.Name != 'Sprint' " +
-                    "        AND gp3.Id NOT IN ( " +
-                    "            SELECT DISTINCT gp4.Id " +
-                    "            FROM GrandPrix gp4 " +
-                    "            INNER JOIN Session ses4 ON gp4.Id = ses4.GrandPrixId " +
-                    "            INNER JOIN Joker j4 ON gp4.Id = j4.GrandPrixId " +
-                    "            WHERE ses4.Name = 'Sprint' " +
+                    "        INNER JOIN GrandPrix jgp ON ses3.GrandPrixId = jgp.Id " +
+                    "        INNER JOIN Season s3 ON jgp.SeasonId = s3.Id " +
+                    "        INNER JOIN Joker j3 ON p3.Id = j3.ParticipantId " +
+                    "        WHERE jgp.Id = ( " +
+                    "            SELECT jgp2.Id FROM Joker j2 " +
+                    "            INNER JOIN GrandPrix jgp2 ON jgp2.Id = j2.GrandPrixId " +
                     "        ) " +
-                    "        GROUP BY gp3.Id, p3.Id " +
+                    "        GROUP BY jgp.Id, p3.Id " +
                     "    ) AS SubQuery " +
                     ")",
             nativeQuery = true
     )
-    List<Object[]> findLowestWeekendJoker(Pageable pageable);
+    List<Object[]> findLowestSprintWeekendJoker(Pageable pageable);
 
 
-//    List<Object[]> findHighestSprintWeekendJoker(Pageable pageable);
+//    List<Object[]> findHighestWeekendJoker(Pageable pageable);
 //
 //
-//    List<Object[]> findLowestSprintWeekendJoker(Pageable pageable);
+//    List<Object[]> findLowestWeekendJoker(Pageable pageable);
 }
