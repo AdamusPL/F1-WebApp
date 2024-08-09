@@ -83,3 +83,17 @@ svg{
     margin-top: 30px;
     margin-right: 20px;
 }
+
+#logout{
+    margin-top: 20px;
+}
+
+#logout:active{
+    background-color: white;
+    color: black;
+    border-color: black;
+}
+
+#login{
+    margin-top: 20px;
+}

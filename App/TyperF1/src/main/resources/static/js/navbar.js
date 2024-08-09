@@ -45,23 +45,25 @@ function createLogOutButton() {
     const aButton = document.createElement("a");
     aButton.setAttribute("onclick", "logout()");
     aButton.classList.add("btn", "btn-outline-primary", "me-2");
-    aButton.style.marginTop = '20px';
+    aButton.id = "logout";
     aButton.innerText = "Log-out";
     div.appendChild(aButton);
     navbarHeader.appendChild(div);
 }
 
 function createLoginAndRegisterButton() {
-    const navbarHeader = document.getElementById("navbar-header");
+    const navbarHeader = document.getElementById("navbar-container");
     const div = document.createElement("div");
     div.classList.add("col-md-3", "text-end");
     const a = document.createElement("a");
     a.setAttribute('href', 'sign-in');
     a.classList.add("btn", "btn-outline-primary", "me-2");
+    a.id = "login";
     a.innerText = "Login";
     div.appendChild(a);
     const button = document.createElement("button");
     button.classList.add("btn", "btn-primary");
+    button.id = "login";
     button.type = "button";
     button.innerText = "Sign-up";
     div.appendChild(button);
