@@ -1,7 +1,6 @@
 package com.typerf1.typerf1.service;
 
 import com.typerf1.typerf1.dto.Record;
-import com.typerf1.typerf1.dto.RecordLong;
 import com.typerf1.typerf1.repository.WorldRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -17,11 +16,11 @@ public class WorldRecordService {
     private final WorldRecordRepository worldRecordRepository;
 
     @Autowired
-    public WorldRecordService(WorldRecordRepository worldRecordRepository){
+    public WorldRecordService(WorldRecordRepository worldRecordRepository) {
         this.worldRecordRepository = worldRecordRepository;
     }
 
-    public Map<String, Record> getRecords(){
+    public Map<String, Record> getRecords() {
         Map<String, Record> recordList = new HashMap<>();
 
         //without joker
@@ -38,56 +37,84 @@ public class WorldRecordService {
         putRecordJoker(recordList, false, "Race", "lowest-race-joker");
         putRecordJoker(recordList, false, "Qualifying", "lowest-qualifying-joker");
 
+        //weekend without joker
+        putRecordWeekend(recordList, true, "highest-weekend");
+        putRecordWeekend(recordList, false, "lowest-weekend");
+
         //weekend with joker
-        putRecordWeekendJoker(recordList, true, "highest-non-sprint-weekend-joker");
-        putRecordWeekendJoker(recordList, false, "lowest-non-sprint-weekend-joker");
+        putRecordSprintWeekendJoker(recordList, true, "highest-sprint-weekend-joker");
+        putRecordSprintWeekendJoker(recordList, false, "lowest-sprint-weekend-joker");
+
+        //sprint weekend without joker
 
         return recordList;
     }
 
-    void putRecord(Map<String, Record> recordList, boolean highest, String find, String key){
-        Pageable pageable = PageRequest.of(0,1);
+    void putRecord(Map<String, Record> recordList, boolean highest, String find, String key) {
+        Pageable pageable = PageRequest.of(0, 1);
         List<Record> toFind;
-        if(highest) {
+        if (highest) {
             toFind = worldRecordRepository.findHighest(find, pageable);
-        }
-        else{
+        } else {
             toFind = worldRecordRepository.findLowest(find, pageable);
         }
-        if(!toFind.isEmpty()){
+        if (!toFind.isEmpty()) {
             recordList.put(key, toFind.get(0));
         }
     }
 
-    void putRecordJoker(Map<String, Record> recordList, boolean highest, String find, String key){
-        Pageable pageable = PageRequest.of(0,1);
+    void putRecordJoker(Map<String, Record> recordList, boolean highest, String find, String key) {
+        Pageable pageable = PageRequest.of(0, 1);
         List<Record> toFind;
-        if(highest) {
+        if (highest) {
             toFind = worldRecordRepository.findHighestJoker(find, pageable);
-        }
-        else{
+        } else {
             toFind = worldRecordRepository.findLowestJoker(find, pageable);
         }
-        if(!toFind.isEmpty()){
+        if (!toFind.isEmpty()) {
             recordList.put(key, toFind.get(0));
         }
     }
 
-    void putRecordWeekendJoker(Map<String, Record> recordList, boolean highest, String key){
-        Pageable pageable = PageRequest.of(0,1);
-        List<RecordLong> toFind;
+    void putRecordWeekend(Map<String, Record> recordList, boolean highest, String key) {
+        Pageable pageable = PageRequest.of(0, 1);
+        List<Object[]> results;
 
-        if(highest) {
-            toFind = worldRecordRepository.findHighestWeekendJoker(pageable);
+        if (highest) {
+            results = worldRecordRepository.findHighestWeekend(pageable);
+        } else {
+            results = worldRecordRepository.findLowestWeekend(pageable);
         }
-        else{
-            toFind = worldRecordRepository.findLowestWeekendJoker(pageable);
-        }
-        if(!toFind.isEmpty()){
-            RecordLong recordLong = toFind.get(0);
-            Record record = new Record(recordLong.getParticipantName(), recordLong.getParticipantSurname(), recordLong.getGrandPrixName(), recordLong.getYear(), Math.toIntExact(recordLong.getPoints()));
+        if (!results.isEmpty()) {
+            Object[] result = results.get(0);
+            String name = (String) result[0];
+            String surname = (String) result[1];
+            String grandPrixName = (String) result[2];
+            Integer year = (Integer) result[3];
+            Integer pointsSum = ((Number) result[4]).intValue();
+            Record record = new Record(name, surname, grandPrixName, year, pointsSum);
             recordList.put(key, record);
         }
     }
 
+    void putRecordSprintWeekendJoker(Map<String, Record> recordList, boolean highest, String key) {
+        Pageable pageable = PageRequest.of(0, 1);
+        List<Object[]> results;
+
+        if (highest) {
+            results = worldRecordRepository.findHighestSprintWeekendJoker(pageable);
+        } else {
+            results = worldRecordRepository.findLowestSprintWeekendJoker(pageable);
+        }
+        if (!results.isEmpty()) {
+            Object[] result = results.get(0);
+            String name = (String) result[0];
+            String surname = (String) result[1];
+            String grandPrixName = (String) result[2];
+            Integer year = (Integer) result[3];
+            Integer pointsSum = ((Number) result[4]).intValue();
+            Record record = new Record(name, surname, grandPrixName, year, pointsSum);
+            recordList.put(key, record);
+        }
+    }
 }

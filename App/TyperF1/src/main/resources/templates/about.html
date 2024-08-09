@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<html xmlns:th="http://www.thymeleaf.org">
 
 <!-- Header -->
 <head>
@@ -12,23 +11,17 @@
 </head>
 
 <header>
-    <div class="container">
-        <header id="navbar-header"
-                class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-            <div class="col-md-3 mb-2 mb-md-0">
-                <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none">
-                    <svg class="bi" width="75" height="75" role="img">
-                        <image xlink:href="http://localhost:8080/images/logo.png" width="75" height="75" alt="logo"/>
-                    </svg>
-                </a>
-            </div>
-
-            <ul id="navbar-elements" class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-                <li><a class="nav-link px-2" href="/">Home</a></li>
-                <li><a class="nav-link px-2" href="rules">Rules</a></li>
-                <li><a class="nav-link px-2 link-secondary" href="about">About</a></li>
-            </ul>
-        </header>
+    <div id="navbar-container">
+        <a href="/">
+            <svg width="75" height="75" role="img">
+                <image xlink:href="http://localhost:8080/images/logo.png" width="75" height="75" alt="logo"/>
+            </svg>
+        </a>
+        <ul id="navbar-elements">
+            <li><a class="nav-link" href="/">Home</a></li>
+            <li><a class="nav-link" href="rules">Rules</a></li>
+            <li><a class="nav-link" href="about">About</a></li>
+        </ul>
     </div>
 </header>
 

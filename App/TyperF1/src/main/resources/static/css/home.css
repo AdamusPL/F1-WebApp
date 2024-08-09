@@ -64,6 +64,36 @@ h4{
 }
 
 svg{
-   display: block;
+    display: block;
     margin: auto;
+}
+
+#navbar-container{
+    display: flex;
+    justify-content: center;
+    border-bottom: 1px solid #A9A9A9;
+}
+
+#navbar-elements{
+    display: flex;
+    list-style: none;
+}
+
+.nav-link{
+    margin-top: 30px;
+    margin-right: 20px;
+}
+
+#logout{
+    margin-top: 20px;
+}
+
+#logout:active{
+    background-color: white;
+    color: black;
+    border-color: black;
+}
+
+#login{
+    margin-top: 20px;
 }

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -9,27 +8,21 @@
     <link rel="stylesheet" href="css/results.css">
     <script src="js/world-records.js"></script>
     <script src="js/navbar.js"></script>
-    <title>Season 2024</title>
+    <title>World Records</title>
 </head>
 
 <header>
-    <div class="container">
-        <header id="navbar-header"
-                class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-            <div class="col-md-3 mb-2 mb-md-0">
-                <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none">
-                    <svg class="bi" width="75" height="75" role="img">
-                        <image xlink:href="http://localhost:8080/images/logo.png" width="75" height="75" alt="logo"/>
-                    </svg>
-                </a>
-            </div>
-
-            <ul id="navbar-elements" class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-                <li><a class="nav-link px-2" href="/">Home</a></li>
-                <li><a class="nav-link px-2" href="rules">Rules</a></li>
-                <li><a class="nav-link px-2" href="about">About</a></li>
-            </ul>
-        </header>
+    <div id="navbar-container">
+        <a href="/">
+            <svg width="75" height="75" role="img">
+                <image xlink:href="http://localhost:8080/images/logo.png" width="75" height="75" alt="logo"/>
+            </svg>
+        </a>
+        <ul id="navbar-elements">
+            <li><a class="nav-link" href="/">Home</a></li>
+            <li><a class="nav-link" href="rules">Rules</a></li>
+            <li><a class="nav-link" href="about">About</a></li>
+        </ul>
     </div>
 </header>
 
@@ -46,6 +39,8 @@
             <li>The highest number of points gained with bet on Race: <a id="highest-race"></a></li>
             <li>The highest number of points gained with bet on Qualifying: <a id="highest-qualifying"></a></li>
             <li>The highest number of points gained with bet on Sprint: <a id="highest-sprint"></a></li>
+            <li>The highest number of points gained with bet in non-Sprint weekend: <a id="highest-weekend"></a></li>
+            <li>The highest number of points gained with bet in Sprint weekend: <a id="highest-sprint-weekend"></a></li>
         </ul>
 
         <h3>Worst</h3>
@@ -53,6 +48,8 @@
             <li>The lowest number of points gained with bet on Race: <a id="lowest-race"></a></li>
             <li>The lowest number of points gained with bet on Qualifying: <a id="lowest-qualifying"></a></li>
             <li>The lowest number of points gained with bet on Sprint: <a id="lowest-sprint"></a></li>
+            <li>The lowest number of points gained with bet in non-Sprint weekend: <a id="lowest-weekend"></a></li>
+            <li>The lowest number of points gained with bet in Sprint weekend: <a id="lowest-sprint-weekend"></a></li>
         </ul>
 
         <h2>Using Joker</h2>
