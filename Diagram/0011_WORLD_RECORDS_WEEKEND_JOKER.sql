@@ -1,7 +1,7 @@
 USE TyperF1;
 GO
 
---max points Sprint with joker
+--max points Sprint weekend with joker
 SELECT p.Name, p.Surname, gp.Name AS GrandPrixName, s.Year, SUM(pt.Number) AS PointsSum
 FROM Participant p
 INNER JOIN Points pt ON p.Id = pt.ParticipantId
@@ -40,7 +40,7 @@ HAVING SUM(pt.Number) = (
     ) AS SubQuery
 );
 
---min points Sprint with joker
+--min points Sprint weekend with joker
 SELECT p.Name, p.Surname, gp.Name AS GrandPrixName, s.Year, SUM(pt.Number) AS PointsSum
 FROM Participant p
 INNER JOIN Points pt ON p.Id = pt.ParticipantId

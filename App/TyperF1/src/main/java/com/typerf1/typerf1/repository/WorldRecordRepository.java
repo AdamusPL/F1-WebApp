@@ -227,6 +227,12 @@ public interface WorldRecordRepository extends JpaRepository<Points, Integer> {
     List<Object[]> findLowestSprintWeekendJoker(Pageable pageable);
 
 
+//    List<Object[]> findHighestSprintWeekend(Pageable pageable);
+//
+//
+//    List<Object[]> findLowestSprintWeekend(Pageable pageable);
+
+
 //    List<Object[]> findHighestWeekendJoker(Pageable pageable);
 //
 //

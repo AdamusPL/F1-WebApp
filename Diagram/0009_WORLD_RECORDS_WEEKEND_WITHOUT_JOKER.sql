@@ -1,7 +1,7 @@
 USE TyperF1;
 GO
 
---max points non-Sprint without joker
+--max points non-Sprint weekend without joker
 SELECT p.Name, p.Surname, gp.Name AS GrandPrixName, s.Year, SUM(pt.Number) AS PointsSum
 FROM Participant p
 INNER JOIN Points pt ON p.Id = pt.ParticipantId
@@ -41,7 +41,7 @@ HAVING SUM(pt.Number) = (
 );
 
 
---min points non-Sprint without joker
+--min points non-Sprint weekend without joker
 SELECT p.Name, p.Surname, gp.Name AS GrandPrixName, s.Year, SUM(pt.Number) AS PointsSum
 FROM Participant p
 INNER JOIN Points pt ON p.Id = pt.ParticipantId

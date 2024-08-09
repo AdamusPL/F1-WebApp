@@ -45,6 +45,8 @@ public class WorldRecordService {
         putRecordSprintWeekendJoker(recordList, true, "highest-sprint-weekend-joker");
         putRecordSprintWeekendJoker(recordList, false, "lowest-sprint-weekend-joker");
 
+        //sprint weekend without joker
+
         return recordList;
     }
 
