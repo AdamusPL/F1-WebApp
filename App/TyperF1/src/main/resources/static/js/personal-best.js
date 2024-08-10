@@ -41,6 +41,7 @@ function getRecords(firstName, surname) {
                         highest.innerText = record.points + " (" + record.grandPrixName + " " + record.year + ")";
                     }
                 }
+                document.getElementById("participant-choice").innerText = firstName + ' ' + surname;
             })
     } catch (e) {
 
