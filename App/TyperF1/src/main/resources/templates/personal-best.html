@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="css/home.css">
     <link rel="stylesheet" href="css/results.css">
+    <script src="js/personal-best.js"></script>
     <script src="js/navbar.js"></script>
-    <script src="js/results.js"></script>
-    <title>Results</title>
+    <title>Personal Best</title>
 </head>
 
 <header>
@@ -27,15 +28,19 @@
 </header>
 
 <body>
-<h1>Results</h1>
+<h1>Personal Best</h1>
 <div class="body-container">
     <div class="dropdown">
-        <a href="#" id="season-year" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown"
+        <a href="#" id="season-year" class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
+           data-bs-toggle="dropdown"
            aria-expanded="false">
-            Choose season
+            Choose participant
         </a>
         <ul class="dropdown-menu text-small">
-            <li class="dropdown-item" th:each="season : ${seasons}" th:text="${season.year}" th:onclick="'getScores(' + ${season.year} + ')'"></li>
+            <li class="dropdown-item" th:each="participant : ${participants}" th:text="|${participant.name} ${participant.surname}|"
+                th:data-parameter1="${participant.name}" th:data-parameter2="${participant.surname}"
+                th:onclick="getRecords(this.getAttribute('data-parameter1'), this.getAttribute('data-parameter2'))">
+            </li>
         </ul>
     </div>
 </div>

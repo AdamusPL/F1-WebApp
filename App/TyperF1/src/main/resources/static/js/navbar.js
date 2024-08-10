@@ -30,7 +30,6 @@ function createTag(navbarElements, id, name) {
 
 function checkSubpage() {
     const links = document.getElementsByClassName('nav-link');
-    debugger;
     for (let i = 0; i < links.length; i++) {
         if (links[i].href === window.location.href) {
             links[i].classList.add("link-secondary");
