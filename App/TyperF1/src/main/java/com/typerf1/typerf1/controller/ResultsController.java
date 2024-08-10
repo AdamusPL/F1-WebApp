@@ -3,6 +3,7 @@ package com.typerf1.typerf1.controller;
 import com.typerf1.typerf1.dto.SeasonScoreWithJokers;
 import com.typerf1.typerf1.service.ResultsService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -12,13 +13,8 @@ import java.util.List;
 public class ResultsController {
     public final ResultsService resultsService;
 
-    public ResultsController(ResultsService resultsService){
+    public ResultsController(ResultsService resultsService) {
         this.resultsService = resultsService;
-    }
-
-    @GetMapping("/results")
-    public String results() {
-        return "results";
     }
 
     @GetMapping("/get-participant-standings")

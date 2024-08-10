@@ -16,6 +16,10 @@ Functionalities:
 
 ![image](https://github.com/user-attachments/assets/0e4213ff-f72b-4a9c-b5a6-8cbe313d0ae5)
 
+- Printing Personal Best Records - minimum/maximum points ever gained in specific session;
+
+![image](https://github.com/user-attachments/assets/27f651a1-7576-4306-9948-18533d628f60)
+
 # Stack
 - Java Spring
 - HTML/CSS/JS

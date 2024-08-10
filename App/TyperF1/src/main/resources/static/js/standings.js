@@ -10,7 +10,6 @@ function getParticipantStandings(){
                 return response.json();
             })
             .then(data => {
-                debugger;
                 const standings = document.getElementById("standings");
                 data.forEach(item => {
                     const li = document.createElement("li");

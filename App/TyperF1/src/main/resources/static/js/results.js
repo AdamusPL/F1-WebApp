@@ -1,5 +1,4 @@
 function getScores(year) {
-    debugger;
     const div = document.getElementById("statistics");
     if(div !== null){
         div.remove()
@@ -17,7 +16,6 @@ function getScores(year) {
                 return response.json();
             })
             .then(data => {
-                debugger;
                 const statistics = document.getElementById("statistics");
                 var grandPrix = "";
                 var session = "";
