@@ -1,5 +1,6 @@
 package com.typerf1.typerf1.service;
 
+import com.typerf1.typerf1.dto.FullName;
 import com.typerf1.typerf1.model.ParticipantLoginData;
 import com.typerf1.typerf1.repository.ParticipantLoginDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,11 @@ public class ParticipantLoginDataService {
         }
 
         return false;
+    }
+
+    public String getFullName(String username){
+        FullName fullNameObject = participantLoginDataRepository.getFullName(username).get(0);
+        return fullNameObject.getFirstName() + ' ' + fullNameObject.getSurname();
     }
 
 }
