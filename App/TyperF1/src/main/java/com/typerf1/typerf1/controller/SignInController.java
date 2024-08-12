@@ -23,13 +23,7 @@ public class SignInController {
 
     @PostMapping("/check-data")
     public ResponseEntity<String> login(@RequestBody ParticipantLoginData participantLoginData) {
-        boolean login = participantLoginDataService.isLoginAndPasswordCorrect(participantLoginData);
-
-        if (login) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return participantLoginDataService.isLoginAndPasswordCorrect(participantLoginData);
     }
 
     @GetMapping("/get-full-name")

@@ -62,11 +62,12 @@ function createLoginAndRegisterButton() {
     a.id = "login";
     a.innerText = "Login";
     div.appendChild(a);
-    const button = document.createElement("button");
+    const button = document.createElement("a");
     button.classList.add("btn", "btn-primary");
     button.id = "login";
     button.type = "button";
     button.innerText = "Sign-up";
+    button.setAttribute('href', 'register');
     div.appendChild(button);
     navbarHeader.appendChild(div);
 }
