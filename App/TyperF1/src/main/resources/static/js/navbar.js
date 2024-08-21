@@ -8,7 +8,7 @@ function printNavbar() {
         createTag(navbarElements, 'world-records', 'WorldRecords')
         createTag(navbarElements, 'personal-best', "Personal Best")
         createTag(navbarElements, 'participants', "Participants")
-        createTag(navbarElements, 'bet', "Bet")
+        createTag(navbarElements, 'predict', "Predict")
 
         createLogOutButton();
         printParticipant(JSON.parse(localStorage.getItem('user')).username);
