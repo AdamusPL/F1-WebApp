@@ -1,28 +1,23 @@
 package com.typerf1.typerf1.dto;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 public class RegisterData {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     String firstName;
     String surname;
     String username;
     String email;
     String password;
     String description;
+    MultipartFile profilePicture;
 
     public RegisterData(String firstName, String surname, String username, String email){
         this.firstName = firstName;

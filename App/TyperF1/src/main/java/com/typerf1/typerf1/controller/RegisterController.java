@@ -5,8 +5,11 @@ import com.typerf1.typerf1.service.RegisterService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import java.io.IOException;
 
 @Controller
 public class RegisterController {
@@ -23,7 +26,7 @@ public class RegisterController {
     }
 
     @PostMapping("/register-user")
-    public ResponseEntity<String> registerUser(@RequestBody RegisterData registerData) {
+    public ResponseEntity<String> registerUser(@ModelAttribute RegisterData registerData) throws IOException {
         return registerService.checkExistence(registerData);
     }
 }

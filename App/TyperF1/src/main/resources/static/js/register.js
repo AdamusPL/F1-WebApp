@@ -9,28 +9,25 @@ function submitForm(e) {
         const confirmPassword = document.getElementById('floatingConfirmPassword').value;
         const email = document.getElementById('floatingEmail').value;
         const description = document.getElementById('floatingDescription').value;
-        const profilePicture = document.getElementById('floatingImage').value;
+        const profilePicture = document.getElementById('floatingImage').files[0];
 
         if(password !== confirmPassword){
             document.getElementById("error").innerText = "Error: Passwords don't match"
             return;
         }
 
-        const formData = {
-            firstName: firstName,
-            surname: surname,
-            username: username,
-            password: password,
-            email: email,
-            description: description
-        }
+        const formData = new FormData();
+        formData.append('firstName', firstName);
+        formData.append('surname', surname);
+        formData.append('username', username);
+        formData.append('email', email);
+        formData.append('password', password);
+        formData.append('description', description);
+        formData.append('profilePicture', profilePicture);
 
         fetch('/register-user', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData)
+            body: formData
         }).then(response => {
             if (response.ok) {
                 document.getElementById("error").innerText = "Successfully registered a new user"

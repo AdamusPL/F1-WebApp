@@ -69,6 +69,7 @@ CREATE TABLE Participant(
 	Name VARCHAR(255) NOT NULL,
 	Surname VARCHAR(255) NOT NULL,
 	Description VARCHAR(255),
+	ProfilePicture VARCHAR(255),
 	UserId INT NOT NULL,
 	EmailId INT NOT NULL,
 	PRIMARY KEY(Id),

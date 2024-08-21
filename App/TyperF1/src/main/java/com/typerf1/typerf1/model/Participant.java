@@ -21,10 +21,13 @@ public class Participant {
     String surname;
     String description;
 
-    public Participant(String name, String surname, String description){
+    String profilePicture;
+
+    public Participant(String name, String surname, String description, String profilePicture){
         this.name = name;
         this.surname = surname;
         this.description = description;
+        this.profilePicture = profilePicture;
     }
 
     @OneToMany(mappedBy = "participant")
@@ -34,11 +37,11 @@ public class Participant {
     private List<Joker> jokers;
 
     @OneToOne
-    @JoinColumn(name = "UserId")
+    @JoinColumn(name = "UserId", referencedColumnName = "Id")
     ParticipantLoginData participantLoginData;
 
     @OneToOne
-    @JoinColumn(name = "EmailId")
+    @JoinColumn(name = "EmailId", referencedColumnName = "Id")
     Email email;
 
 }
