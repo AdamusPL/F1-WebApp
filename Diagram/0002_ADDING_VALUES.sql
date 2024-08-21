@@ -42,10 +42,10 @@ INSERT INTO ParticipantLoginData VALUES('jimianowski123', 'sledz123');
 INSERT INTO ParticipantLoginData VALUES('aczekalski123', 'sledz123');
 INSERT INTO ParticipantLoginData VALUES('purbaniak123', 'sledz123');
 
-INSERT INTO Participant VALUES('Andrzej', 'Borowczyk', 'The most famous Polish F1 commentator. He is distinguished by the fact that he places stress on every syllable while talking.', 1, 1);
-INSERT INTO Participant VALUES('Mikolaj', 'Sokol', 'Sports commentator. "All-F1-Knower".', 2, 2);
-INSERT INTO Participant VALUES('Maciej', 'Jermakow', 'Journalist who specialises in automotive.', 3, 3);
-INSERT INTO Participant VALUES('Cezary', 'Gutowski', 'Formula 1 specialist. He thinks about it 24/7. He has a nose with finding talents. He published texts about Robert Kubica while he was an unknown driver.', 4 , 4);
+INSERT INTO Participant VALUES('Andrzej', 'Borowczyk', 'The most famous Polish F1 commentator. He is distinguished by the fact that he places stress on every syllable while talking.', 'image', 1, 1);
+INSERT INTO Participant VALUES('Mikolaj', 'Sokol', 'Sports commentator. "All-F1-Knower".', 'image', 2, 2);
+INSERT INTO Participant VALUES('Maciej', 'Jermakow', 'Journalist who specialises in automotive.', 'image', 3, 3);
+INSERT INTO Participant VALUES('Cezary', 'Gutowski', 'Formula 1 specialist. He thinks about it 24/7. He has a nose with finding talents. He published texts about Robert Kubica while he was an unknown driver.', 'image', 4 , 4);
 
 DECLARE @counter INT;
 SET @counter = 1;

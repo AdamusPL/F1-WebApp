@@ -14,20 +14,17 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class ParticipantLoginData {
+public class Email {
     @jakarta.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
-    String username;
-    String password;
+    String email;
 
-    public ParticipantLoginData(String username, String password){
-        this.username = username;
-        this.password = password;
+    public Email(String email){
+        this.email = email;
     }
 
-    @OneToOne(mappedBy = "participantLoginData")
+    @OneToOne(mappedBy = "email")
     private Participant participant;
 
 }
-

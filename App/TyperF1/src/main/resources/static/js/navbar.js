@@ -11,6 +11,8 @@ function printNavbar() {
         createTag(navbarElements, 'bet', "Bet")
 
         createLogOutButton();
+        printParticipant(JSON.parse(localStorage.getItem('user')).username);
+
     } else {
         createLoginAndRegisterButton();
     }
@@ -60,11 +62,12 @@ function createLoginAndRegisterButton() {
     a.id = "login";
     a.innerText = "Login";
     div.appendChild(a);
-    const button = document.createElement("button");
+    const button = document.createElement("a");
     button.classList.add("btn", "btn-primary");
     button.id = "login";
     button.type = "button";
     button.innerText = "Sign-up";
+    button.setAttribute('href', 'register');
     div.appendChild(button);
     navbarHeader.appendChild(div);
 }
@@ -72,4 +75,21 @@ function createLoginAndRegisterButton() {
 function logout() {
     localStorage.removeItem('user');
     window.location.href = '/';
+}
+
+function printParticipant(username) {
+    debugger;
+    fetch(`/get-full-name?username=${username}`)
+        .then(response => {
+            debugger;
+            if (!response.ok) {
+                throw new Error('Error');
+            }
+            return response.text();
+        })
+        .then(data => {
+            debugger;
+            document.getElementById("welcome").innerText = "Welcome, " + data + ", in the place for the real Formula 1 lovers!";
+        })
+
 }

@@ -37,7 +37,7 @@
                 <div class="col">
                     <div class="card shadow-sm">
                         <img class="card-img-top"
-                             th:src="@{'/images/' + ${participant.name + participant.surname + '.jpg'}}">
+                             th:src="*{'data:image/base64'+${participant.profilePicture}}">
                         <div class="card-body">
                             <p class="card-text" span th:text="${participant.description}"></p>
                             <div class="d-flex justify-content-between align-items-center">
