@@ -15,12 +15,14 @@ import java.util.List;
 @Entity
 public class Participant {
     @jakarta.persistence.Id
+    @Column(name = "Id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
     String name;
     String surname;
     String description;
 
+    @Column(columnDefinition = "MEDIUMBLOB")
     String profilePicture;
 
     public Participant(String name, String surname, String description, String profilePicture){
@@ -36,11 +38,11 @@ public class Participant {
     @OneToMany(mappedBy = "participant")
     private List<Joker> jokers;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "UserId", referencedColumnName = "Id")
     ParticipantLoginData participantLoginData;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "EmailId", referencedColumnName = "Id")
     Email email;
 
