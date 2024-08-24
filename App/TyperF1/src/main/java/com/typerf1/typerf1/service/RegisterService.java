@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -51,26 +52,18 @@ public class RegisterService {
             }
         }
 
+        String fileName = StringUtils.cleanPath(registerData.getProfilePicture().getOriginalFilename());
+        Participant participant = new Participant(registerData.getFirstName(), registerData.getSurname(), registerData.getDescription(), Base64.getEncoder().encodeToString(registerData.getProfilePicture().getBytes()));
+
         //if there's no conflict
         ParticipantLoginData participantLoginData = new ParticipantLoginData(registerData.getUsername(), registerData.getPassword());
-
-
         Email email = new Email(registerData.getEmail());
-
-        String fileName = StringUtils.cleanPath(registerData.getProfilePicture().getOriginalFilename());
-        Participant participant = new Participant(registerData.getFirstName(), registerData.getSurname(), registerData.getDescription(), fileName);
-        participant.setParticipantLoginData(participantLoginData);
-        participant.setEmail(email);
 
         participantLoginData.setParticipant(participant);
         email.setParticipant(participant);
-
-        participantLoginDataRepository.save(participantLoginData);
-        emailRepository.save(email);
+        participant.setParticipantLoginData(participantLoginData);
+        participant.setEmail(email);
         participantRepository.save(participant);
-
-        String upload = "images/" + participant.getName() + participant.getSurname();
-        FileUploadUtil.saveFile(upload, fileName, registerData.getProfilePicture());
 
         return ResponseEntity.ok().build();
 

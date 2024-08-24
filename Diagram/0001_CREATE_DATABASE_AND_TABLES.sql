@@ -69,11 +69,11 @@ CREATE TABLE Participant(
 	Name VARCHAR(255) NOT NULL,
 	Surname VARCHAR(255) NOT NULL,
 	Description VARCHAR(255),
-	ProfilePicture VARCHAR(255),
+	ProfilePicture NVARCHAR(MAX),
 	UserId INT NOT NULL,
 	EmailId INT NOT NULL,
 	PRIMARY KEY(Id),
-	FOREIGN KEY(UserId) REFERENCES Email(Id),
+	FOREIGN KEY(UserId) REFERENCES ParticipantLoginData(Id),
 	FOREIGN KEY(EmailId) REFERENCES Email(Id)
 );
 
