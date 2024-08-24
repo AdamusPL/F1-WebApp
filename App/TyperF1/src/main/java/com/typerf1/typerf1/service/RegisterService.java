@@ -65,9 +65,6 @@ public class RegisterService {
         participant.setEmail(email);
         participantRepository.save(participant);
 
-        String upload = "images/" + participant.getName() + participant.getSurname();
-        FileUploadUtil.saveFile(upload, fileName, registerData.getProfilePicture());
-
         return ResponseEntity.ok().build();
 
     }
