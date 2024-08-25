@@ -18,6 +18,11 @@ public class GrandPrix {
     Integer id;
     String name;
 
+    public GrandPrix(Integer id, String name){
+        this.id = id;
+        this.name = name;
+    }
+
     @ManyToOne
     @JoinColumn(name = "SeasonId")
     Season season;

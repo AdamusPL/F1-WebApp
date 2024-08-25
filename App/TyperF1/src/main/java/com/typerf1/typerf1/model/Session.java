@@ -19,6 +19,11 @@ public class Session {
     Integer id;
     String name;
 
+    public Session(Integer id, String name){
+        this.id = id;
+        this.name = name;
+    }
+
     @ManyToOne
     @JoinColumn(name = "GrandPrixId")
     GrandPrix grandPrix;

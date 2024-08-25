@@ -1,0 +1,9 @@
+.dropdown{
+    display: flex;
+    justify-content: center;
+}
+
+.prediction{
+    display: flex;
+    justify-content: center;
+}
