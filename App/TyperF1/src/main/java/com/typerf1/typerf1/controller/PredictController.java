@@ -5,6 +5,7 @@ import com.typerf1.typerf1.service.PredictService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -29,5 +30,10 @@ public class PredictController {
     @GetMapping("/get-sessions")
     public @ResponseBody List<Session> getSessions(@RequestParam int grandPrixId){
         return predictService.getSessionsOfGrandPrix(grandPrixId);
+    }
+
+    @PostMapping("/post-predictions")
+    public @ResponseBody void postPredictions(){
+        predictService.postPredictions();
     }
 }

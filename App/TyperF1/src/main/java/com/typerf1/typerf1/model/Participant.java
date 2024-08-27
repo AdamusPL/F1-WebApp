@@ -38,6 +38,9 @@ public class Participant {
     @OneToMany(mappedBy = "participant")
     private List<Joker> jokers;
 
+//    @OneToMany
+//    Predictions predictions;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "UserId", referencedColumnName = "Id")
     ParticipantLoginData participantLoginData;

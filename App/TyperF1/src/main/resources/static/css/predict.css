@@ -7,3 +7,12 @@
     display: flex;
     justify-content: center;
 }
+
+.form-control{
+    width: 300px;
+}
+
+#button-div{
+    display: flex;
+    justify-content: center;
+}
