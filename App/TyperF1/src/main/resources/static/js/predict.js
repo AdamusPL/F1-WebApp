@@ -89,7 +89,7 @@ function printTextFieldForStandings(sessionName) {
         const input = document.createElement("input");
         input.type = "text";
         input.classList.add("form-control");
-        input.id = "prediction-" + i + 1;
+        input.id = "prediction-" + (i + 1).toString();
         divPrediction.appendChild(label);
         divPrediction.appendChild(input);
         div.appendChild(divPrediction);
@@ -119,16 +119,16 @@ function postPredictions() {
     for (var i = 1; i <= 20; i++) {
         const id = "prediction-" + i;
         const prediction = document.getElementById(id);
-        predictions.append("driver1", prediction);
+        predictions.append("driver" + i, prediction.value);
     }
 
-    fetch(`/post-predictions`).then(response => {
+    fetch(`/post-predictions?`, {
+        method: 'POST',
+        body: predictions
+    }).then(response => {
         if (!response.ok) {
             throw new Error('Error');
         }
         return response.json();
-    })
-        .then(data => {
-
-        })
+    });
 }

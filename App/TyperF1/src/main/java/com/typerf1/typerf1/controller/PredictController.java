@@ -1,13 +1,12 @@
 package com.typerf1.typerf1.controller;
 
+import com.typerf1.typerf1.model.Predictions;
 import com.typerf1.typerf1.model.Session;
 import com.typerf1.typerf1.service.PredictService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -33,7 +32,7 @@ public class PredictController {
     }
 
     @PostMapping("/post-predictions")
-    public @ResponseBody void postPredictions(){
-        predictService.postPredictions();
+    public ResponseEntity<String> postPredictions(@ModelAttribute Predictions predictions){
+        return predictService.postPredictions();
     }
 }

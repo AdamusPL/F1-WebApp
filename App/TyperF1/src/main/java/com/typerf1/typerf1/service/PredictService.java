@@ -7,6 +7,7 @@ import com.typerf1.typerf1.repository.GrandPrixRepository;
 import com.typerf1.typerf1.repository.PredictionsRepository;
 import com.typerf1.typerf1.repository.SessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,8 +34,9 @@ public class PredictService {
         return sessionRepository.getSessionsFromThatGrandPrix(grandPrixId);
     }
 
-    public void postPredictions(){
+    public ResponseEntity<String> postPredictions(){
         Predictions predictions = new Predictions();
         predictionsRepository.save(predictions);
+        return ResponseEntity.ok().build();
     }
 }
