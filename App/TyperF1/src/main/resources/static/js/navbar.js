@@ -78,17 +78,14 @@ function logout() {
 }
 
 function printParticipant(username) {
-    debugger;
     fetch(`/get-full-name?username=${username}`)
         .then(response => {
-            debugger;
             if (!response.ok) {
                 throw new Error('Error');
             }
             return response.text();
         })
         .then(data => {
-            debugger;
             document.getElementById("welcome").innerText = "Welcome, " + data + ", in the place for the real Formula 1 lovers!";
         })
 

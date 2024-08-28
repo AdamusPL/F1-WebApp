@@ -7,6 +7,7 @@ DROP TABLE Points;
 DROP TABLE Joker;
 DROP TABLE Email;
 DROP TABLE Track;
+DROP TABLE Predictions;
 DROP TABLE Participant;
 DROP TABLE Session;
 DROP TABLE GrandPrix;

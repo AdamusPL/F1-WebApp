@@ -32,7 +32,9 @@ public class PredictController {
     }
 
     @PostMapping("/post-predictions")
-    public ResponseEntity<String> postPredictions(@ModelAttribute Predictions predictions){
-        return predictService.postPredictions();
+    public ResponseEntity<String> postPredictions(@RequestParam int grandPrixId, @RequestParam int sessionId,
+                                                  @RequestParam String username,
+                                                  @ModelAttribute Predictions predictions){
+        return predictService.postPredictions(grandPrixId, sessionId, username, predictions);
     }
 }

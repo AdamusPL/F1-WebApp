@@ -16,7 +16,6 @@ function getSessions(grandPrixId, grandPrixName) {
             return response.json();
         })
             .then(data => {
-                debugger;
                 document.getElementById("participant-choice").innerText = grandPrixName;
                 const div = document.getElementById("body-container");
                 const dropdown = document.createElement("div");
@@ -36,11 +35,11 @@ function getSessions(grandPrixId, grandPrixName) {
                     li.innerText = item.name;
                     if (item.name === "Sprint" || item.name === "Qualifying") {
                         li.addEventListener("click", function () {
-                            printTextFieldForSprintOrQualifying(item.name);
+                            printTextFieldForSprintOrQualifying(item.name, item.id, grandPrixId);
                         }, false);
                     } else {
                         li.addEventListener("click", function () {
-                            printTextFieldForRace(item.name);
+                            printTextFieldForRace(item.name, item.id, grandPrixId);
                         }, false);
                     }
                     ul.appendChild(li);
@@ -58,7 +57,7 @@ function printTextFieldForSprintOrQualifying(sessionName) {
     createPredictButton();
 }
 
-function printTextFieldForRace(sessionName) {
+function printTextFieldForRace(sessionName, sessionId, grandPrixId) {
     printTextFieldForStandings(sessionName);
     const divPredictions = document.getElementById("predictions");
     const divPrediction = document.createElement("div");
@@ -71,7 +70,7 @@ function printTextFieldForRace(sessionName) {
     divPrediction.appendChild(label);
     divPrediction.appendChild(input);
     divPredictions.appendChild(divPrediction);
-    createPredictButton();
+    createPredictButton(sessionId, grandPrixId);
 }
 
 function printTextFieldForStandings(sessionName) {
@@ -98,7 +97,7 @@ function printTextFieldForStandings(sessionName) {
     divContainer.appendChild(div);
 }
 
-function createPredictButton() {
+function createPredictButton(sessionId, grandPrixId) {
     const divContainer = document.getElementById("predictions");
     const div = document.createElement("div");
     div.id = "button-div";
@@ -108,13 +107,13 @@ function createPredictButton() {
     button.type = "button";
     button.innerText = "Post predictions";
     button.addEventListener("click", function () {
-        postPredictions();
+        postPredictions(grandPrixId, sessionId);
     }, false);
     div.appendChild(button);
     divContainer.appendChild(div);
 }
 
-function postPredictions() {
+function postPredictions(grandPrixId, sessionId) {
     const predictions = new FormData();
     for (var i = 1; i <= 20; i++) {
         const id = "prediction-" + i;
@@ -122,7 +121,10 @@ function postPredictions() {
         predictions.append("driver" + i, prediction.value);
     }
 
-    fetch(`/post-predictions?`, {
+    const username = JSON.parse(localStorage.getItem('user')).username;
+
+    debugger;
+    fetch(`/post-predictions?grandPrixId=${grandPrixId}&sessionId=${sessionId}&username=${username}`, {
         method: 'POST',
         body: predictions
     }).then(response => {

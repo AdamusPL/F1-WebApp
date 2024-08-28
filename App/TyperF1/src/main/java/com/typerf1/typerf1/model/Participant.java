@@ -25,6 +25,14 @@ public class Participant {
     @Column(columnDefinition = "MEDIUMBLOB")
     String profilePicture;
 
+    public Participant(Integer id, String name, String surname, String description, String profilePicture){
+        this.id = id;
+        this.name = name;
+        this.surname = surname;
+        this.description = description;
+        this.profilePicture = profilePicture;
+    }
+
     public Participant(String name, String surname, String description, String profilePicture){
         this.name = name;
         this.surname = surname;
@@ -38,8 +46,8 @@ public class Participant {
     @OneToMany(mappedBy = "participant")
     private List<Joker> jokers;
 
-//    @OneToMany
-//    Predictions predictions;
+    @OneToMany(mappedBy = "participant")
+    private List<Predictions> predictions;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "UserId", referencedColumnName = "Id")

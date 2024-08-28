@@ -28,4 +28,7 @@ public class Points {
     @ManyToOne
     @JoinColumn(name = "ParticipantId")
     Participant participant;
+
+    @OneToOne(mappedBy = "points")
+    private Predictions predictions;
 }

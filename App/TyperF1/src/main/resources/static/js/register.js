@@ -1,7 +1,6 @@
 function submitForm(e) {
     e.preventDefault();
     try {
-        debugger;
         const firstName = document.getElementById('floatingInputFirstName').value;
         const surname = document.getElementById('floatingInputSurname').value;
         const username = document.getElementById('floatingInput').value;

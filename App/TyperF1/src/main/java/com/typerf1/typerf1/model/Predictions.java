@@ -37,18 +37,22 @@ public class Predictions {
     String driver18;
     String driver19;
     String driver20;
+    String fastestLap;
 
-//    @ManyToOne
-//    private GrandPrix grandPrix;
-//
-//    @ManyToOne
-//    private Session session;
-//
-//    @ManyToOne
-//    private Participant participant;
+    @ManyToOne
+    @JoinColumn(name = "GrandPrixId")
+    private GrandPrix grandPrix;
 
-//    @OneToOne(mappedBy = "predictions")
-//    private Points points;
+    @ManyToOne
+    @JoinColumn(name = "SessionId")
+    private Session session;
 
+    @ManyToOne
+    @JoinColumn(name = "ParticipantId")
+    private Participant participant;
+
+    @OneToOne
+    @JoinColumn(name = "PointsId")
+    Points points;
 
 }

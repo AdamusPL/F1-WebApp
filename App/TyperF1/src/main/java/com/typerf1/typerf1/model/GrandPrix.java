@@ -33,4 +33,7 @@ public class GrandPrix {
     @OneToOne(mappedBy = "grandPrix")
     Joker joker;
 
+    @OneToMany(mappedBy = "grandPrix")
+    private List<Predictions> predictions;
+
 }
