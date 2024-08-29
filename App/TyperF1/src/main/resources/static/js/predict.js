@@ -157,6 +157,7 @@ async function checkIfSessionWasAlreadyPredicted(sessionId, grandPrixId, isRace)
     const username = JSON.parse(localStorage.getItem('user')).username;
 
     try {
+        //check if participant has already predicted
         const response = await fetch(`/check-predictions-existence?grandPrixId=${grandPrixId}&sessionId=${sessionId}&username=${username}`);
 
         if (response.status === 200) {
@@ -173,6 +174,7 @@ async function checkIfSessionWasAlreadyPredicted(sessionId, grandPrixId, isRace)
                 div.appendChild(label);
                 predictions.appendChild(div);
             }
+
             if(isRace){
                 const div = document.createElement("div");
                 const label = document.createElement("label");
@@ -182,6 +184,45 @@ async function checkIfSessionWasAlreadyPredicted(sessionId, grandPrixId, isRace)
                 predictions.appendChild(div);
             }
             bodyContainer.appendChild(predictions);
+
+            //here calculate points from predictions
+            if(!isRace) {
+                fetch(`/calculate-points-qualifying?grandPrixId=${grandPrixId}&sessionId=${sessionId}&username=${username}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Error');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const div = document.createElement("div");
+                        const label = document.createElement("label");
+                        label.innerText = "Points gained by participant: " + data;
+                        const predictions = document.getElementById("predictions");
+                        div.classList.add("prediction");
+                        div.appendChild(label);
+                        predictions.appendChild(div);
+                    });
+            }
+            else{
+                fetch(`/calculate-points-race?grandPrixId=${grandPrixId}&sessionId=${sessionId}&username=${username}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Error');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const div = document.createElement("div");
+                        const label = document.createElement("label");
+                        label.innerText = "Points gained by participant: " + data;
+                        const predictions = document.getElementById("predictions");
+                        div.classList.add("prediction");
+                        div.appendChild(label);
+                        predictions.appendChild(div);
+                    });
+            }
+
             return true;
         } else if (response.status === 204) {
             return false;

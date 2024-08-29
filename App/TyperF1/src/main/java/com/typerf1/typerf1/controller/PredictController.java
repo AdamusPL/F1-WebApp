@@ -43,4 +43,18 @@ public class PredictController {
                                                             @RequestParam String username){
         return predictService.checkPredictionsExistence(grandPrixId, sessionId, username);
     }
+
+    @GetMapping("/calculate-points-qualifying")
+    public ResponseEntity<Double> calculatePointsQualifying(@RequestParam int grandPrixId, @RequestParam int sessionId,
+                                              @RequestParam String username) throws NoSuchFieldException, IllegalAccessException {
+        int year = 2024;
+        return ResponseEntity.ok(predictService.F1APIQualifyingParser(grandPrixId, sessionId, username, year));
+    }
+
+    @GetMapping("/calculate-points-race")
+    public ResponseEntity<Double> calculatePointsRace(@RequestParam int grandPrixId, @RequestParam int sessionId,
+                                        @RequestParam String username) throws NoSuchFieldException, IllegalAccessException {
+        int year = 2024;
+        return ResponseEntity.ok(predictService.F1APIRaceParser(grandPrixId, sessionId, username, year));
+    }
 }
