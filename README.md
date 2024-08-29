@@ -1,5 +1,5 @@
 # F1-WebApp
-WebApp which aims to make ability to see the statistics from predicting driver standings from Formula 1 session (Sprint/Qualifying/Race)
+WebApp which aims to make ability to make predictions of driver standings from Formula 1 session (Sprint/Qualifying/Race) and see statistics from it
 
 # Functionalities
 After registration/signing-in:
