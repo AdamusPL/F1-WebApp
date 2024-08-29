@@ -31,6 +31,16 @@
 </div>
 <div id="statistics-container">
     <h1>Participant standings</h1>
+    <div class="dropdown">
+        <a href="#" id="season-year" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown"
+           aria-expanded="false">
+            Choose season
+        </a>
+        <ul class="dropdown-menu text-small">
+            <li class="dropdown-item" th:each="season : ${seasons}" th:text="${season.year}"
+                th:onclick="'getParticipantStandings(' + ${season.year} + ')'"></li>
+        </ul>
+    </div>
     <div id="statistics">
         <ol id="standings"></ol>
     </div>

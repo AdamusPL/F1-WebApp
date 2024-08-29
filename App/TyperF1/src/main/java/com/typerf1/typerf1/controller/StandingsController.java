@@ -19,11 +19,6 @@ public class StandingsController {
         this.standingsRepository = standingsRepository;
     }
 
-    @GetMapping("/standings")
-    public String standings() {
-        return "standings";
-    }
-
     @GetMapping("/get-season-scores")
     public @ResponseBody List<ScoreWithJokers> scores(@RequestParam Integer year){
         return standingsRepository.getScores(year);

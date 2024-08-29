@@ -19,4 +19,10 @@ public class SeasonController {
         model.addAttribute("seasons", seasonService.getSeasons());
         return "results";
     }
+
+    @GetMapping("/standings")
+    public String standings(Model model) {
+        model.addAttribute("seasons", seasonService.getSeasons());
+        return "standings";
+    }
 }
