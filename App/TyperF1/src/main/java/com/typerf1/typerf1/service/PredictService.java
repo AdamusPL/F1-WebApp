@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.lang.reflect.Field;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -107,7 +108,11 @@ public class PredictService {
             LinkedHashMap<?, ?> resultDriver = (LinkedHashMap<?, ?>) resultMap.get("Driver");
 
             String resultFamilyName = (String) resultDriver.get("FamilyName");
-            driverStandings.add(resultFamilyName);
+            //to match letters like é or ü in Pérez or Hülkenberg with participant predictions
+            String normalized = Normalizer.normalize(resultFamilyName, Normalizer.Form.NFD);
+            String result = normalized.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+
+            driverStandings.add(result);
         }
 
         List<String> participantPredictions = new ArrayList<>();
@@ -143,7 +148,7 @@ public class PredictService {
         boolean joker = false;
         Predictions predictions = getParticipantPredictions(grandPrixId, sessionId, username);
 
-        //page with api with F1 race results
+        //page with api with F1 race results (standings)
         String url = "https://ergast.com/api/f1/" + year + "/" + grandPrixId + "/results";
         RestTemplate restTemplate = new RestTemplate();
         List<String> driverStandings = new ArrayList<>();
@@ -169,7 +174,11 @@ public class PredictService {
             LinkedHashMap<?, ?> resultDriver = (LinkedHashMap<?, ?>) resultMap.get("Driver");
 
             String resultFamilyName = (String) resultDriver.get("FamilyName");
-            driverStandings.add(resultFamilyName);
+            //to match letters like é or ü in Pérez or Hülkenberg with participant predictions
+            String normalized = Normalizer.normalize(resultFamilyName, Normalizer.Form.NFD);
+            String result = normalized.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+
+            driverStandings.add(result);
         }
 
         List<String> participantPredictions = new ArrayList<>();
@@ -198,6 +207,30 @@ public class PredictService {
 
         PointsCalculator pointsCalculator = new PointsCalculator(driverStandings, participantPredictions, joker);
 
-        return pointsCalculator.countPointsFromRace(predictions.getFastestLap());
+        //page with the fastest laps in race
+        String urlFastestLap = "http://ergast.com/api/f1/" + year + "/" + grandPrixId + "/fastest/" + 1 + "/results";
+        RestTemplate restTemplateFastestLap = new RestTemplate();
+
+        Object[] fastestLaps = restTemplate.getForObject(url, Object[].class);
+
+        // Step 1: Access the first element of the array, cast it to LinkedHashMap
+        LinkedHashMap<?, ?> rootMapFL = (LinkedHashMap<?, ?>) results[1];
+
+        // Step 2: Access the "Race" LinkedHashMap
+        LinkedHashMap<?, ?> raceMapFL = (LinkedHashMap<?, ?>) rootMapFL.get("Race");
+
+        // Step 3: Access the "ResultsList" LinkedHashMap
+        LinkedHashMap<?, ?> resultsListMapFL = (LinkedHashMap<?, ?>) raceMapFL.get("ResultsList");
+
+        // Step 4: Access the "Result" LinkedHashMap
+        ArrayList<?> resultsArrayFL = (ArrayList<?>) resultsListMapFL.get("Result");
+
+        LinkedHashMap<?, ?> resultMap = (LinkedHashMap<?, ?>) resultsArrayFL.get(0);
+
+        LinkedHashMap<?, ?> resultDriver = (LinkedHashMap<?, ?>) resultMap.get("Driver");
+
+        String actualFastestLap = (String) resultDriver.get("FamilyName");
+
+        return pointsCalculator.countPointsFromRace(predictions.getFastestLap(), actualFastestLap);
     }
 }

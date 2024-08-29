@@ -17,8 +17,13 @@ public class PointsCalculator {
         this.joker = joker;
     }
 
-    public double countPointsFromRace(String fastestLap) {
+    public double countPointsFromRace(String fastestLap, String actualFastestLap) {
         points += getPoints();
+
+        //if fastest lap was guessed
+        if(fastestLap.equals(actualFastestLap)){
+            points += 1;
+        }
 
         points *= 2; //because it's race
 
@@ -70,7 +75,6 @@ public class PointsCalculator {
     private double getPoints() {
         int actualIndex = 0;
         for (String actualDriver : driverStandings) {
-            double participantPoints = 0; //for each prediction separately
             int predictionsIndex = 0;
             for (String participantPrediction : participantPredictions) {
                 if (participantPrediction.equals(actualDriver)) {
@@ -78,27 +82,22 @@ public class PointsCalculator {
                         switch (predictionsIndex + 1) {
                             case 1:
                                 points += 3;
-                                participantPoints += 3;
                                 break;
                             case 2:
                                 points += 2;
-                                participantPoints += 2;
                                 break;
                             case 3:
                                 points += 1;
-                                participantPoints += 1;
                                 break;
                         }
                         points += 2;
-                        participantPoints += 2;
                     } else if (predictionsIndex == actualIndex - 1 || predictionsIndex == actualIndex + 1) {
                         points += 1;
-                        participantPoints += 1;
                     }
                 }
                 predictionsIndex++;
-//                System.out.println(predictionsIndex + ". " + participantPrediction + " " + participantPoints);
             }
+            System.out.println(points);
             actualIndex++;
         }
         return points;
