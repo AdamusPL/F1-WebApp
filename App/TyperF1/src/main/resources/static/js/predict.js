@@ -35,11 +35,11 @@ function getSessions(grandPrixId, grandPrixName) {
                     li.innerText = item.name;
                     if (item.name === "Sprint" || item.name === "Qualifying") {
                         li.addEventListener("click", function () {
-                            printTextFieldForSprintOrQualifying(item.name, item.id, grandPrixId);
+                            printPredictionsQualifyingAndSprint(item.name, item.id, grandPrixId);
                         }, false);
                     } else {
                         li.addEventListener("click", function () {
-                            printTextFieldForRace(item.name, item.id, grandPrixId);
+                            printPredictionsRace(item.name, item.id, grandPrixId);
                         }, false);
                     }
                     ul.appendChild(li);
@@ -52,12 +52,28 @@ function getSessions(grandPrixId, grandPrixName) {
     }
 }
 
-function printTextFieldForSprintOrQualifying(sessionName) {
+async function printPredictionsQualifyingAndSprint(sessionName, sessionId, grandPrixId) {
+    if (document.getElementById("predictions") !== null) {
+        document.getElementById("predictions").remove();
+    }
+    const wasPredicted = await checkIfSessionWasAlreadyPredicted(sessionId, grandPrixId);
+    if (wasPredicted) {
+        document.getElementById("participant-choice-weekend").innerText = sessionName;
+        return;
+    }
     printTextFieldForStandings(sessionName);
-    createPredictButton();
+    createPredictButton(sessionId, grandPrixId);
 }
 
-function printTextFieldForRace(sessionName, sessionId, grandPrixId) {
+async function printPredictionsRace(sessionName, sessionId, grandPrixId) {
+    if (document.getElementById("predictions") !== null) {
+        document.getElementById("predictions").remove();
+    }
+    const wasPredicted = await checkIfSessionWasAlreadyPredicted(sessionId, grandPrixId);
+    if (wasPredicted) {
+        document.getElementById("participant-choice-weekend").innerText = sessionName;
+        return;
+    }
     printTextFieldForStandings(sessionName);
     const divPredictions = document.getElementById("predictions");
     const divPrediction = document.createElement("div");
@@ -74,9 +90,6 @@ function printTextFieldForRace(sessionName, sessionId, grandPrixId) {
 }
 
 function printTextFieldForStandings(sessionName) {
-    if (document.getElementById("predictions") !== null) {
-        document.getElementById("predictions").remove();
-    }
     document.getElementById("participant-choice-weekend").innerText = sessionName;
     const div = document.createElement("div");
     div.id = "predictions";
@@ -123,7 +136,6 @@ function postPredictions(grandPrixId, sessionId) {
 
     const username = JSON.parse(localStorage.getItem('user')).username;
 
-    debugger;
     fetch(`/post-predictions?grandPrixId=${grandPrixId}&sessionId=${sessionId}&username=${username}`, {
         method: 'POST',
         body: predictions
@@ -133,4 +145,37 @@ function postPredictions(grandPrixId, sessionId) {
         }
         return response.json();
     });
+}
+
+async function checkIfSessionWasAlreadyPredicted(sessionId, grandPrixId) {
+    const username = JSON.parse(localStorage.getItem('user')).username;
+
+    try {
+        const response = await fetch(`/check-predictions-existence?grandPrixId=${grandPrixId}&sessionId=${sessionId}&username=${username}`);
+
+        if (response.status === 200) {
+            const data = await response.json();
+            const bodyContainer = document.getElementById("body-container");
+            const predictions = document.createElement("div");
+            predictions.id = "predictions";
+
+            for (let i = 1; i <= 20; i++) {
+                const div = document.createElement("div");
+                const label = document.createElement("label");
+                div.classList.add("prediction");
+                label.textContent = `${i}. ${data['driver' + i]}`;
+                div.appendChild(label);
+                predictions.appendChild(div);
+            }
+            bodyContainer.appendChild(predictions);
+            return true;
+        } else if (response.status === 204) {
+            return false;
+        } else {
+            throw new Error('Network response was not ok');
+        }
+    } catch (error) {
+        console.error('Error in checkIfSessionWasAlreadyPredicted:', error);
+        return false;
+    }
 }

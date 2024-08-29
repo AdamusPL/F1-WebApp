@@ -37,4 +37,10 @@ public class PredictController {
                                                   @ModelAttribute Predictions predictions){
         return predictService.postPredictions(grandPrixId, sessionId, username, predictions);
     }
+
+    @GetMapping("/check-predictions-existence")
+    public ResponseEntity<Predictions> checkPredictionsExistence(@RequestParam int grandPrixId, @RequestParam int sessionId,
+                                                            @RequestParam String username){
+        return predictService.checkPredictionsExistence(grandPrixId, sessionId, username);
+    }
 }

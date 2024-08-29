@@ -4,6 +4,7 @@ import com.typerf1.typerf1.model.*;
 import com.typerf1.typerf1.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -46,5 +47,19 @@ public class PredictService {
 
         predictionsRepository.save(predictions);
         return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<Predictions> checkPredictionsExistence(int grandPrixId, int sessionId, String username){
+        List<Predictions> predictionsList = predictionsRepository.checkPredictionExistence(grandPrixId, sessionId, username);
+        if(predictionsList.size() != 0){
+            Predictions predictions = predictionsList.get(0);
+            predictions.setParticipant(null);
+            predictions.setSession(null);
+            predictions.setGrandPrix(null);
+            return ResponseEntity.ok(predictions);
+        }
+        else{
+            return ResponseEntity.noContent().build();
+        }
     }
 }
