@@ -56,20 +56,20 @@ async function printPredictionsQualifyingAndSprint(sessionName, sessionId, grand
     if (document.getElementById("predictions") !== null) {
         document.getElementById("predictions").remove();
     }
-    const wasPredicted = await checkIfSessionWasAlreadyPredicted(sessionId, grandPrixId);
+    const wasPredicted = await checkIfSessionWasAlreadyPredicted(sessionId, grandPrixId, false);
     if (wasPredicted) {
         document.getElementById("participant-choice-weekend").innerText = sessionName;
         return;
     }
     printTextFieldForStandings(sessionName);
-    createPredictButton(sessionId, grandPrixId);
+    createPredictButton(sessionId, grandPrixId, false);
 }
 
 async function printPredictionsRace(sessionName, sessionId, grandPrixId) {
     if (document.getElementById("predictions") !== null) {
         document.getElementById("predictions").remove();
     }
-    const wasPredicted = await checkIfSessionWasAlreadyPredicted(sessionId, grandPrixId);
+    const wasPredicted = await checkIfSessionWasAlreadyPredicted(sessionId, grandPrixId, true);
     if (wasPredicted) {
         document.getElementById("participant-choice-weekend").innerText = sessionName;
         return;
@@ -82,11 +82,12 @@ async function printPredictionsRace(sessionName, sessionId, grandPrixId) {
     label.innerText = "Fastest lap: ";
     const input = document.createElement("input");
     input.type = "text";
+    input.id = "fastest-lap";
     input.classList.add("form-control");
     divPrediction.appendChild(label);
     divPrediction.appendChild(input);
     divPredictions.appendChild(divPrediction);
-    createPredictButton(sessionId, grandPrixId);
+    createPredictButton(sessionId, grandPrixId, true);
 }
 
 function printTextFieldForStandings(sessionName) {
@@ -110,7 +111,7 @@ function printTextFieldForStandings(sessionName) {
     divContainer.appendChild(div);
 }
 
-function createPredictButton(sessionId, grandPrixId) {
+function createPredictButton(sessionId, grandPrixId, isRace) {
     const divContainer = document.getElementById("predictions");
     const div = document.createElement("div");
     div.id = "button-div";
@@ -120,18 +121,23 @@ function createPredictButton(sessionId, grandPrixId) {
     button.type = "button";
     button.innerText = "Post predictions";
     button.addEventListener("click", function () {
-        postPredictions(grandPrixId, sessionId);
+        postPredictions(grandPrixId, sessionId, isRace);
     }, false);
     div.appendChild(button);
     divContainer.appendChild(div);
 }
 
-function postPredictions(grandPrixId, sessionId) {
+function postPredictions(grandPrixId, sessionId, isRace) {
     const predictions = new FormData();
     for (var i = 1; i <= 20; i++) {
         const id = "prediction-" + i;
         const prediction = document.getElementById(id);
         predictions.append("driver" + i, prediction.value);
+    }
+
+    if(isRace){
+        const fastestLap = document.getElementById("fastest-lap");
+        predictions.append("fastestLap", fastestLap.value);
     }
 
     const username = JSON.parse(localStorage.getItem('user')).username;
@@ -147,7 +153,7 @@ function postPredictions(grandPrixId, sessionId) {
     });
 }
 
-async function checkIfSessionWasAlreadyPredicted(sessionId, grandPrixId) {
+async function checkIfSessionWasAlreadyPredicted(sessionId, grandPrixId, isRace) {
     const username = JSON.parse(localStorage.getItem('user')).username;
 
     try {
@@ -164,6 +170,14 @@ async function checkIfSessionWasAlreadyPredicted(sessionId, grandPrixId) {
                 const label = document.createElement("label");
                 div.classList.add("prediction");
                 label.textContent = `${i}. ${data['driver' + i]}`;
+                div.appendChild(label);
+                predictions.appendChild(div);
+            }
+            if(isRace){
+                const div = document.createElement("div");
+                const label = document.createElement("label");
+                div.classList.add("prediction");
+                label.textContent = `Fastest lap: ${data['fastestLap']}`;
                 div.appendChild(label);
                 predictions.appendChild(div);
             }
