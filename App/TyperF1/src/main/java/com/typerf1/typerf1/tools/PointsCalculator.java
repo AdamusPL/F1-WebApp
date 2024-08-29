@@ -1,6 +1,5 @@
 package com.typerf1.typerf1.tools;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PointsCalculator {
