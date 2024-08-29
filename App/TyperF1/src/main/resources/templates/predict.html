@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="css/home.css">
     <link rel="stylesheet" href="css/results.css">
-    <script src="js/standings.js"></script>
+    <link rel="stylesheet" href="css/predict.css">
+    <script src="js/predict.js"></script>
     <script src="js/navbar.js"></script>
-    <title>Season 2024</title>
+    <title>Predict</title>
 </head>
 
 <header>
@@ -27,22 +29,21 @@
 </header>
 
 <body>
-<div class="body-container">
-</div>
-<div id="statistics-container">
-    <h1>Participant standings</h1>
+<h1>Give your predictions</h1>
+<div id="body-container">
     <div class="dropdown">
-        <a href="#" id="season-year" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown"
+        <a href="#" id="participant-choice" class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
+           data-bs-toggle="dropdown"
            aria-expanded="false">
-            Choose season
+            Choose race weekend
         </a>
         <ul class="dropdown-menu text-small">
-            <li class="dropdown-item" th:each="season : ${seasons}" th:text="${season.year}"
-                th:onclick="'getParticipantStandings(' + ${season.year} + ')'"></li>
+            <li class="dropdown-item" th:each="grandPrix : ${grandPrixWeekends}"
+                th:text="${grandPrix.name}"
+                th:data-parameter1="${grandPrix.id}" th:data-parameter2="${grandPrix.name}"
+                th:onclick="getSessions(this.getAttribute('data-parameter1'), this.getAttribute('data-parameter2'))">
+            </li>
         </ul>
-    </div>
-    <div id="statistics">
-        <ol id="standings"></ol>
     </div>
 </div>
 

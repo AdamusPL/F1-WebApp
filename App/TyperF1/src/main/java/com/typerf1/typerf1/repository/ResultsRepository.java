@@ -19,7 +19,7 @@ public interface ResultsRepository extends JpaRepository<Points, Integer> {
             "JOIN pt.session ses " +
             "JOIN ses.grandPrix gp " +
             "JOIN gp.season s " +
-            "WHERE s.year = 2024 " +
+            "WHERE s.year = :year " +
             "GROUP BY s.id, p.name, p.surname " +
             "ORDER BY s.id, SUM(pt.number) DESC")
     List<SeasonScore> getParticipantStandings(@Param("year") Integer year);

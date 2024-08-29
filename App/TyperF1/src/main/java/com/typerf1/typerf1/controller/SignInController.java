@@ -1,6 +1,5 @@
 package com.typerf1.typerf1.controller;
 
-import com.typerf1.typerf1.dto.FullName;
 import com.typerf1.typerf1.model.ParticipantLoginData;
 import com.typerf1.typerf1.service.ParticipantLoginDataService;
 import org.springframework.http.ResponseEntity;

@@ -18,6 +18,11 @@ public class GrandPrix {
     Integer id;
     String name;
 
+    public GrandPrix(Integer id, String name){
+        this.id = id;
+        this.name = name;
+    }
+
     @ManyToOne
     @JoinColumn(name = "SeasonId")
     Season season;
@@ -27,5 +32,8 @@ public class GrandPrix {
 
     @OneToOne(mappedBy = "grandPrix")
     Joker joker;
+
+    @OneToMany(mappedBy = "grandPrix")
+    private List<Predictions> predictions;
 
 }

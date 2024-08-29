@@ -4,11 +4,8 @@ import com.typerf1.typerf1.dto.RegisterData;
 import com.typerf1.typerf1.model.Email;
 import com.typerf1.typerf1.model.Participant;
 import com.typerf1.typerf1.model.ParticipantLoginData;
-import com.typerf1.typerf1.repository.EmailRepository;
-import com.typerf1.typerf1.repository.ParticipantLoginDataRepository;
 import com.typerf1.typerf1.repository.ParticipantRepository;
 import com.typerf1.typerf1.repository.RegisterRepository;
-import com.typerf1.typerf1.tools.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,15 +21,11 @@ public class RegisterService {
 
     private final RegisterRepository registerRepository;
     private final ParticipantRepository participantRepository;
-    private final ParticipantLoginDataRepository participantLoginDataRepository;
-    private final EmailRepository emailRepository;
 
     @Autowired
-    public RegisterService(RegisterRepository registerRepository, ParticipantRepository participantRepository, ParticipantLoginDataRepository participantLoginDataRepository, EmailRepository emailRepository) {
+    public RegisterService(RegisterRepository registerRepository, ParticipantRepository participantRepository) {
         this.registerRepository = registerRepository;
         this.participantRepository = participantRepository;
-        this.participantLoginDataRepository = participantLoginDataRepository;
-        this.emailRepository = emailRepository;
     }
 
 

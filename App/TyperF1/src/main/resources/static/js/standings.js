@@ -1,8 +1,11 @@
 window.addEventListener('load', getParticipantStandings);
 
-function getParticipantStandings(){
+function getParticipantStandings(year){
+    if(document.getElementById("standings") !== null){
+        document.getElementById("standings").remove();
+    }
     try {
-        fetch('/get-participant-standings')
+        fetch(`/get-participant-standings?year=${year}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Error');
@@ -10,7 +13,8 @@ function getParticipantStandings(){
                 return response.json();
             })
             .then(data => {
-                const standings = document.getElementById("standings");
+                const standings = document.createElement("ol");
+                standings.id = "standings";
                 data.forEach(item => {
                     const li = document.createElement("li");
                     li.innerText = item.participantName + " " + item.participantSurname + " " + item.pointsSum + " ";
@@ -19,6 +23,8 @@ function getParticipantStandings(){
                     }
                     standings.appendChild(li);
                 });
+                document.getElementById("statistics").appendChild(standings);
+                document.getElementById("season-year").innerText = year;
             })
     } catch (e) {
 
