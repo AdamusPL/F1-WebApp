@@ -22,17 +22,17 @@ function getRecords(firstName, surname) {
                 h3.innerText = "Best";
                 statistics.appendChild(h3);
 
-                createRecord("The highest number of points gained with bet on Race: ", "highest-race", statistics)
-                createRecord("The highest number of points gained with bet on Qualifying: ", "highest-qualifying", statistics)
-                createRecord("The highest number of points gained with bet on Sprint: ", "highest-sprint", statistics)
+                createRecord("The highest number of points gained with prediction on Race: ", "highest-race", statistics)
+                createRecord("The highest number of points gained with prediction on Qualifying: ", "highest-qualifying", statistics)
+                createRecord("The highest number of points gained with prediction on Sprint: ", "highest-sprint", statistics)
 
                 const h3Worst = document.createElement("h3");
                 h3Worst.innerText = "Worst";
                 statistics.appendChild(h3Worst);
 
-                createRecord("The lowest number of points gained with bet on Race: ", "lowest-race", statistics)
-                createRecord("The lowest number of points gained with bet on Qualifying: ", "lowest-qualifying", statistics)
-                createRecord("The lowest number of points gained with bet on Sprint: ", "lowest-sprint", statistics)
+                createRecord("The lowest number of points gained with prediction on Race: ", "lowest-race", statistics)
+                createRecord("The lowest number of points gained with prediction on Qualifying: ", "lowest-qualifying", statistics)
+                createRecord("The lowest number of points gained with prediction on Sprint: ", "lowest-sprint", statistics)
 
                 for (const key in data) {
                     if (data.hasOwnProperty(key)) {

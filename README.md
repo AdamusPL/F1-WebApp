@@ -3,6 +3,7 @@ WebApp which aims to make ability to make predictions of driver standings from F
 
 # Functionalities
 After registration/signing-in:
+
 - Posting predictions for Sprint/Qualifying/Race and seeing gained points
 - Printing participant standings in specific season;
 - Printing standings from each session, race weekend in the specific year;
