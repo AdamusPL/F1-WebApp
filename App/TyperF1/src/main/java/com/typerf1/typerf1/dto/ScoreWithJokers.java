@@ -19,10 +19,10 @@ public class ScoreWithJokers {
     String grandPrixName;
     String participantName;
     String participantSurname;
-    int points;
-    Long numberOfJokersUsed;
+    double points;
+    Double numberOfJokersUsed;
 
-    public ScoreWithJokers(String grandPrixName, String sessionName, String participantName, String participantSurname, int points, Long numberOfJokersUsed) {
+    public ScoreWithJokers(String grandPrixName, String sessionName, String participantName, String participantSurname, double points, Double numberOfJokersUsed) {
         this.grandPrixName = grandPrixName;
         this.sessionName = sessionName;
         this.participantName = participantName;

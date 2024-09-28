@@ -1,4 +1,5 @@
 function getSessions(grandPrixId, grandPrixName) {
+    const year = 2024;
     try {
         if (document.getElementById("predictions") !== null) {
             document.getElementById("predictions").remove();
@@ -35,11 +36,11 @@ function getSessions(grandPrixId, grandPrixName) {
                     li.innerText = item.name;
                     if (item.name === "Sprint" || item.name === "Qualifying") {
                         li.addEventListener("click", function () {
-                            printPredictionsQualifyingAndSprint(item.name, item.id, grandPrixId);
+                            printPredictionsQualifyingAndSprint(year, item.name, item.id, grandPrixId);
                         }, false);
                     } else {
                         li.addEventListener("click", function () {
-                            printPredictionsRace(item.name, item.id, grandPrixId);
+                            printPredictionsRace(year, item.name, item.id, grandPrixId);
                         }, false);
                     }
                     ul.appendChild(li);
@@ -52,26 +53,28 @@ function getSessions(grandPrixId, grandPrixName) {
     }
 }
 
-async function printPredictionsQualifyingAndSprint(sessionName, sessionId, grandPrixId) {
+async function printPredictionsQualifyingAndSprint(year, sessionName, sessionId, grandPrixId) {
     if (document.getElementById("predictions") !== null) {
         document.getElementById("predictions").remove();
     }
-    const wasPredicted = await checkIfSessionWasAlreadyPredicted(sessionId, grandPrixId, false);
-    if (wasPredicted) {
-        document.getElementById("participant-choice-weekend").innerText = sessionName;
+    const wasPredicted = await checkIfSessionWasAlreadyPredicted(year, sessionId, sessionName, grandPrixId, false);
+    document.getElementById("participant-choice-weekend").innerText = sessionName;
+    if (wasPredicted === 200 || wasPredicted === 406) {
         return;
     }
     printTextFieldForStandings(sessionName);
     createPredictButton(sessionId, grandPrixId, false);
 }
 
-async function printPredictionsRace(sessionName, sessionId, grandPrixId) {
+async function printPredictionsRace(year, sessionName, sessionId, grandPrixId) {
     if (document.getElementById("predictions") !== null) {
         document.getElementById("predictions").remove();
     }
-    const wasPredicted = await checkIfSessionWasAlreadyPredicted(sessionId, grandPrixId, true);
-    if (wasPredicted) {
-        document.getElementById("participant-choice-weekend").innerText = sessionName;
+
+    document.getElementById("participant-choice-weekend").innerText = sessionName;
+
+    const wasPredicted = await checkIfSessionWasAlreadyPredicted(year, sessionId, sessionName, grandPrixId, true);
+    if (wasPredicted === 200 || wasPredicted === 406) {
         return;
     }
     printTextFieldForStandings(sessionName);
@@ -91,7 +94,6 @@ async function printPredictionsRace(sessionName, sessionId, grandPrixId) {
 }
 
 function printTextFieldForStandings(sessionName) {
-    document.getElementById("participant-choice-weekend").innerText = sessionName;
     const div = document.createElement("div");
     div.id = "predictions";
     for (var i = 0; i < 20; i++) {
@@ -135,7 +137,7 @@ function postPredictions(grandPrixId, sessionId, isRace) {
         predictions.append("driver" + i, prediction.value);
     }
 
-    if(isRace){
+    if (isRace) {
         const fastestLap = document.getElementById("fastest-lap");
         predictions.append("fastestLap", fastestLap.value);
     }
@@ -153,12 +155,21 @@ function postPredictions(grandPrixId, sessionId, isRace) {
     });
 }
 
-async function checkIfSessionWasAlreadyPredicted(sessionId, grandPrixId, isRace) {
+async function checkIfSessionWasAlreadyPredicted(year, sessionId, sessionName, grandPrixId, isRace) {
     const username = JSON.parse(localStorage.getItem('user')).username;
 
     try {
         //check if participant has already predicted
-        const response = await fetch(`/check-predictions-existence?grandPrixId=${grandPrixId}&sessionId=${sessionId}&username=${username}`);
+        let sessionType = "";
+        if(isRace){
+            sessionType = "R";
+        }
+        else{
+            sessionType = "Q";
+        }
+
+        const response = await fetch(`/check-predictions-existence?sessionType=${sessionType}&year=${year}&grandPrixId=${grandPrixId}
+        &sessionId=${sessionId}&username=${username}`);
 
         if (response.status === 200) {
             const data = await response.json();
@@ -175,7 +186,7 @@ async function checkIfSessionWasAlreadyPredicted(sessionId, grandPrixId, isRace)
                 predictions.appendChild(div);
             }
 
-            if(isRace){
+            if (isRace) {
                 const div = document.createElement("div");
                 const label = document.createElement("label");
                 div.classList.add("prediction");
@@ -186,51 +197,92 @@ async function checkIfSessionWasAlreadyPredicted(sessionId, grandPrixId, isRace)
             bodyContainer.appendChild(predictions);
 
             //here calculate points from predictions
-            if(!isRace) {
+            if (!isRace) {
                 fetch(`/calculate-points-qualifying?grandPrixId=${grandPrixId}&sessionId=${sessionId}&username=${username}`)
                     .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Error');
+                        const status = handleResponse(response);
+                        if(response.status === 200){
+                            return response.json();
                         }
-                        return response.json();
+                        if(status){
+                            return;
+                        }
+                        throw new Error('Error');
                     })
                     .then(data => {
-                        const div = document.createElement("div");
-                        const label = document.createElement("label");
-                        label.innerText = "Points gained by participant: " + data;
-                        const predictions = document.getElementById("predictions");
-                        div.classList.add("prediction");
-                        div.appendChild(label);
-                        predictions.appendChild(div);
+                        if (data !== undefined) {
+                            const div = document.createElement("div");
+                            const label = document.createElement("label");
+                            label.innerText = "Points gained by participant: " + data;
+                            const predictions = document.getElementById("predictions");
+                            div.classList.add("prediction");
+                            div.appendChild(label);
+                            predictions.appendChild(div);
+                        }
                     });
-            }
-            else{
+            } else {
                 fetch(`/calculate-points-race?grandPrixId=${grandPrixId}&sessionId=${sessionId}&username=${username}`)
                     .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Error');
+                        const status = handleResponse(response);
+                        if(response.status === 200){
+                            return response.json();
                         }
-                        return response.json();
+                        if(status){
+                            return;
+                        }
+                        throw new Error('Error');
                     })
                     .then(data => {
-                        const div = document.createElement("div");
-                        const label = document.createElement("label");
-                        label.innerText = "Points gained by participant: " + data;
-                        const predictions = document.getElementById("predictions");
-                        div.classList.add("prediction");
-                        div.appendChild(label);
-                        predictions.appendChild(div);
+                        if (data !== undefined) {
+                            const div = document.createElement("div");
+                            const label = document.createElement("label");
+                            label.innerText = "Points gained by participant: " + data;
+                            const predictions = document.getElementById("predictions");
+                            div.classList.add("prediction");
+                            div.appendChild(label);
+                            predictions.appendChild(div);
+                        }
                     });
             }
-
-            return true;
-        } else if (response.status === 204) {
-            return false;
+            return response.status;
+        }
+        else if(response.status === 406){
+            const div = document.createElement("div");
+            div.id = "predictions";
+            const label = document.createElement("label");
+            const divInfo = document.createElement("div");
+            divInfo.classList.add("prediction");
+            label.innerText = "You cannot post predictions for this session anymore!";
+            const bodyContainer = document.getElementById("body-container");
+            divInfo.appendChild(label);
+            div.appendChild(divInfo);
+            bodyContainer.appendChild(div);
+            return response.status;
+        }
+        else if (response.status === 204) {
+            return response.status;
         } else {
             throw new Error('Network response was not ok');
         }
     } catch (error) {
-        console.error('Error in checkIfSessionWasAlreadyPredicted:', error);
+        console.error('Error in checking if session was already predicted:', error);
         return false;
     }
+}
+
+function handleResponse(response){
+    if (response.status === 204) {
+        const div = document.createElement("div");
+        const label = document.createElement("label");
+        label.innerText = "Session hasn't finished yet";
+        const predictions = document.getElementById("predictions");
+        div.classList.add("prediction");
+        div.appendChild(label);
+        predictions.appendChild(div);
+        return true;
+    }
+     else if (response.status === 200) {
+        return true;
+    }
+    return false;
 }

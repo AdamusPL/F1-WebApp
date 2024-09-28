@@ -14,9 +14,9 @@ public class SeasonScore {
     int seasonId;
     String participantName;
     String participantSurname;
-    Long pointsSum;
+    Double pointsSum;
 
-    public SeasonScore(int seasonId, String participantName, String participantSurname, Long pointsSum) {
+    public SeasonScore(int seasonId, String participantName, String participantSurname, Double pointsSum) {
         this.seasonId = seasonId;
         this.participantName = participantName;
         this.participantSurname = participantSurname;

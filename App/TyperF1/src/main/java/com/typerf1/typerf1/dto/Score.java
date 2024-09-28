@@ -19,9 +19,9 @@ public class Score {
     String sessionName;
     String participantName;
     String participantSurname;
-    int points;
+    double points;
 
-    public Score(int year, String grandPrixName, String sessionName, String participantName, String participantSurname, int points) {
+    public Score(int year, String grandPrixName, String sessionName, String participantName, String participantSurname, double points) {
         this.year = year;
         this.grandPrixName = grandPrixName;
         this.sessionName = sessionName;

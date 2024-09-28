@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 
 @Controller
@@ -39,22 +40,23 @@ public class PredictController {
     }
 
     @GetMapping("/check-predictions-existence")
-    public ResponseEntity<Predictions> checkPredictionsExistence(@RequestParam int grandPrixId, @RequestParam int sessionId,
-                                                            @RequestParam String username){
-        return predictService.checkPredictionsExistence(grandPrixId, sessionId, username);
+    public ResponseEntity<Predictions> checkPredictionsExistence(@RequestParam String sessionType, @RequestParam int year,
+                                                                 @RequestParam int grandPrixId, @RequestParam int sessionId,
+                                                            @RequestParam String username) throws ParseException {
+        return predictService.checkPredictionsExistence(sessionType, year, grandPrixId, sessionId, username);
     }
 
     @GetMapping("/calculate-points-qualifying")
-    public ResponseEntity<Double> calculatePointsQualifying(@RequestParam int grandPrixId, @RequestParam int sessionId,
-                                              @RequestParam String username) throws NoSuchFieldException, IllegalAccessException {
+    public ResponseEntity<String> calculatePointsQualifying(@RequestParam int grandPrixId, @RequestParam int sessionId,
+                                              @RequestParam String username) throws ParseException {
         int year = 2024;
-        return ResponseEntity.ok(predictService.F1APIQualifyingParser(grandPrixId, sessionId, username, year));
+        return predictService.F1APIQualifyingParser(grandPrixId, sessionId, username, year);
     }
 
     @GetMapping("/calculate-points-race")
-    public ResponseEntity<Double> calculatePointsRace(@RequestParam int grandPrixId, @RequestParam int sessionId,
-                                        @RequestParam String username) throws NoSuchFieldException, IllegalAccessException {
+    public ResponseEntity<String> calculatePointsRace(@RequestParam int grandPrixId, @RequestParam int sessionId,
+                                        @RequestParam String username) throws ParseException {
         int year = 2024;
-        return ResponseEntity.ok(predictService.F1APIRaceParser(grandPrixId, sessionId, username, year));
+        return predictService.F1APIRaceParser(grandPrixId, sessionId, username, year);
     }
 }

@@ -23,10 +23,10 @@ public class StandingsService {
         List<ScoreWithJokers> scoreWithJokersList = new ArrayList<>();
 
         for (Score score : scoreList) {
-            Long numberOfJokersUsed = 0L;
+            Double numberOfJokersUsed = 0D;
             for (JokersUsage jokersUsed : usedJokersGPList) {
                 if (jokersUsed.getParticipantName().equals(score.getParticipantName()) && jokersUsed.getParticipantSurname().equals(score.getParticipantSurname()) && jokersUsed.getGrandPrixName().equals(score.getGrandPrixName())) {
-                    numberOfJokersUsed = 1L;
+                    numberOfJokersUsed = 1D;
                 }
             }
             ScoreWithJokers scoreWithJokers = new ScoreWithJokers(score.getGrandPrixName(), score.getSessionName(), score.getParticipantName(), score.getParticipantSurname(), score.getPoints(), numberOfJokersUsed);
