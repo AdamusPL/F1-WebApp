@@ -78,20 +78,20 @@ public class PredictService {
             predictions.setGrandPrix(null);
             return ResponseEntity.ok(predictions);
         } else {
-//            //check if user can still post predictions
-//            boolean isAbleToPost;
-//
-//            if(sessionType.equals("R")) {
-//                isAbleToPost = checkBeginningTimeOfRace(year, grandPrixId);
-//            }
-//            else{
-//                isAbleToPost = checkBeginningTimeOfQualifying(year, grandPrixId);
-//            }
-//
-//            //if session has already begun
-//            if (!isAbleToPost) {
-//                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
-//            }
+            //check if user can still post predictions
+            boolean isAbleToPost;
+
+            if(sessionType.equals("R")) {
+                isAbleToPost = checkBeginningTimeOfRace(year, grandPrixId);
+            }
+            else{
+                isAbleToPost = checkBeginningTimeOfQualifying(year, grandPrixId);
+            }
+
+            //if session has already begun
+            if (!isAbleToPost) {
+                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+            }
             return ResponseEntity.noContent().build();
         }
     }
