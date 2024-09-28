@@ -1,9 +1,6 @@
 package com.typerf1.typerf1.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +12,9 @@ import lombok.Setter;
 @Setter
 @Entity
 public class Joker {
+
     @jakarta.persistence.Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
     @ManyToOne

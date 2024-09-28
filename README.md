@@ -18,7 +18,7 @@ After registration/signing-in:
 ## Screenshots
 ### Predicting Qualifying
 - Predicting
-![image](https://github.com/user-attachments/assets/426b2b7b-ac24-48cd-b7fa-1118d39332c7)
+![image](https://github.com/user-attachments/assets/0bcca262-863e-4cc7-98e1-6e5580e4e3bf)
 
 - After posting predictions
 ![image](https://github.com/user-attachments/assets/5c140e74-e7c2-432e-9d1e-3cf453abd799)
@@ -31,7 +31,7 @@ After registration/signing-in:
 
 ### Predicting Race
 - Predicting (you have to guess driver with fastest lap additionally)
-![image](https://github.com/user-attachments/assets/eff904de-29da-42a2-8d66-93e2faca34e6)
+![image](https://github.com/user-attachments/assets/f32d5dce-4e5d-434f-a2cc-21ea49036d41)
 
 - After session ended
 ![image](https://github.com/user-attachments/assets/4d0deae0-03ec-45a3-9a2a-b219a585b423)

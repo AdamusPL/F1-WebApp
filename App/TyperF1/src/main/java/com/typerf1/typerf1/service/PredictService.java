@@ -27,16 +27,18 @@ public class PredictService {
     private final PredictionsRepository predictionsRepository;
     private final ParticipantRepository participantRepository;
     private final PointsRepository pointsRepository;
+    private final JokerRepository jokerRepository;
 
     @Autowired
     public PredictService(GrandPrixRepository grandPrixRepository, SessionRepository sessionRepository,
                           PredictionsRepository predictionsRepository, ParticipantRepository participantRepository,
-                          PointsRepository pointsRepository) {
+                          PointsRepository pointsRepository, JokerRepository jokerRepository) {
         this.grandPrixRepository = grandPrixRepository;
         this.sessionRepository = sessionRepository;
         this.predictionsRepository = predictionsRepository;
         this.participantRepository = participantRepository;
         this.pointsRepository = pointsRepository;
+        this.jokerRepository = jokerRepository;
     }
 
     public List<GrandPrix> getThisYearGrandPrix(int year) {
@@ -47,7 +49,7 @@ public class PredictService {
         return sessionRepository.getSessionsFromThatGrandPrix(grandPrixId);
     }
 
-    public ResponseEntity<String> postPredictions(int grandPrixId, int sessionId, String username, Predictions predictions) {
+    public ResponseEntity<String> postPredictions(int grandPrixId, int sessionId, String username, boolean joker, Predictions predictions) {
         GrandPrix grandPrix = grandPrixRepository.findById(grandPrixId)
                 .orElseThrow(() -> new EntityNotFoundException("GrandPrix not found with id: " + grandPrixId));
         Session session = sessionRepository.findById(sessionId)
@@ -56,6 +58,12 @@ public class PredictService {
         predictions.setGrandPrix(grandPrix);
         predictions.setSession(session);
         predictions.setParticipant(participant);
+        if(joker && predictions.getGrandPrix().getJoker() == null){
+            Joker jokerObject = new Joker();
+            jokerObject.setParticipant(participant);
+            jokerObject.setGrandPrix(grandPrix);
+            jokerRepository.save(jokerObject);
+        }
 
         predictionsRepository.save(predictions);
         return ResponseEntity.ok().build();
@@ -96,6 +104,9 @@ public class PredictService {
     public ResponseEntity<String> F1APIQualifyingParser(int grandPrixId, int sessionId, String username, int year) throws ParseException {
         boolean joker = false;
         Predictions predictions = getParticipantPredictions(grandPrixId, sessionId, username);
+        if(predictions.getGrandPrix().getJoker() != null){
+            joker = true;
+        }
 
         double pointsCalculated;
 
@@ -331,6 +342,9 @@ public class PredictService {
     public ResponseEntity<String> F1APIRaceParser(int grandPrixId, int sessionId, String username, int year) {
         boolean joker = false;
         Predictions predictions = getParticipantPredictions(grandPrixId, sessionId, username);
+        if(predictions.getGrandPrix().getJoker() != null){
+            joker = true;
+        }
 
         double pointsCalculated;
 
