@@ -16,3 +16,12 @@
     display: flex;
     justify-content: center;
 }
+
+#state{
+    width: 100px;
+}
+
+#joker{
+    display: flex;
+    justify-content: center;
+}

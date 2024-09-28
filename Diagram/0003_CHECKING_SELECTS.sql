@@ -12,3 +12,6 @@ SELECT * FROM Track;
 SELECT * FROM Points;
 SELECT * FROM Session;
 SELECT * FROM Joker;
+
+DELETE FROM Predictions WHERE Id=32;
+DELETE FROM Points WHERE Id=28;

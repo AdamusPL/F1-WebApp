@@ -34,9 +34,9 @@ public class PredictController {
 
     @PostMapping("/post-predictions")
     public ResponseEntity<String> postPredictions(@RequestParam int grandPrixId, @RequestParam int sessionId,
-                                                  @RequestParam String username,
+                                                  @RequestParam String username, @RequestParam boolean joker,
                                                   @ModelAttribute Predictions predictions){
-        return predictService.postPredictions(grandPrixId, sessionId, username, predictions);
+        return predictService.postPredictions(grandPrixId, sessionId, username, joker, predictions);
     }
 
     @GetMapping("/check-predictions-existence")

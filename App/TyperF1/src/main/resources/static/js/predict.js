@@ -63,7 +63,29 @@ async function printPredictionsQualifyingAndSprint(year, sessionName, sessionId,
         return;
     }
     printTextFieldForStandings(sessionName);
+    createJokerOption();
     createPredictButton(sessionId, grandPrixId, false);
+}
+
+function createJokerOption(){
+    const divPredictions = document.getElementById("predictions");
+    const jokerDiv = document.createElement("div");
+    jokerDiv.id = "joker";
+    const jokerLabel = document.createElement("label");
+    jokerLabel.innerText = "Joker usage: ";
+    const select = document.createElement("select");
+    select.classList.add("form-select");
+    select.id = "state";
+    select.required = true;
+    const optionNo = document.createElement("option");
+    optionNo.innerText = "No";
+    const optionYes = document.createElement("option");
+    optionYes.innerText = "Yes";
+    jokerDiv.appendChild(jokerLabel);
+    select.appendChild(optionNo);
+    select.appendChild(optionYes);
+    jokerDiv.appendChild(select);
+    divPredictions.appendChild(jokerDiv);
 }
 
 async function printPredictionsRace(year, sessionName, sessionId, grandPrixId) {
@@ -81,15 +103,18 @@ async function printPredictionsRace(year, sessionName, sessionId, grandPrixId) {
     const divPredictions = document.getElementById("predictions");
     const divPrediction = document.createElement("div");
     divPrediction.classList.add("prediction");
+
     const label = document.createElement("label");
     label.innerText = "Fastest lap: ";
     const input = document.createElement("input");
     input.type = "text";
     input.id = "fastest-lap";
     input.classList.add("form-control");
+
     divPrediction.appendChild(label);
     divPrediction.appendChild(input);
     divPredictions.appendChild(divPrediction);
+    createJokerOption();
     createPredictButton(sessionId, grandPrixId, true);
 }
 
@@ -142,9 +167,16 @@ function postPredictions(grandPrixId, sessionId, isRace) {
         predictions.append("fastestLap", fastestLap.value);
     }
 
+    const selection = document.getElementById("state");
+    const selectedText = selection.options[selection.selectedIndex].innerText;
+    let jokerChoice = false;
+    if(selectedText === "Yes"){
+        jokerChoice = true;
+    }
+
     const username = JSON.parse(localStorage.getItem('user')).username;
 
-    fetch(`/post-predictions?grandPrixId=${grandPrixId}&sessionId=${sessionId}&username=${username}`, {
+    fetch(`/post-predictions?grandPrixId=${grandPrixId}&sessionId=${sessionId}&username=${username}&joker=${jokerChoice}`, {
         method: 'POST',
         body: predictions
     }).then(response => {
