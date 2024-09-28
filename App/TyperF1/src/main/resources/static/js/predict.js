@@ -135,7 +135,7 @@ function postPredictions(grandPrixId, sessionId, isRace) {
         predictions.append("driver" + i, prediction.value);
     }
 
-    if(isRace){
+    if (isRace) {
         const fastestLap = document.getElementById("fastest-lap");
         predictions.append("fastestLap", fastestLap.value);
     }
@@ -175,7 +175,7 @@ async function checkIfSessionWasAlreadyPredicted(sessionId, grandPrixId, isRace)
                 predictions.appendChild(div);
             }
 
-            if(isRace){
+            if (isRace) {
                 const div = document.createElement("div");
                 const label = document.createElement("label");
                 div.classList.add("prediction");
@@ -186,40 +186,62 @@ async function checkIfSessionWasAlreadyPredicted(sessionId, grandPrixId, isRace)
             bodyContainer.appendChild(predictions);
 
             //here calculate points from predictions
-            if(!isRace) {
+            if (!isRace) {
                 fetch(`/calculate-points-qualifying?grandPrixId=${grandPrixId}&sessionId=${sessionId}&username=${username}`)
                     .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Error');
+                        if (response.status === 404) {
+                            const div = document.createElement("div");
+                            const label = document.createElement("label");
+                            label.innerText = "Session hasn't finished yet";
+                            const predictions = document.getElementById("predictions");
+                            div.classList.add("prediction");
+                            div.appendChild(label);
+                            predictions.appendChild(div);
+                            return;
+                        } else if (response.status === 200) {
+                            return response.json();
                         }
-                        return response.json();
+                        throw new Error('Error');
+
                     })
                     .then(data => {
-                        const div = document.createElement("div");
-                        const label = document.createElement("label");
-                        label.innerText = "Points gained by participant: " + data;
-                        const predictions = document.getElementById("predictions");
-                        div.classList.add("prediction");
-                        div.appendChild(label);
-                        predictions.appendChild(div);
+                        if (data !== undefined) {
+                            const div = document.createElement("div");
+                            const label = document.createElement("label");
+                            label.innerText = "Points gained by participant: " + data;
+                            const predictions = document.getElementById("predictions");
+                            div.classList.add("prediction");
+                            div.appendChild(label);
+                            predictions.appendChild(div);
+                        }
                     });
-            }
-            else{
+            } else {
                 fetch(`/calculate-points-race?grandPrixId=${grandPrixId}&sessionId=${sessionId}&username=${username}`)
                     .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Error');
+                        if (response.status === 404) {
+                            const div = document.createElement("div");
+                            const label = document.createElement("label");
+                            label.innerText = "Session hasn't finished yet";
+                            const predictions = document.getElementById("predictions");
+                            div.classList.add("prediction");
+                            div.appendChild(label);
+                            predictions.appendChild(div);
+                            return;
+                        } else if (response.status === 200) {
+                            return response.json();
                         }
-                        return response.json();
+                        throw new Error('Error');
                     })
                     .then(data => {
-                        const div = document.createElement("div");
-                        const label = document.createElement("label");
-                        label.innerText = "Points gained by participant: " + data;
-                        const predictions = document.getElementById("predictions");
-                        div.classList.add("prediction");
-                        div.appendChild(label);
-                        predictions.appendChild(div);
+                        if (data !== undefined) {
+                            const div = document.createElement("div");
+                            const label = document.createElement("label");
+                            label.innerText = "Points gained by participant: " + data;
+                            const predictions = document.getElementById("predictions");
+                            div.classList.add("prediction");
+                            div.appendChild(label);
+                            predictions.appendChild(div);
+                        }
                     });
             }
 

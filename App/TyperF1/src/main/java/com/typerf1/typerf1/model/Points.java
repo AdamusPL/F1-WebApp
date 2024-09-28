@@ -1,9 +1,7 @@
 package com.typerf1.typerf1.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,10 +14,13 @@ import lombok.Setter;
 @Entity
 public class Points {
     @jakarta.persistence.Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     Integer id;
-    Integer number;
-    Integer participantId;
-    Integer sessionId;
+    Double number;
+
+    public Points(Double number){
+        this.number = number;
+    }
 
     @OneToOne
     @JoinColumn(name = "SessionId")
@@ -29,6 +30,7 @@ public class Points {
     @JoinColumn(name = "ParticipantId")
     Participant participant;
 
-    @OneToOne(mappedBy = "points")
+    @JsonManagedReference
+    @OneToOne(mappedBy = "points", fetch = FetchType.EAGER)
     private Predictions predictions;
 }

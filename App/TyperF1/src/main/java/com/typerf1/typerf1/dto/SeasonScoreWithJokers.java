@@ -17,10 +17,10 @@ public class SeasonScoreWithJokers {
     int id;
     String participantName;
     String participantSurname;
-    Long pointsSum;
+    Double pointsSum;
     Long numberOfJokersUsed;
 
-    public SeasonScoreWithJokers(String participantName, String participantSurname, Long pointsSum, Long numberOfJokersUsed) {
+    public SeasonScoreWithJokers(String participantName, String participantSurname, Double pointsSum, Long numberOfJokersUsed) {
         this.participantName = participantName;
         this.participantSurname = participantSurname;
         this.pointsSum = pointsSum;

@@ -1,5 +1,6 @@
 package com.typerf1.typerf1.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -51,7 +52,8 @@ public class Predictions {
     @JoinColumn(name = "ParticipantId")
     private Participant participant;
 
-    @OneToOne
+    @JsonBackReference
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PointsId")
     Points points;
 

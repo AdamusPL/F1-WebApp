@@ -19,9 +19,9 @@ public class Record {
     String participantSurname;
     String grandPrixName;
     int year;
-    int points;
+    double points;
 
-    public Record(String participantName, String participantSurname, String grandPrixName, int year, int points) {
+    public Record(String participantName, String participantSurname, String grandPrixName, int year, double points) {
         this.year = year;
         this.grandPrixName = grandPrixName;
         this.participantName = participantName;

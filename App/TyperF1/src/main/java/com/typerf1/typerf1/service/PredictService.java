@@ -3,7 +3,9 @@ package com.typerf1.typerf1.service;
 import com.typerf1.typerf1.model.*;
 import com.typerf1.typerf1.repository.*;
 import jakarta.persistence.EntityNotFoundException;
+import jdk.jshell.Snippet;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -12,6 +14,8 @@ import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Optional;
+
 import com.typerf1.typerf1.model.Predictions;
 
 import com.typerf1.typerf1.tools.PointsCalculator;
@@ -23,14 +27,17 @@ public class PredictService {
     private final SessionRepository sessionRepository;
     private final PredictionsRepository predictionsRepository;
     private final ParticipantRepository participantRepository;
+    private final PointsRepository pointsRepository;
 
     @Autowired
     public PredictService(GrandPrixRepository grandPrixRepository, SessionRepository sessionRepository,
-                          PredictionsRepository predictionsRepository, ParticipantRepository participantRepository) {
+                          PredictionsRepository predictionsRepository, ParticipantRepository participantRepository,
+                          PointsRepository pointsRepository) {
         this.grandPrixRepository = grandPrixRepository;
         this.sessionRepository = sessionRepository;
         this.predictionsRepository = predictionsRepository;
         this.participantRepository = participantRepository;
+        this.pointsRepository = pointsRepository;
     }
 
     public List<GrandPrix> getThisYearGrandPrix(int year) {
@@ -70,28 +77,27 @@ public class PredictService {
 
     public Predictions getParticipantPredictions(int grandPrixId, int sessionId, String username) {
         List<Predictions> predictionsList = predictionsRepository.checkPredictionExistence(grandPrixId, sessionId, username);
-        Predictions predictions = predictionsList.get(0);
-        predictions.setParticipant(null);
-        predictions.setSession(null);
-        predictions.setGrandPrix(null);
-        return predictions;
+        return predictionsList.get(0);
     }
 
-    public double F1APIQualifyingParser(int grandPrixId, int sessionId, String username, int year){
+    public ResponseEntity<String> F1APIQualifyingParser(int grandPrixId, int sessionId, String username, int year) {
         boolean joker = false;
         Predictions predictions = getParticipantPredictions(grandPrixId, sessionId, username);
 
+        double pointsCalculated;
+
+        //if points were already calculated
+        if (predictions.getPoints() != null) {
+            return ResponseEntity.ok(predictions.getPoints().getNumber().toString());
+        }
+
         //page with api with F1 race results
         String url = "https://ergast.com/api/f1/" + year + "/" + grandPrixId + "/qualifying";
-        RestTemplate restTemplate = new RestTemplate();
-        List<String> driverStandings = new ArrayList<>();
+        LinkedHashMap<?, ?> raceMap = getTreeToRaces(url);
 
-        Object[] results = restTemplate.getForObject(url, Object[].class);
-        // Step 1: Access the first element of the array, cast it to LinkedHashMap
-        LinkedHashMap<?, ?> rootMap = (LinkedHashMap<?, ?>) results[1];
-
-        // Step 2: Access the "Race" LinkedHashMap
-        LinkedHashMap<?, ?> raceMap = (LinkedHashMap<?, ?>) rootMap.get("Race");
+        if (raceMap == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
 
         // Step 3: Access the "ResultsList" LinkedHashMap
         LinkedHashMap<?, ?> resultsListMap = (LinkedHashMap<?, ?>) raceMap.get("QualifyingList");
@@ -99,6 +105,43 @@ public class PredictService {
         // Step 4: Access the "Result" LinkedHashMap
         ArrayList<?> resultsArray = (ArrayList<?>) resultsListMap.get("QualifyingResult");
 
+        List<String> driverStandings = parseSurnames(resultsArray);
+
+        PointsCalculator pointsCalculator = initPointsCalculator(predictions, driverStandings, joker);
+
+        pointsCalculated = pointsCalculator.countPointsFromQualifying();
+
+        Points points = new Points(pointsCalculated);
+        points.setParticipant(predictions.getParticipant());
+        points.setSession(predictions.getSession());
+        Predictions predictions1 = predictionsRepository.checkPredictionExistence(grandPrixId, sessionId, username).get(0);
+        points.setPredictions(predictions1);
+
+        predictions1.setPoints(points);
+        pointsRepository.save(points);
+
+        return ResponseEntity.ok(String.valueOf(pointsCalculated));
+    }
+
+    private LinkedHashMap<?, ?> getTreeToRaces(String url) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        Object[] results = restTemplate.getForObject(url, Object[].class);
+        // Step 1: Access the first element of the array, cast it to LinkedHashMap
+        LinkedHashMap<?, ?> rootMap = (LinkedHashMap<?, ?>) results[1];
+
+        if (rootMap.isEmpty()) {
+            return null;
+        }
+
+        // Step 2: Access the "Race" LinkedHashMap
+        LinkedHashMap<?, ?> raceMap = (LinkedHashMap<?, ?>) rootMap.get("Race");
+
+        return raceMap;
+    }
+
+    private List<String> parseSurnames(ArrayList<?> resultsArray) {
+        List<String> driverStandings = new ArrayList<>();
         // Step 5: Iterate through the ArrayList
         for (Object resultObject : resultsArray) {
             // Each element in the ArrayList is a LinkedHashMap
@@ -113,7 +156,10 @@ public class PredictService {
 
             driverStandings.add(result);
         }
+        return driverStandings;
+    }
 
+    private PointsCalculator initPointsCalculator(Predictions predictions, List<String> driverStandings, boolean joker) {
         List<String> participantPredictions = new ArrayList<>();
 
         //parse predictions object to arraylist with just driver surnames
@@ -138,26 +184,27 @@ public class PredictService {
         participantPredictions.add(predictions.getDriver19());
         participantPredictions.add(predictions.getDriver20());
 
-        PointsCalculator pointsCalculator = new PointsCalculator(driverStandings, participantPredictions, joker);
-
-        return pointsCalculator.countPointsFromQualifying();
+        return new PointsCalculator(driverStandings, participantPredictions, joker);
     }
 
-    public double F1APIRaceParser(int grandPrixId, int sessionId, String username, int year) throws NoSuchFieldException, IllegalAccessException {
+    public ResponseEntity<String> F1APIRaceParser(int grandPrixId, int sessionId, String username, int year) {
         boolean joker = false;
         Predictions predictions = getParticipantPredictions(grandPrixId, sessionId, username);
 
+        double pointsCalculated;
+
+        //if points were already calculated
+        if (predictions.getPoints() != null) {
+            return ResponseEntity.ok(predictions.getPoints().getNumber().toString());
+        }
+
         //page with api with F1 race results (standings)
         String url = "https://ergast.com/api/f1/" + year + "/" + grandPrixId + "/results";
-        RestTemplate restTemplate = new RestTemplate();
-        List<String> driverStandings = new ArrayList<>();
+        LinkedHashMap<?, ?> raceMap = getTreeToRaces(url);
 
-        Object[] results = restTemplate.getForObject(url, Object[].class);
-        // Step 1: Access the first element of the array, cast it to LinkedHashMap
-        LinkedHashMap<?, ?> rootMap = (LinkedHashMap<?, ?>) results[1];
-
-        // Step 2: Access the "Race" LinkedHashMap
-        LinkedHashMap<?, ?> raceMap = (LinkedHashMap<?, ?>) rootMap.get("Race");
+        if (raceMap == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
 
         // Step 3: Access the "ResultsList" LinkedHashMap
         LinkedHashMap<?, ?> resultsListMap = (LinkedHashMap<?, ?>) raceMap.get("ResultsList");
@@ -165,71 +212,53 @@ public class PredictService {
         // Step 4: Access the "Result" LinkedHashMap
         ArrayList<?> resultsArray = (ArrayList<?>) resultsListMap.get("Result");
 
-        // Step 5: Iterate through the ArrayList
-        for (Object resultObject : resultsArray) {
-            // Each element in the ArrayList is a LinkedHashMap
-            LinkedHashMap<?, ?> resultMap = (LinkedHashMap<?, ?>) resultObject;
+        List<String> driverStandings = parseSurnames(resultsArray);
 
-            LinkedHashMap<?, ?> resultDriver = (LinkedHashMap<?, ?>) resultMap.get("Driver");
-
-            String resultFamilyName = (String) resultDriver.get("FamilyName");
-            //to match letters like é or ü in Pérez or Hülkenberg with participant predictions
-            String normalized = Normalizer.normalize(resultFamilyName, Normalizer.Form.NFD);
-            String result = normalized.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
-
-            driverStandings.add(result);
-        }
-
-        List<String> participantPredictions = new ArrayList<>();
-
-        //parse predictions object to arraylist with just driver surnames
-        participantPredictions.add(predictions.getDriver1());
-        participantPredictions.add(predictions.getDriver2());
-        participantPredictions.add(predictions.getDriver3());
-        participantPredictions.add(predictions.getDriver4());
-        participantPredictions.add(predictions.getDriver5());
-        participantPredictions.add(predictions.getDriver6());
-        participantPredictions.add(predictions.getDriver7());
-        participantPredictions.add(predictions.getDriver8());
-        participantPredictions.add(predictions.getDriver9());
-        participantPredictions.add(predictions.getDriver10());
-        participantPredictions.add(predictions.getDriver11());
-        participantPredictions.add(predictions.getDriver12());
-        participantPredictions.add(predictions.getDriver13());
-        participantPredictions.add(predictions.getDriver14());
-        participantPredictions.add(predictions.getDriver15());
-        participantPredictions.add(predictions.getDriver16());
-        participantPredictions.add(predictions.getDriver17());
-        participantPredictions.add(predictions.getDriver18());
-        participantPredictions.add(predictions.getDriver19());
-        participantPredictions.add(predictions.getDriver20());
-
-        PointsCalculator pointsCalculator = new PointsCalculator(driverStandings, participantPredictions, joker);
+        PointsCalculator pointsCalculator = initPointsCalculator(predictions, driverStandings, joker);
 
         //page with the fastest laps in race
-        String urlFastestLap = "http://ergast.com/api/f1/" + year + "/" + grandPrixId + "/fastest/" + 1 + "/results";
-        RestTemplate restTemplateFastestLap = new RestTemplate();
+        String urlFastestLap = "https://ergast.com/api/f1/" + year + "/" + grandPrixId + "/fastest/" + 1 + "/results";
 
-        Object[] fastestLaps = restTemplate.getForObject(url, Object[].class);
-
-        // Step 1: Access the first element of the array, cast it to LinkedHashMap
-        LinkedHashMap<?, ?> rootMapFL = (LinkedHashMap<?, ?>) results[1];
-
-        // Step 2: Access the "Race" LinkedHashMap
-        LinkedHashMap<?, ?> raceMapFL = (LinkedHashMap<?, ?>) rootMapFL.get("Race");
+        LinkedHashMap<?, ?> raceMapFL = getTreeToRaces(urlFastestLap);
 
         // Step 3: Access the "ResultsList" LinkedHashMap
         LinkedHashMap<?, ?> resultsListMapFL = (LinkedHashMap<?, ?>) raceMapFL.get("ResultsList");
 
-        // Step 4: Access the "Result" LinkedHashMap
-        ArrayList<?> resultsArrayFL = (ArrayList<?>) resultsListMapFL.get("Result");
+        LinkedHashMap<?, ?> result = (LinkedHashMap<?, ?>) resultsListMapFL.get("Result");
 
-        LinkedHashMap<?, ?> resultMap = (LinkedHashMap<?, ?>) resultsArrayFL.get(0);
-
-        LinkedHashMap<?, ?> resultDriver = (LinkedHashMap<?, ?>) resultMap.get("Driver");
+        LinkedHashMap<?, ?> resultDriver = (LinkedHashMap<?, ?>) result.get("Driver");
 
         String actualFastestLap = (String) resultDriver.get("FamilyName");
 
-        return pointsCalculator.countPointsFromRace(predictions.getFastestLap(), actualFastestLap);
+        pointsCalculated = pointsCalculator.countPointsFromRace(predictions.getFastestLap(), actualFastestLap);
+
+        Participant participant = participantRepository.getParticipantByParticipantLoginDataUsername(username).get(0);
+        Optional<Session> session = sessionRepository.findById(sessionId);
+        Optional<GrandPrix> grandPrix = grandPrixRepository.findById(grandPrixId);
+
+        Points points = new Points(pointsCalculated);
+        if (session.isPresent()) {
+            points.setSession(session.get());
+        } else {
+            points.setSession(null);
+        }
+        points.setParticipant(participant);
+        Predictions predictions1 = predictionsRepository.checkPredictionExistence(grandPrixId, sessionId, username).get(0);
+        if (grandPrix.isPresent()) {
+            predictions1.setGrandPrix(grandPrix.get());
+        } else {
+            predictions1.setGrandPrix(null);
+        }
+        predictions1.setParticipant(participant);
+        if (session.isPresent()) {
+            predictions1.setSession(session.get());
+        } else {
+            predictions1.setSession(null);
+        }
+        points.setPredictions(predictions1);
+        pointsRepository.save(points);
+
+        return ResponseEntity.ok(String.valueOf(pointsCalculated));
+
     }
 }
