@@ -3,7 +3,6 @@ package com.typerf1.typerf1.service;
 import com.typerf1.typerf1.model.*;
 import com.typerf1.typerf1.repository.*;
 import jakarta.persistence.EntityNotFoundException;
-import jdk.jshell.Snippet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,10 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.text.Normalizer;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Optional;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import com.typerf1.typerf1.model.Predictions;
 
@@ -62,7 +60,7 @@ public class PredictService {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Predictions> checkPredictionsExistence(int grandPrixId, int sessionId, String username) {
+    public ResponseEntity<Predictions> checkPredictionsExistence(int year, int grandPrixId, int sessionId, String username) throws ParseException {
         List<Predictions> predictionsList = predictionsRepository.checkPredictionExistence(grandPrixId, sessionId, username);
         if (predictionsList.size() != 0) {
             Predictions predictions = predictionsList.get(0);
@@ -71,6 +69,13 @@ public class PredictService {
             predictions.setGrandPrix(null);
             return ResponseEntity.ok(predictions);
         } else {
+            //check if user can still post predictions
+            boolean isAbleToPost = checkBeginningTimeOfRace(year, grandPrixId);
+
+            //if session has already begun
+            if(!isAbleToPost){
+                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+            }
             return ResponseEntity.noContent().build();
         }
     }
@@ -80,7 +85,7 @@ public class PredictService {
         return predictionsList.get(0);
     }
 
-    public ResponseEntity<String> F1APIQualifyingParser(int grandPrixId, int sessionId, String username, int year) {
+    public ResponseEntity<String> F1APIQualifyingParser(int grandPrixId, int sessionId, String username, int year) throws ParseException {
         boolean joker = false;
         Predictions predictions = getParticipantPredictions(grandPrixId, sessionId, username);
 
@@ -96,7 +101,7 @@ public class PredictService {
         LinkedHashMap<?, ?> raceMap = getTreeToRaces(url);
 
         if (raceMap == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
 
         // Step 3: Access the "ResultsList" LinkedHashMap
@@ -187,7 +192,65 @@ public class PredictService {
         return new PointsCalculator(driverStandings, participantPredictions, joker);
     }
 
-    public ResponseEntity<String> F1APIRaceParser(int grandPrixId, int sessionId, String username, int year) {
+    private boolean checkBeginningTimeOfRace(int year, int grandPrixId) throws ParseException {
+        String url = "https://ergast.com/api/f1/" + year;
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        Object[] results = restTemplate.getForObject(url, Object[].class);
+        // Step 1: Access the first element of the array, cast it to LinkedHashMap
+        LinkedHashMap<?, ?> rootMap = (LinkedHashMap<?, ?>) results[1];
+
+        ArrayList<?> racesArray = (ArrayList<?>) rootMap.get("Race");
+
+        LinkedHashMap<?, ?> raceMap = (LinkedHashMap<?, ?>) racesArray.get(grandPrixId - 1);
+
+        // Date and time of the beginning of the session
+        String beginningDate = (String) raceMap.get("Date");
+        String beginningTime = (String) raceMap.get("Time");
+
+        // Create date object
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC")); // Ensure date parsing in UTC
+        Date dateToCompare = dateFormatter.parse(beginningDate);
+
+        // Current date and hour in computer (system default time zone)
+        Date currentDate = new Date();
+
+        // Check if it's not too late to post predictions based on the date
+        if (currentDate.after(dateToCompare)) {
+            return false;
+        }
+
+        // Create combined date-time string for parsing
+        String dateTimeString = beginningDate + " " + beginningTime;
+
+        // Parse the date and time together with UTC timezone
+        SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssX");
+        dateTimeFormatter.setTimeZone(TimeZone.getTimeZone("UTC")); // Parse as UTC
+        Date dateTimeToCompare = dateTimeFormatter.parse(dateTimeString);
+
+        // Create a Calendar instance for the parsed time in UTC
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        calendar.setTime(dateTimeToCompare);
+
+        // Subtract 30 minutes from the race start time
+        calendar.add(Calendar.MINUTE, -30);
+        Date adjustedTime = calendar.getTime(); // New time after subtracting 30 minutes
+
+        // Get the current time in UTC for comparison
+        Calendar currentCal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        currentCal.setTime(currentDate);
+
+        // Check if it's not too late to post predictions based on the adjusted time
+        if (currentCal.getTime().after(adjustedTime)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public ResponseEntity<String> F1APIRaceParser(int grandPrixId, int sessionId, String username, int year) throws ParseException {
         boolean joker = false;
         Predictions predictions = getParticipantPredictions(grandPrixId, sessionId, username);
 
@@ -202,8 +265,9 @@ public class PredictService {
         String url = "https://ergast.com/api/f1/" + year + "/" + grandPrixId + "/results";
         LinkedHashMap<?, ?> raceMap = getTreeToRaces(url);
 
+        //if race hasn't finished yet
         if (raceMap == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
 
         // Step 3: Access the "ResultsList" LinkedHashMap
@@ -232,33 +296,15 @@ public class PredictService {
 
         pointsCalculated = pointsCalculator.countPointsFromRace(predictions.getFastestLap(), actualFastestLap);
 
-        Participant participant = participantRepository.getParticipantByParticipantLoginDataUsername(username).get(0);
-        Optional<Session> session = sessionRepository.findById(sessionId);
-        Optional<GrandPrix> grandPrix = grandPrixRepository.findById(grandPrixId);
-
         Points points = new Points(pointsCalculated);
-        if (session.isPresent()) {
-            points.setSession(session.get());
-        } else {
-            points.setSession(null);
-        }
-        points.setParticipant(participant);
+        points.setParticipant(predictions.getParticipant());
+        points.setSession(predictions.getSession());
         Predictions predictions1 = predictionsRepository.checkPredictionExistence(grandPrixId, sessionId, username).get(0);
-        if (grandPrix.isPresent()) {
-            predictions1.setGrandPrix(grandPrix.get());
-        } else {
-            predictions1.setGrandPrix(null);
-        }
-        predictions1.setParticipant(participant);
-        if (session.isPresent()) {
-            predictions1.setSession(session.get());
-        } else {
-            predictions1.setSession(null);
-        }
         points.setPredictions(predictions1);
+
+        predictions1.setPoints(points);
         pointsRepository.save(points);
 
         return ResponseEntity.ok(String.valueOf(pointsCalculated));
-
     }
 }
