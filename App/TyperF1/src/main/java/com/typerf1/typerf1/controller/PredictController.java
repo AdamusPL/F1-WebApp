@@ -40,10 +40,10 @@ public class PredictController {
     }
 
     @GetMapping("/check-predictions-existence")
-    public ResponseEntity<Predictions> checkPredictionsExistence(@RequestParam int year,
+    public ResponseEntity<Predictions> checkPredictionsExistence(@RequestParam String sessionType, @RequestParam int year,
                                                                  @RequestParam int grandPrixId, @RequestParam int sessionId,
                                                             @RequestParam String username) throws ParseException {
-        return predictService.checkPredictionsExistence(year, grandPrixId, sessionId, username);
+        return predictService.checkPredictionsExistence(sessionType, year, grandPrixId, sessionId, username);
     }
 
     @GetMapping("/calculate-points-qualifying")

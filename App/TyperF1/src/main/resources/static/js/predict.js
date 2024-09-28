@@ -160,7 +160,15 @@ async function checkIfSessionWasAlreadyPredicted(year, sessionId, sessionName, g
 
     try {
         //check if participant has already predicted
-        const response = await fetch(`/check-predictions-existence?year=${year}&grandPrixId=${grandPrixId}
+        let sessionType = "";
+        if(isRace){
+            sessionType = "R";
+        }
+        else{
+            sessionType = "Q";
+        }
+
+        const response = await fetch(`/check-predictions-existence?sessionType=${sessionType}&year=${year}&grandPrixId=${grandPrixId}
         &sessionId=${sessionId}&username=${username}`);
 
         if (response.status === 200) {

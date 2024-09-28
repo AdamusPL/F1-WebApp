@@ -17,6 +17,7 @@ import java.util.*;
 import com.typerf1.typerf1.model.Predictions;
 
 import com.typerf1.typerf1.tools.PointsCalculator;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 public class PredictService {
@@ -60,7 +61,7 @@ public class PredictService {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Predictions> checkPredictionsExistence(int year, int grandPrixId, int sessionId, String username) throws ParseException {
+    public ResponseEntity<Predictions> checkPredictionsExistence(String sessionType, int year, int grandPrixId, int sessionId, String username) throws ParseException {
         List<Predictions> predictionsList = predictionsRepository.checkPredictionExistence(grandPrixId, sessionId, username);
         if (predictionsList.size() != 0) {
             Predictions predictions = predictionsList.get(0);
@@ -70,10 +71,17 @@ public class PredictService {
             return ResponseEntity.ok(predictions);
         } else {
             //check if user can still post predictions
-            boolean isAbleToPost = checkBeginningTimeOfRace(year, grandPrixId);
+            boolean isAbleToPost;
+
+            if(sessionType.equals("R")) {
+                isAbleToPost = checkBeginningTimeOfRace(year, grandPrixId);
+            }
+            else{
+                isAbleToPost = checkBeginningTimeOfQualifying(year, grandPrixId);
+            }
 
             //if session has already begun
-            if(!isAbleToPost){
+            if (!isAbleToPost) {
                 return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
             }
             return ResponseEntity.noContent().build();
@@ -116,6 +124,10 @@ public class PredictService {
 
         pointsCalculated = pointsCalculator.countPointsFromQualifying();
 
+        return updatePredictionsInDB(grandPrixId, sessionId, username, predictions, pointsCalculated);
+    }
+
+    private ResponseEntity<String> updatePredictionsInDB(int grandPrixId, int sessionId, String username, Predictions predictions, double pointsCalculated) {
         Points points = new Points(pointsCalculated);
         points.setParticipant(predictions.getParticipant());
         points.setSession(predictions.getSession());
@@ -250,7 +262,73 @@ public class PredictService {
         return true;
     }
 
-    public ResponseEntity<String> F1APIRaceParser(int grandPrixId, int sessionId, String username, int year) throws ParseException {
+    private boolean checkBeginningTimeOfQualifying(int year, int grandPrixId) throws ParseException {
+        String url = "https://ergast.com/api/f1/" + year + "/" + grandPrixId + ".json";
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        // Build the URI with placeholders
+        String uri = UriComponentsBuilder.fromUriString(url)
+                .buildAndExpand(Map.of("season", year, "round", grandPrixId))
+                .toString();
+
+        // Fetch data from the API
+        Map response = restTemplate.getForObject(uri, Map.class);
+        String beginningDate = "";
+        String beginningTime = "";
+
+        if (response != null) {
+            Map raceTable = (Map) response.get("MRData");
+            Map raceData = (Map) ((Map) ((List) ((Map) raceTable.get("RaceTable")).get("Races")).get(0)).get("Qualifying");
+
+            if (raceData != null) {
+                beginningDate = (String) raceData.get("date");
+                beginningTime = (String) raceData.get("time");
+            }
+        }
+
+        // Create date object
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC")); // Ensure date parsing in UTC
+        Date dateToCompare = dateFormatter.parse(beginningDate);
+
+        // Current date and hour in computer (system default time zone)
+        Date currentDate = new Date();
+
+        // Check if it's not too late to post predictions based on the date
+        if (currentDate.after(dateToCompare)) {
+            return false;
+        }
+
+        // Create combined date-time string for parsing
+        String dateTimeString = beginningDate + " " + beginningTime;
+
+        // Parse the date and time together with UTC timezone
+        SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssX");
+        dateTimeFormatter.setTimeZone(TimeZone.getTimeZone("UTC")); // Parse as UTC
+        Date dateTimeToCompare = dateTimeFormatter.parse(dateTimeString);
+
+        // Create a Calendar instance for the parsed time in UTC
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        calendar.setTime(dateTimeToCompare);
+
+        // Subtract 30 minutes from the race start time
+        calendar.add(Calendar.MINUTE, -30);
+        Date adjustedTime = calendar.getTime(); // New time after subtracting 30 minutes
+
+        // Get the current time in UTC for comparison
+        Calendar currentCal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        currentCal.setTime(currentDate);
+
+        // Check if it's not too late to post predictions based on the adjusted time
+        if (currentCal.getTime().after(adjustedTime)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public ResponseEntity<String> F1APIRaceParser(int grandPrixId, int sessionId, String username, int year) {
         boolean joker = false;
         Predictions predictions = getParticipantPredictions(grandPrixId, sessionId, username);
 
@@ -296,15 +374,6 @@ public class PredictService {
 
         pointsCalculated = pointsCalculator.countPointsFromRace(predictions.getFastestLap(), actualFastestLap);
 
-        Points points = new Points(pointsCalculated);
-        points.setParticipant(predictions.getParticipant());
-        points.setSession(predictions.getSession());
-        Predictions predictions1 = predictionsRepository.checkPredictionExistence(grandPrixId, sessionId, username).get(0);
-        points.setPredictions(predictions1);
-
-        predictions1.setPoints(points);
-        pointsRepository.save(points);
-
-        return ResponseEntity.ok(String.valueOf(pointsCalculated));
+        return updatePredictionsInDB(grandPrixId, sessionId, username, predictions, pointsCalculated);
     }
 }
