@@ -90,20 +90,17 @@ public class PredictService {
             predictions.setGrandPrix(null);
             return ResponseEntity.ok(predictions);
         } else {
-
-            //still have to handle how to get sprint begin time
-            if(sessionType.equals("S")){
-                return ResponseEntity.noContent().build();
-            }
-
             //check if user can still post predictions
             boolean isAbleToPost;
 
             if(sessionType.equals("R")) {
                 isAbleToPost = checkBeginningTimeOfRace(year, grandPrixId);
             }
-            else{
+            else if(sessionType.equals("Q")){
                 isAbleToPost = checkBeginningTimeOfQualifying(year, grandPrixId);
+            }
+            else{
+                isAbleToPost = checkBeginningTimeOfSprint(year, grandPrixId);
             }
 
             //if session has already begun
@@ -309,6 +306,72 @@ public class PredictService {
         if (response != null) {
             Map raceTable = (Map) response.get("MRData");
             Map raceData = (Map) ((Map) ((List) ((Map) raceTable.get("RaceTable")).get("Races")).get(0)).get("Qualifying");
+
+            if (raceData != null) {
+                beginningDate = (String) raceData.get("date");
+                beginningTime = (String) raceData.get("time");
+            }
+        }
+
+        // Create date object
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC")); // Ensure date parsing in UTC
+        Date dateToCompare = dateFormatter.parse(beginningDate);
+
+        // Current date and hour in computer (system default time zone)
+        Date currentDate = new Date();
+
+        // Check if it's not too late to post predictions based on the date
+        if (currentDate.after(dateToCompare)) {
+            return false;
+        }
+
+        // Create combined date-time string for parsing
+        String dateTimeString = beginningDate + " " + beginningTime;
+
+        // Parse the date and time together with UTC timezone
+        SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssX");
+        dateTimeFormatter.setTimeZone(TimeZone.getTimeZone("UTC")); // Parse as UTC
+        Date dateTimeToCompare = dateTimeFormatter.parse(dateTimeString);
+
+        // Create a Calendar instance for the parsed time in UTC
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        calendar.setTime(dateTimeToCompare);
+
+        // Subtract 30 minutes from the race start time
+        calendar.add(Calendar.MINUTE, -30);
+        Date adjustedTime = calendar.getTime(); // New time after subtracting 30 minutes
+
+        // Get the current time in UTC for comparison
+        Calendar currentCal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        currentCal.setTime(currentDate);
+
+        // Check if it's not too late to post predictions based on the adjusted time
+        if (currentCal.getTime().after(adjustedTime)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean checkBeginningTimeOfSprint(int year, int grandPrixId) throws ParseException {
+        String url = "https://ergast.com/api/f1/" + year + "/" + grandPrixId + ".json";
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        // Build the URI with placeholders
+        String uri = UriComponentsBuilder.fromUriString(url)
+                .buildAndExpand(Map.of("season", year, "round", grandPrixId))
+                .toString();
+
+        // Fetch data from the API
+        Map response = restTemplate.getForObject(uri, Map.class);
+        String beginningDate = "";
+        String beginningTime = "";
+
+        if (response != null) {
+            Map raceTable = (Map) response.get("MRData");
+            Map raceData = (Map) ((Map) ((List) ((Map) raceTable.get("RaceTable")).get("Races")).get(0)).get("Sprint");
 
             if (raceData != null) {
                 beginningDate = (String) raceData.get("date");

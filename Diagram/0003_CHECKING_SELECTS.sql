@@ -12,6 +12,8 @@ SELECT * FROM Track;
 SELECT * FROM Points;
 SELECT * FROM Joker;
 
+SELECT * FROM Points WHERE Number=16;
+
 INSERT INTO Joker VALUES(3, 15);
-UPDATE Predictions SET PointsId=NULL WHERE Id=7 OR Id=8;
-DELETE FROM Points WHERE Id=7 OR Id=8;
+DELETE FROM Predictions WHERE Id=49;
+DELETE FROM Points WHERE Id=46;
