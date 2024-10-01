@@ -10,8 +10,8 @@ SELECT * FROM Predictions;
 SELECT * FROM Session;
 SELECT * FROM Track;
 SELECT * FROM Points;
-SELECT * FROM Session;
 SELECT * FROM Joker;
 
-DELETE FROM Predictions WHERE Id=32;
-DELETE FROM Points WHERE Id=28;
+INSERT INTO Joker VALUES(3, 15);
+UPDATE Predictions SET PointsId=NULL WHERE Id=7 OR Id=8;
+DELETE FROM Points WHERE Id=7 OR Id=8;
