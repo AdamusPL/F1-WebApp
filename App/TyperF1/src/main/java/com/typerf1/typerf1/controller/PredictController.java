@@ -55,8 +55,15 @@ public class PredictController {
 
     @GetMapping("/calculate-points-race")
     public ResponseEntity<String> calculatePointsRace(@RequestParam int grandPrixId, @RequestParam int sessionId,
-                                        @RequestParam String username) throws ParseException {
+                                        @RequestParam String username) {
         int year = 2024;
         return predictService.F1APIRaceParser(grandPrixId, sessionId, username, year);
+    }
+
+    @GetMapping("/calculate-points-sprint")
+    public ResponseEntity<String> calculatePointsSprint(@RequestParam int grandPrixId, @RequestParam int sessionId,
+                                                      @RequestParam String username, @RequestParam String grandPrixName) {
+        int year = 2024;
+        return predictService.sprintSeleniumParser(grandPrixId, sessionId, username, year, grandPrixName);
     }
 }

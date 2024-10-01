@@ -2,8 +2,11 @@ package com.typerf1.typerf1.service;
 
 import com.typerf1.typerf1.model.*;
 import com.typerf1.typerf1.repository.*;
+import com.typerf1.typerf1.tools.URL;
+import com.typerf1.typerf1.tools.UrlFromTxtParser;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -19,8 +22,17 @@ import com.typerf1.typerf1.model.Predictions;
 import com.typerf1.typerf1.tools.PointsCalculator;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+
 @Service
 public class PredictService {
+
+    @Autowired
+    private ResourceLoader resourceLoader;
 
     private final GrandPrixRepository grandPrixRepository;
     private final SessionRepository sessionRepository;
@@ -84,8 +96,11 @@ public class PredictService {
             if(sessionType.equals("R")) {
                 isAbleToPost = checkBeginningTimeOfRace(year, grandPrixId);
             }
-            else{
+            else if(sessionType.equals("Q")){
                 isAbleToPost = checkBeginningTimeOfQualifying(year, grandPrixId);
+            }
+            else{
+                isAbleToPost = checkBeginningTimeOfSprint(year, grandPrixId);
             }
 
             //if session has already begun
@@ -339,6 +354,72 @@ public class PredictService {
         return true;
     }
 
+    private boolean checkBeginningTimeOfSprint(int year, int grandPrixId) throws ParseException {
+        String url = "https://ergast.com/api/f1/" + year + "/" + grandPrixId + ".json";
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        // Build the URI with placeholders
+        String uri = UriComponentsBuilder.fromUriString(url)
+                .buildAndExpand(Map.of("season", year, "round", grandPrixId))
+                .toString();
+
+        // Fetch data from the API
+        Map response = restTemplate.getForObject(uri, Map.class);
+        String beginningDate = "";
+        String beginningTime = "";
+
+        if (response != null) {
+            Map raceTable = (Map) response.get("MRData");
+            Map raceData = (Map) ((Map) ((List) ((Map) raceTable.get("RaceTable")).get("Races")).get(0)).get("Sprint");
+
+            if (raceData != null) {
+                beginningDate = (String) raceData.get("date");
+                beginningTime = (String) raceData.get("time");
+            }
+        }
+
+        // Create date object
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC")); // Ensure date parsing in UTC
+        Date dateToCompare = dateFormatter.parse(beginningDate);
+
+        // Current date and hour in computer (system default time zone)
+        Date currentDate = new Date();
+
+        // Check if it's not too late to post predictions based on the date
+        if (currentDate.after(dateToCompare)) {
+            return false;
+        }
+
+        // Create combined date-time string for parsing
+        String dateTimeString = beginningDate + " " + beginningTime;
+
+        // Parse the date and time together with UTC timezone
+        SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssX");
+        dateTimeFormatter.setTimeZone(TimeZone.getTimeZone("UTC")); // Parse as UTC
+        Date dateTimeToCompare = dateTimeFormatter.parse(dateTimeString);
+
+        // Create a Calendar instance for the parsed time in UTC
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        calendar.setTime(dateTimeToCompare);
+
+        // Subtract 30 minutes from the race start time
+        calendar.add(Calendar.MINUTE, -30);
+        Date adjustedTime = calendar.getTime(); // New time after subtracting 30 minutes
+
+        // Get the current time in UTC for comparison
+        Calendar currentCal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        currentCal.setTime(currentDate);
+
+        // Check if it's not too late to post predictions based on the adjusted time
+        if (currentCal.getTime().after(adjustedTime)) {
+            return false;
+        }
+
+        return true;
+    }
+
     public ResponseEntity<String> F1APIRaceParser(int grandPrixId, int sessionId, String username, int year) {
         boolean joker = false;
         Predictions predictions = getParticipantPredictions(grandPrixId, sessionId, username);
@@ -389,5 +470,72 @@ public class PredictService {
         pointsCalculated = pointsCalculator.countPointsFromRace(predictions.getFastestLap(), actualFastestLap);
 
         return updatePredictionsInDB(grandPrixId, sessionId, username, predictions, pointsCalculated);
+    }
+
+    public ResponseEntity<String> sprintSeleniumParser(int grandPrixId, int sessionId, String username, int year, String grandPrixName) {
+        try {
+            boolean joker = false;
+            Predictions predictions = getParticipantPredictions(grandPrixId, sessionId, username);
+            if (predictions.getGrandPrix().getJoker() != null) {
+                joker = true;
+            }
+
+            double pointsCalculated;
+
+            //if points were already calculated
+            if (predictions.getPoints() != null) {
+                return ResponseEntity.ok(predictions.getPoints().getNumber().toString());
+            }
+
+            ArrayList<String> driverArrayList = new ArrayList<>();
+            WebDriver driver;
+            System.setProperty("webdriver.firefox.marionette","C:\\apps\\geckodriver.exe");
+
+            // Create an instance of FirefoxOptions
+            FirefoxOptions options = new FirefoxOptions();
+            options.addArguments("--headless=new");
+
+            driver = new FirefoxDriver(options);
+
+            String file = "2024_s.txt";
+            UrlFromTxtParser urlFromTxtParser = new UrlFromTxtParser();
+            ArrayList<URL> urls = urlFromTxtParser.add(file, resourceLoader);
+
+            String baseUrl = null;
+
+            grandPrixName = grandPrixName.toLowerCase();
+            grandPrixName = grandPrixName.replace(" ", "-");
+
+            for(URL url : urls){
+                if(url.getGpName().equals(grandPrixName)){
+                    baseUrl = url.getUrl();
+                    baseUrl += "/sprint-results";
+                    break;
+                }
+            }
+
+            if(baseUrl != null) {
+                driver.get(baseUrl);
+
+                List<WebElement> sth = driver.findElements(By.className("max-tablet:hidden"));
+
+                for (WebElement webElement : sth) {
+                    String surname = webElement.getText();
+                    driverArrayList.add(surname);
+                }
+
+                PointsCalculator pointsCalculator = initPointsCalculator(predictions, driverArrayList, joker);
+                pointsCalculated = pointsCalculator.countPointsFromSprint();
+
+                return updatePredictionsInDB(grandPrixId, sessionId, username, predictions, pointsCalculated);
+            }
+            else{
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

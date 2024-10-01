@@ -29,6 +29,9 @@ After registration/signing-in:
 - Session which wasn't predicted 30 minutes before its start by participant
 ![image](https://github.com/user-attachments/assets/30524ba6-20c3-4568-8cba-a39bc100685e)
 
+### Predicting Sprint
+It's the same as with Qualifying
+
 ### Predicting Race
 - Predicting (you have to guess driver with fastest lap additionally)
 ![image](https://github.com/user-attachments/assets/f32d5dce-4e5d-434f-a2cc-21ea49036d41)
