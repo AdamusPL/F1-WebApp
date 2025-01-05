@@ -9,6 +9,7 @@ import com.typerf1.typerf1.repository.RegisterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -19,6 +20,8 @@ import java.util.List;
 @Service
 public class RegisterService {
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     private final RegisterRepository registerRepository;
     private final ParticipantRepository participantRepository;
 
@@ -49,7 +52,7 @@ public class RegisterService {
         Participant participant = new Participant(registerData.getFirstName(), registerData.getSurname(), registerData.getDescription(), Base64.getEncoder().encodeToString(registerData.getProfilePicture().getBytes()));
 
         //if there's no conflict
-        ParticipantLoginData participantLoginData = new ParticipantLoginData(registerData.getUsername(), registerData.getPassword());
+        ParticipantLoginData participantLoginData = new ParticipantLoginData(registerData.getUsername(), passwordEncoder.encode(registerData.getPassword()));
         Email email = new Email(registerData.getEmail());
 
         participantLoginData.setParticipant(participant);

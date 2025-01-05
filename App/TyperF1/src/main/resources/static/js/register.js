@@ -1,4 +1,5 @@
 function submitForm(e) {
+    debugger;
     e.preventDefault();
     try {
         const firstName = document.getElementById('floatingInputFirstName').value;
