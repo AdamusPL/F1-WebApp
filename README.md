@@ -57,10 +57,8 @@ It's the same as with Qualifying
 ![image](https://github.com/user-attachments/assets/0778ae78-a3b3-4c80-bd48-412cce4c8c9f)
 
 ### Sign-in page
-![image](https://github.com/user-attachments/assets/69c5c624-22ea-404f-a345-ded23217bec7)
+![image](https://github.com/user-attachments/assets/2fb83120-ea89-4112-8a35-975700d880b8)
 
 ### Registration page
-![image](https://github.com/user-attachments/assets/337d1bf2-c979-4495-9297-e233f8dd3b34)
-
-
+![image](https://github.com/user-attachments/assets/4820da7f-61a5-4bcf-9330-7f7576cbf4cd)
 
