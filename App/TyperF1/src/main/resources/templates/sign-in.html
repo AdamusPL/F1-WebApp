@@ -18,7 +18,7 @@
 
 
     <!-- Custom styles for this template -->
-    <link href="css/sign-in.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/sign-in.css">
     <script src="js/sign-in.js"></script>
     <link rel="stylesheet" href="css/home.css">
 </head>
@@ -98,7 +98,7 @@
         <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
         <div class="form-floating">
-            <input type="search" class="form-control" id="floatingInput" placeholder="name@example.com">
+            <input type="text" class="form-control" id="floatingInput" placeholder="user1234">
             <label for="floatingInput">Login</label>
         </div>
         <div class="form-floating">
@@ -113,9 +113,12 @@
             </label>
         </div>
 
-        <p id="error"></p>
+        <p>Don't have an account? Register <a href="/register">here</a></p>
 
         <button class="btn btn-primary w-100 py-2">Sign in</button>
+
+        <p id="error"></p>
+
         <p class="mt-5 mb-3 text-body-secondary">&copy; 2020–2024</p>
     </form>
 </main>
