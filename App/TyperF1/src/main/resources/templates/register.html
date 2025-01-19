@@ -98,27 +98,27 @@
         <h1 class="h3 mb-3 fw-normal">Register your account</h1>
 
         <div class="form-floating">
-            <input type="text" class="form-control" id="floatingInputFirstName" placeholder="Ayrton">
+            <input type="text" minlength="2" maxlength="18" class="form-control" id="floatingInputFirstName" placeholder="Ayrton">
             <label for="floatingInputFirstName">First Name</label>
         </div>
         <div class="form-floating">
-            <input type="text" class="form-control" id="floatingInputSurname" placeholder="Senna">
+            <input type="text" minlength="2" maxlength="48" class="form-control" id="floatingInputSurname" placeholder="Senna">
             <label for="floatingInputSurname">Surname</label>
         </div>
         <div class="form-floating">
-            <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
+            <input type="text" minlength="6" maxlength="30" class="form-control" id="floatingInput" placeholder="name@example.com">
             <label for="floatingInput">Login</label>
         </div>
         <div class="form-floating">
-            <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+            <input type="password" minlength="8" class="form-control" id="floatingPassword" placeholder="Password">
             <label for="floatingPassword">Password</label>
         </div>
         <div class="form-floating">
-            <input type="password" class="form-control" id="floatingConfirmPassword" placeholder="Confirm Password">
+            <input type="password" minlength="8" class="form-control" id="floatingConfirmPassword" placeholder="Confirm Password">
             <label for="floatingConfirmPassword">Confirm password</label>
         </div>
         <div class="form-floating">
-            <input type="email" class="form-control" id="floatingEmail" placeholder="Email">
+            <input type="email" minlength="2" maxlength="64" class="form-control" id="floatingEmail" placeholder="Email">
             <label for="floatingEmail">E-mail Address</label>
         </div>
 
@@ -126,7 +126,7 @@
         <input type="file" class="form-control" id="floatingImage">
 
         <div class="form-floating">
-            <input type="text" class="form-control" id="floatingDescription">
+            <input type="text" maxlength="300" class="form-control" id="floatingDescription">
             <label for="floatingDescription">Profile description</label>
         </div>
 

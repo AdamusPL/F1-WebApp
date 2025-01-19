@@ -26,7 +26,7 @@ public class ParticipantLoginDataService {
         List<ParticipantLoginData> participantLoginDataList = participantLoginDataRepository.findAll();
 
         for (ParticipantLoginData data : participantLoginDataList) {
-            if (data.getUsername().equals(participantLoginData.getUsername()) && passwordEncoder.matches(data.getPassword(), participantLoginData.getPassword())) {
+            if (data.getUsername().equals(participantLoginData.getUsername()) && passwordEncoder.matches(participantLoginData.getPassword(), data.getPassword())) {
                 return ResponseEntity.ok().build();
             }
         }

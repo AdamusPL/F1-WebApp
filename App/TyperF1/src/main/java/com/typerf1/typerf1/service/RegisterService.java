@@ -38,13 +38,13 @@ public class RegisterService {
         for (RegisterData userData : userDataList) {
             //because every participant has to have different full name
             if (userData.getFirstName().equals(registerData.getFirstName()) && userData.getSurname().equals(registerData.getSurname())) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).build();
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Full name is already taken");
             }
             if (userData.getUsername().equals(registerData.getUsername())) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).build();
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Username is already taken");
             }
             if (userData.getEmail().equals(registerData.getEmail())) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).build();
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Email is already taken");
             }
         }
 

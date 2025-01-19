@@ -11,6 +11,12 @@ function submitForm(e) {
         const description = document.getElementById('floatingDescription').value;
         const profilePicture = document.getElementById('floatingImage').files[0];
 
+        if(profilePicture === undefined){
+            document.getElementById("error").innerText = "You have to upload a profile picture";
+            return;
+        }
+        debugger;
+
         if(password !== confirmPassword){
             document.getElementById("error").innerText = "Error: Passwords don't match"
             return;
@@ -32,7 +38,10 @@ function submitForm(e) {
             if (response.ok) {
                 document.getElementById("error").innerText = "Successfully registered a new user"
             } else {
-                document.getElementById("error").innerText = "Error"
+                response.text().then(data => {
+                    debugger;
+                    document.getElementById("error").innerText = data;
+                })
             }
         })
     }
