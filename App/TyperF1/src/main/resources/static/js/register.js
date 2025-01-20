@@ -34,7 +34,7 @@ function submitForm(e) {
             body: formData
         }).then(response => {
             if (response.ok) {
-                document.getElementById("error").innerText = "Successfully registered a new user"
+                document.getElementById("success").innerText = "Successfully registered a new user"
             } else {
                 response.text().then(data => {
                     document.getElementById("error").innerText = data;
