@@ -2,8 +2,9 @@
 WebApp which aims to make ability to make predictions of driver standings from Formula 1 session (Sprint/Qualifying/Race) and see statistics from it
 
 ## Functionalities
-After registration/signing-in:
+- JWT & Cookie authorization & authentication
 
+After registration/signing-in:
 - Posting predictions for Sprint/Qualifying/Race and seeing gained points
 - Printing participant standings in specific season;
 - Printing standings from each session, race weekend in the specific year;
@@ -12,7 +13,11 @@ After registration/signing-in:
 
 ## Stack
 - Formula One API - https://documenter.getpostman.com/view/11586746/SztEa7bL#dfa298c3-bd29-4a40-9ea0-8cbd81653905 - to download driver standings from specific sessions, compare it to participant predictions and count points
+- Selenium (for Sprint session results)
+- MS SQL Server 22 + Docker
+- Java 23
 - Java Spring
+- Spring Security
 - HTML/CSS/JS
 
 ## Screenshots
@@ -60,5 +65,4 @@ It's the same as with Qualifying
 ![image](https://github.com/user-attachments/assets/2fb83120-ea89-4112-8a35-975700d880b8)
 
 ### Registration page
-![image](https://github.com/user-attachments/assets/4820da7f-61a5-4bcf-9330-7f7576cbf4cd)
-
+![image](https://github.com/user-attachments/assets/8fde2b08-81e3-49ef-86a8-8bb8f0632ad4)
