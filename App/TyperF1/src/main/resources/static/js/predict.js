@@ -188,9 +188,7 @@ function postPredictions(grandPrixId, sessionId, isRace) {
         jokerChoice = true;
     }
 
-    const username = JSON.parse(localStorage.getItem('user')).username;
-
-    fetch(`/post-predictions?grandPrixId=${grandPrixId}&sessionId=${sessionId}&username=${username}&joker=${jokerChoice}`, {
+    fetch(`/post-predictions?grandPrixId=${grandPrixId}&sessionId=${sessionId}&joker=${jokerChoice}`, {
         method: 'POST',
         body: predictions
     }).then(response => {
@@ -202,8 +200,6 @@ function postPredictions(grandPrixId, sessionId, isRace) {
 }
 
 async function checkIfSessionWasAlreadyPredicted(year, sessionId, sessionName, grandPrixId, sessionType, grandPrixName) {
-    const username = JSON.parse(localStorage.getItem('user')).username;
-
     try {
         //check if participant has already predicted
         let shortcut = "";
@@ -216,7 +212,7 @@ async function checkIfSessionWasAlreadyPredicted(year, sessionId, sessionName, g
         }
 
         const response = await fetch(`/check-predictions-existence?sessionType=${shortcut}&year=${year}&grandPrixId=${grandPrixId}
-        &sessionId=${sessionId}&username=${username}`);
+        &sessionId=${sessionId}`);
 
         if (response.status === 200) {
             const data = await response.json();
@@ -245,7 +241,7 @@ async function checkIfSessionWasAlreadyPredicted(year, sessionId, sessionName, g
 
             //here calculate points from predictions
             if (sessionType === "qualifying") {
-                fetch(`/calculate-points-qualifying?grandPrixId=${grandPrixId}&sessionId=${sessionId}&username=${username}`)
+                fetch(`/calculate-points-qualifying?grandPrixId=${grandPrixId}&sessionId=${sessionId}`)
                     .then(response => {
                         const status = handleResponse(response);
                         if (response.status === 200) {
@@ -268,7 +264,7 @@ async function checkIfSessionWasAlreadyPredicted(year, sessionId, sessionName, g
                         }
                     });
             } else if (sessionType === "race") {
-                fetch(`/calculate-points-race?grandPrixId=${grandPrixId}&sessionId=${sessionId}&username=${username}`)
+                fetch(`/calculate-points-race?grandPrixId=${grandPrixId}&sessionId=${sessionId}`)
                     .then(response => {
                         const status = handleResponse(response);
                         if (response.status === 200) {
@@ -291,7 +287,7 @@ async function checkIfSessionWasAlreadyPredicted(year, sessionId, sessionName, g
                         }
                     });
             } else {
-                fetch(`/calculate-points-sprint?grandPrixId=${grandPrixId}&sessionId=${sessionId}&username=${username}&grandPrixName=${grandPrixName}`)
+                fetch(`/calculate-points-sprint?grandPrixId=${grandPrixId}&sessionId=${sessionId}&grandPrixName=${grandPrixName}`)
                     .then(response => {
                         const status = handleResponse(response);
                         if (response.status === 200) {
