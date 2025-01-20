@@ -64,8 +64,6 @@ async function printPredictionsQualifyingAndSprint(year, sessionName, sessionId,
         document.getElementById("predictions").remove();
     }
 
-    debugger;
-
     let wasPredicted;
     if(sessionType === "qualifying"){
         wasPredicted = await checkIfSessionWasAlreadyPredicted(year, sessionId, sessionName, grandPrixId, "qualifying", grandPrixName);
@@ -204,7 +202,6 @@ function postPredictions(grandPrixId, sessionId, isRace) {
 }
 
 async function checkIfSessionWasAlreadyPredicted(year, sessionId, sessionName, grandPrixId, sessionType, grandPrixName) {
-    debugger;
     const username = JSON.parse(localStorage.getItem('user')).username;
 
     try {
@@ -220,8 +217,6 @@ async function checkIfSessionWasAlreadyPredicted(year, sessionId, sessionName, g
 
         const response = await fetch(`/check-predictions-existence?sessionType=${shortcut}&year=${year}&grandPrixId=${grandPrixId}
         &sessionId=${sessionId}&username=${username}`);
-
-        debugger;
 
         if (response.status === 200) {
             const data = await response.json();

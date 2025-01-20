@@ -1,5 +1,6 @@
 package com.typerf1.typerf1.controller;
 
+import com.typerf1.typerf1.dto.SecurityFilterDto;
 import com.typerf1.typerf1.model.ParticipantLoginData;
 import com.typerf1.typerf1.service.ParticipantLoginDataService;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +22,12 @@ public class SignInController {
     }
 
     @PostMapping("/check-data")
-    public ResponseEntity<String> login(@RequestBody ParticipantLoginData participantLoginData) {
+    public ResponseEntity<SecurityFilterDto> login(@RequestBody ParticipantLoginData participantLoginData) {
         return participantLoginDataService.isLoginAndPasswordCorrect(participantLoginData);
     }
 
     @GetMapping("/get-full-name")
-    public @ResponseBody String getFullName(@RequestParam String username){
-        return participantLoginDataService.getFullName(username);
+    public @ResponseBody String getFullName(){
+        return participantLoginDataService.getFullName();
     }
 }

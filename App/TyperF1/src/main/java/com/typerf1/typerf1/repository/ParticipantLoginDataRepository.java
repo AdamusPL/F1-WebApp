@@ -18,4 +18,6 @@ public interface ParticipantLoginDataRepository extends JpaRepository<Participan
                     "WHERE pld.username = :username "
     )
     List<FullName> getFullName(@Param("username") String username);
+
+    List<ParticipantLoginData> findAllByUsername(String username);
 }

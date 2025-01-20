@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -19,12 +20,26 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/register", "/sign-in", "/about", "/",
-                                "/rules", "/images/*","/css/**", "/js/**").permitAll()
+                                "/rules", "/images/*","/css/**", "/js/**")
+                        .permitAll()
 
-                        .requestMatchers(HttpMethod.POST, "/register-user", "/check-data").permitAll()
-                        .anyRequest().authenticated()
-                );
+                        .requestMatchers(HttpMethod.POST, "/register-user", "/check-data")
+                        .permitAll()
+
+                        .requestMatchers("/participants", "/personal-best", "/get-personal-best", "/predict",
+                                "/get-sessions", "/post-predictions", "/check-predictions-existence",
+                                "/calculate-points-qualifying", "/calculate-points-race", "/calculate-points-sprint",
+                                "/get-participant-standings", "/results", "/standings", "/get-full-name",
+                                "/get-season-scores", "/get-grandprix-summary", "/world-records", "/get-records")
+                        .authenticated()
+                )
+                .addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationFilter authenticationFilter() {
+        return new AuthenticationFilter();
     }
 
     @Bean
