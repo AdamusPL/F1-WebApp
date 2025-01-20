@@ -1,9 +1,9 @@
 package com.typerf1.typerf1.repository;
 
-import com.typerf1.typerf1.dto.GrandPrixScore;
-import com.typerf1.typerf1.dto.JokersUsage;
-import com.typerf1.typerf1.dto.Score;
-import com.typerf1.typerf1.dto.UsedJokersGP;
+import com.typerf1.typerf1.dto.grandprix.GrandPrixScore;
+import com.typerf1.typerf1.dto.joker.JokersUsage;
+import com.typerf1.typerf1.dto.points.Score;
+import com.typerf1.typerf1.dto.joker.UsedJokersGP;
 import com.typerf1.typerf1.model.Points;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

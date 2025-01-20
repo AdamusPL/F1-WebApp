@@ -1,7 +1,7 @@
 package com.typerf1.typerf1.controller;
 
-import com.typerf1.typerf1.dto.GrandPrixScoreWithJokers;
-import com.typerf1.typerf1.dto.ScoreWithJokers;
+import com.typerf1.typerf1.dto.grandprix.GrandPrixScoreWithJokers;
+import com.typerf1.typerf1.dto.points.ScoreWithJokers;
 import com.typerf1.typerf1.service.StandingsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

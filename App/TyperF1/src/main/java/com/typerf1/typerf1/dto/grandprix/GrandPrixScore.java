@@ -1,4 +1,4 @@
-package com.typerf1.typerf1.dto;
+package com.typerf1.typerf1.dto.grandprix;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,21 +11,19 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class RecordLong {
+public class GrandPrixScore {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    String grandPrixName;
+    String sessionName;
     String participantName;
     String participantSurname;
-    String grandPrixName;
-    Integer year;
-    Integer points;
+    Long pointsSum;
 
-    public RecordLong(String participantName, String participantSurname, String grandPrixName, Integer year, Integer points) {
-        this.year = year;
+    public GrandPrixScore(String grandPrixName, String participantName, String participantSurname, Long pointsSum) {
         this.grandPrixName = grandPrixName;
         this.participantName = participantName;
         this.participantSurname = participantSurname;
-        this.points = points;
+        this.pointsSum = pointsSum;
     }
 }

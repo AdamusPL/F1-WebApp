@@ -1,6 +1,6 @@
 package com.typerf1.typerf1.controller;
 
-import com.typerf1.typerf1.dto.SeasonScoreWithJokers;
+import com.typerf1.typerf1.dto.season.SeasonScoreWithJokers;
 import com.typerf1.typerf1.service.ResultsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

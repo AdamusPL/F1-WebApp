@@ -1,7 +1,7 @@
 package com.typerf1.typerf1.repository;
 
-import com.typerf1.typerf1.dto.JokersUsed;
-import com.typerf1.typerf1.dto.SeasonScore;
+import com.typerf1.typerf1.dto.joker.JokersUsed;
+import com.typerf1.typerf1.dto.season.SeasonScore;
 import com.typerf1.typerf1.model.Points;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

@@ -1,6 +1,6 @@
 package com.typerf1.typerf1.service;
 
-import com.typerf1.typerf1.dto.RegisterData;
+import com.typerf1.typerf1.dto.participantLoginData.RegisterData;
 import com.typerf1.typerf1.model.Email;
 import com.typerf1.typerf1.model.Participant;
 import com.typerf1.typerf1.model.ParticipantLoginData;

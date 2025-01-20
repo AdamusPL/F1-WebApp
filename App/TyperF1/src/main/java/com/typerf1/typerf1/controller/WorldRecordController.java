@@ -1,6 +1,6 @@
 package com.typerf1.typerf1.controller;
 
-import com.typerf1.typerf1.dto.Record;
+import com.typerf1.typerf1.dto.points.Record;
 import com.typerf1.typerf1.service.WorldRecordService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

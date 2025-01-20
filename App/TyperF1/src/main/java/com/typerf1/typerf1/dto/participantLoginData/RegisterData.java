@@ -1,4 +1,4 @@
-package com.typerf1.typerf1.dto;
+package com.typerf1.typerf1.dto.participantLoginData;
 
 import lombok.Data;
 import lombok.Getter;

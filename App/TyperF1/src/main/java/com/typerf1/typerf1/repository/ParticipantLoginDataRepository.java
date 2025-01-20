@@ -1,6 +1,6 @@
 package com.typerf1.typerf1.repository;
 
-import com.typerf1.typerf1.dto.FullName;
+import com.typerf1.typerf1.dto.participant.FullName;
 import com.typerf1.typerf1.model.ParticipantLoginData;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

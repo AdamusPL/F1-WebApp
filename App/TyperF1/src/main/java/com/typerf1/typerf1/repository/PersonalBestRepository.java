@@ -1,6 +1,6 @@
 package com.typerf1.typerf1.repository;
 
-import com.typerf1.typerf1.dto.Record;
+import com.typerf1.typerf1.dto.points.Record;
 import com.typerf1.typerf1.model.Points;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

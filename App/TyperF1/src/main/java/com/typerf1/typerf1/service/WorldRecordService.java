@@ -1,6 +1,6 @@
 package com.typerf1.typerf1.service;
 
-import com.typerf1.typerf1.dto.Record;
+import com.typerf1.typerf1.dto.points.Record;
 import com.typerf1.typerf1.repository.WorldRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
