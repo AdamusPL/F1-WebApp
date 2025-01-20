@@ -17,8 +17,8 @@ function getScores(year) {
             })
             .then(data => {
                 const statistics = document.getElementById("statistics");
-                var grandPrix = "";
-                var session = "";
+                let grandPrix = "";
+                let session = "";
                 data.forEach(item => {
                     if (item.grandPrixName !== grandPrix) {
                         grandPrix = item.grandPrixName;

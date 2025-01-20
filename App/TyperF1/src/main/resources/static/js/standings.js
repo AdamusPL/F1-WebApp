@@ -18,7 +18,7 @@ function getParticipantStandings(year){
                 data.forEach(item => {
                     const li = document.createElement("li");
                     li.innerText = item.participantName + " " + item.participantSurname + " " + item.pointsSum + " ";
-                    for(var i = 0; i < item.numberOfJokersUsed; i++){
+                    for(let i = 0; i < item.numberOfJokersUsed; i++){
                         li.innerText += "J";
                     }
                     standings.appendChild(li);
