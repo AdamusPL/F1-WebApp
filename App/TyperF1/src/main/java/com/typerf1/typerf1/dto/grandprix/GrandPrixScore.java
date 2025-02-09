@@ -18,9 +18,9 @@ public class GrandPrixScore {
     String sessionName;
     String participantName;
     String participantSurname;
-    Long pointsSum;
+    Double pointsSum;
 
-    public GrandPrixScore(String grandPrixName, String participantName, String participantSurname, Long pointsSum) {
+    public GrandPrixScore(String grandPrixName, String participantName, String participantSurname, Double pointsSum) {
         this.grandPrixName = grandPrixName;
         this.participantName = participantName;
         this.participantSurname = participantSurname;

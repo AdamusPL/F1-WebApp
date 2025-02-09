@@ -1,27 +1,47 @@
-.dropdown{
+.dropdown {
     display: flex;
     justify-content: center;
 }
 
-.prediction{
+.prediction {
     display: flex;
     justify-content: center;
 }
 
-.form-control{
+.form-control {
     width: 300px;
 }
 
-#button-div{
+#button-div {
     display: flex;
     justify-content: center;
 }
 
-#state{
+#state {
     width: 100px;
 }
 
-#joker{
+#joker {
     display: flex;
     justify-content: center;
+}
+
+#prediction-1 {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+#prediction-20 {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+[id^="prediction-"]:not(#prediction-1):not(#prediction-20) {
+    border-radius: 0;
+}
+
+.form-predictions .form-floating:focus-within {
+    z-index: 2;
 }

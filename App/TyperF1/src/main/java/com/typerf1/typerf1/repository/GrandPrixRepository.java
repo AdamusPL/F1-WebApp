@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface GrandPrixRepository extends JpaRepository<GrandPrix, Integer> {
 
-    @Query("SELECT new com.typerf1.typerf1.model.GrandPrix(gp.id, gp.name) " +
+    @Query("SELECT new GrandPrix(gp.id, gp.name) " +
             "FROM GrandPrix gp " +
             "JOIN gp.season s " +
             "WHERE s.year = :year")

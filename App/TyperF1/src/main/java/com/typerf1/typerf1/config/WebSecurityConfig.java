@@ -19,8 +19,10 @@ public class WebSecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register", "/sign-in", "/about", "/",
-                                "/rules", "/images/*","/css/**", "/js/**")
+                        .requestMatchers("/sign-in", "/register").anonymous() // Only unauthenticated users can access
+
+                        .requestMatchers("/about", "/",
+                                "/rules", "/images/*", "/css/**", "/js/**")
                         .permitAll()
 
                         .requestMatchers(HttpMethod.POST, "/register-user", "/check-data")

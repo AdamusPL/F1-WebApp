@@ -1,7 +1,7 @@
 window.addEventListener('load', getParticipantStandings);
 
-function getParticipantStandings(year){
-    if(document.getElementById("standings") !== null){
+function getParticipantStandings(year) {
+    if (document.getElementById("standings") !== null) {
         document.getElementById("standings").remove();
     }
     try {
@@ -15,14 +15,14 @@ function getParticipantStandings(year){
             .then(data => {
                 const standings = document.createElement("ol");
                 standings.id = "standings";
-                data.forEach(item => {
+                data.forEach(((item, index) => {
                     const li = document.createElement("li");
-                    li.innerText = item.participantName + " " + item.participantSurname + " " + item.pointsSum + " ";
-                    for(let i = 0; i < item.numberOfJokersUsed; i++){
+                    li.innerText = (index + 1) + ". " + item.participantName + " " + item.participantSurname + " " + item.pointsSum + " ";
+                    for (let i = 0; i < item.numberOfJokersUsed; i++) {
                         li.innerText += "J";
                     }
                     standings.appendChild(li);
-                });
+                }));
                 document.getElementById("statistics").appendChild(standings);
                 document.getElementById("season-year").innerText = year;
             })

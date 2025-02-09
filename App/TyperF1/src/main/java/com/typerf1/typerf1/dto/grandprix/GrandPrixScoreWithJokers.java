@@ -18,10 +18,10 @@ public class GrandPrixScoreWithJokers {
     String grandPrixName;
     String participantName;
     String participantSurname;
-    Long pointsSum;
+    Double pointsSum;
     Long numberOfJokersUsed;
 
-    public GrandPrixScoreWithJokers(String grandPrixName, String participantName, String participantSurname, Long pointsSum, Long numberOfJokersUsed) {
+    public GrandPrixScoreWithJokers(String grandPrixName, String participantName, String participantSurname, Double pointsSum, Long numberOfJokersUsed) {
         this.grandPrixName = grandPrixName;
         this.participantName = participantName;
         this.participantSurname = participantSurname;

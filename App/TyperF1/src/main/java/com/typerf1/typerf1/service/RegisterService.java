@@ -37,7 +37,7 @@ public class RegisterService {
 
         for (RegisterData userData : userDataList) {
             //because every participant has to have different full name
-            if (userData.getFirstName().equals(registerData.getFirstName()) && userData.getSurname().equals(registerData.getSurname())) {
+            if (userData.getName().equals(registerData.getName()) && userData.getSurname().equals(registerData.getSurname())) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("Full name is already taken");
             }
             if (userData.getUsername().equals(registerData.getUsername())) {
@@ -49,7 +49,7 @@ public class RegisterService {
         }
 
         String fileName = StringUtils.cleanPath(registerData.getProfilePicture().getOriginalFilename());
-        Participant participant = new Participant(registerData.getFirstName(), registerData.getSurname(), registerData.getDescription(), Base64.getEncoder().encodeToString(registerData.getProfilePicture().getBytes()));
+        Participant participant = new Participant(registerData.getName(), registerData.getSurname(), registerData.getDescription(), Base64.getEncoder().encodeToString(registerData.getProfilePicture().getBytes()));
 
         //if there's no conflict
         ParticipantLoginData participantLoginData = new ParticipantLoginData(registerData.getUsername(), passwordEncoder.encode(registerData.getPassword()));

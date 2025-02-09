@@ -197,6 +197,8 @@ function postPredictions(grandPrixId, sessionId, isRace) {
         }
         return response.json();
     });
+
+    document.getElementById("button-div").style.display = "none";
 }
 
 async function checkIfSessionWasAlreadyPredicted(year, sessionId, sessionName, grandPrixId, sessionType, grandPrixName) {

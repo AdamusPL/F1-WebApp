@@ -12,7 +12,7 @@ import java.util.List;
 
 @Repository
 public interface WorldRecordRepository extends JpaRepository<Points, Integer> {
-    @Query("SELECT new com.typerf1.typerf1.dto.Record(p.name, p.surname, gp.name, s.year, pt.number) " +
+    @Query("SELECT new Record(p.name, p.surname, gp.name, s.year, pt.number) " +
             "FROM Points pt " +
             "JOIN pt.participant p " +
             "JOIN pt.session ses " +
@@ -31,7 +31,7 @@ public interface WorldRecordRepository extends JpaRepository<Points, Integer> {
             "WHERE gp2.id = gp.id)) ")
     List<Record> findHighest(@Param("session") String session, Pageable pageable);
 
-    @Query("SELECT new com.typerf1.typerf1.dto.Record(p.name, p.surname, gp.name, s.year, pt.number) " +
+    @Query("SELECT new Record(p.name, p.surname, gp.name, s.year, pt.number) " +
             "FROM Points pt " +
             "JOIN pt.participant p " +
             "JOIN pt.session ses " +
@@ -50,7 +50,7 @@ public interface WorldRecordRepository extends JpaRepository<Points, Integer> {
             "WHERE gp2.id = gp.id)) ")
     List<Record> findLowest(@Param("session") String session, Pageable pageable);
 
-    @Query("SELECT new com.typerf1.typerf1.dto.Record(p.name, p.surname, gp.name, s.year, MAX(pt.number)) " +
+    @Query("SELECT new Record(p.name, p.surname, gp.name, s.year, MAX(pt.number)) " +
             "FROM Points pt " +
             "JOIN pt.participant p " +
             "JOIN pt.session ses " +
@@ -63,7 +63,7 @@ public interface WorldRecordRepository extends JpaRepository<Points, Integer> {
             "GROUP BY p.name, p.surname, gp.name, s.year ")
     List<Record> findHighestJoker(@Param("session") String session, Pageable pageable);
 
-    @Query("SELECT new com.typerf1.typerf1.dto.Record(p.name, p.surname, gp.name, s.year, MIN(pt.number)) " +
+    @Query("SELECT new Record(p.name, p.surname, gp.name, s.year, MIN(pt.number)) " +
             "FROM Points pt " +
             "JOIN pt.participant p " +
             "JOIN pt.session ses " +
