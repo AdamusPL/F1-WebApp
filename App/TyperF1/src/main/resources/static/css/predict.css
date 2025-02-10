@@ -42,6 +42,38 @@
     border-radius: 0;
 }
 
-.form-predictions .form-floating:focus-within {
-    z-index: 2;
+#form-predictions .form-floating {
+    position: relative; /* Ensure it establishes a stacking context */
+    z-index: 1; /* Default z-index */
+}
+
+#form-predictions .form-floating:focus-within {
+    z-index: 10; /* Higher z-index so it appears above other inputs */
+}
+
+#numbers, #joker-label, #fastest-lap-label {
+    margin-top: 3px;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    gap: 14px;
+    margin-right: 5px;
+}
+
+#fastest-lap {
+    margin-bottom: 5px;
+}
+
+select option:checked {
+    background-color: red !important;
+    color: white !important;
+}
+
+option:hover {
+    background-color: darkred;
+}
+
+.form-select:focus {
+    border-color: red;
+    box-shadow: 0 0 0 0.2rem darkred;
 }

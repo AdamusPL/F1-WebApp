@@ -23,7 +23,7 @@ function getSessions(grandPrixId, grandPrixName) {
                 dropdown.classList.add("dropdown");
                 const a = document.createElement("a");
                 a.id = "participant-choice-weekend";
-                a.classList.add("d-block", "link-body-emphasis", "text-decoration-none", "dropdown-toggle");
+                a.classList.add("d-block", "link-body-emphasis", "text-decoration-none", "dropdown-toggle", "mb-4");
                 a.ariaExpanded = "false";
                 a.dataset.bsToggle = "dropdown";
                 a.innerText = "Choose session";
@@ -85,20 +85,27 @@ function createJokerOption() {
     const divPredictions = document.getElementById("predictions");
     const jokerDiv = document.createElement("div");
     jokerDiv.id = "joker";
+    const column1 = document.createElement("div");
+    column1.classList.add("col-4");
     const jokerLabel = document.createElement("label");
     jokerLabel.innerText = "Joker usage: ";
+    column1.appendChild(jokerLabel);
+    column1.id = "joker-label";
+    const column2 = document.createElement("div");
+    column2.classList.add("col-4");
     const select = document.createElement("select");
-    select.classList.add("form-select");
+    select.classList.add("form-select", "mb-4");
     select.id = "state";
     select.required = true;
     const optionNo = document.createElement("option");
     optionNo.innerText = "No";
     const optionYes = document.createElement("option");
     optionYes.innerText = "Yes";
-    jokerDiv.appendChild(jokerLabel);
+    jokerDiv.appendChild(column1);
     select.appendChild(optionNo);
     select.appendChild(optionYes);
-    jokerDiv.appendChild(select);
+    column2.appendChild(select);
+    jokerDiv.appendChild(column2);
     divPredictions.appendChild(jokerDiv);
 }
 
@@ -118,15 +125,23 @@ async function printPredictionsRace(year, sessionName, sessionId, grandPrixId) {
     const divPrediction = document.createElement("div");
     divPrediction.classList.add("prediction");
 
+    const column1 = document.createElement("div");
+    column1.classList.add("col-4");
     const label = document.createElement("label");
     label.innerText = "Fastest lap: ";
+    label.id = "fastest-lap-label";
+    column1.appendChild(label);
+
+    const column2 = document.createElement("div");
+    column2.classList.add("col-4");
     const input = document.createElement("input");
     input.type = "text";
     input.id = "fastest-lap";
     input.classList.add("form-control");
+    column2.appendChild(input);
 
-    divPrediction.appendChild(label);
-    divPrediction.appendChild(input);
+    divPrediction.appendChild(column1);
+    divPrediction.appendChild(column2);
     divPredictions.appendChild(divPrediction);
     createJokerOption();
     createPredictButton(sessionId, grandPrixId, true);
@@ -135,19 +150,34 @@ async function printPredictionsRace(year, sessionName, sessionId, grandPrixId) {
 function printTextFieldForStandings(sessionName) {
     const div = document.createElement("div");
     div.id = "predictions";
-    for (var i = 0; i < 20; i++) {
-        const divPrediction = document.createElement("div");
-        divPrediction.classList.add("prediction");
+    div.classList.add("container");
+
+    const column1 = document.createElement("div");
+    column1.classList.add("col-5");
+    column1.id = "numbers";
+
+    const column2 = document.createElement("div");
+    column2.classList.add("col-4");
+
+    for (let i = 0; i < 20; i++) {
+        let row = document.createElement("div");
+        row.classList.add("row", "form-floating");
+
         const label = document.createElement("label");
         label.innerText = i + 1 + ".";
+        column1.appendChild(label);
+
         const input = document.createElement("input");
         input.type = "text";
         input.classList.add("form-control");
         input.id = "prediction-" + (i + 1).toString();
-        divPrediction.appendChild(label);
-        divPrediction.appendChild(input);
-        div.appendChild(divPrediction);
+        column2.appendChild(input);
+
+        row.appendChild(column1);
+        row.appendChild(column2);
+        div.appendChild(row);
     }
+
     const divContainer = document.getElementById("body-container");
     divContainer.appendChild(div);
 }
@@ -170,7 +200,8 @@ function createPredictButton(sessionId, grandPrixId, isRace) {
 
 function postPredictions(grandPrixId, sessionId, isRace) {
     const predictions = new FormData();
-    for (var i = 1; i <= 20; i++) {
+    predictions.append("id", "form-predictions");
+    for (let i = 1; i <= 20; i++) {
         const id = "prediction-" + i;
         const prediction = document.getElementById(id);
         predictions.append("driver" + i, prediction.value);
