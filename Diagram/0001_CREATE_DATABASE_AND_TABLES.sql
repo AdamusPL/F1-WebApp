@@ -1,6 +1,14 @@
 USE TyperF1;
 GO
 
+DELETE FROM [ParticipantLoginData] WHERE Id=1006;
+DELETE FROM [Participant] WHERE Id=1003;
+DELETE FROM [Email] WHERE Id=1004;
+
+SELECT * FROM [ParticipantLoginData];
+SELECT * FROM [Participant];
+SELECT * FROM [Email];
+
 CREATE TABLE Season(
     Id INT UNIQUE NOT NULL IDENTITY(1,1),
     Year INT UNIQUE NOT NULL,
@@ -60,7 +68,7 @@ CREATE TABLE Email(
 CREATE TABLE ParticipantLoginData(
 	Id INT UNIQUE NOT NULL IDENTITY(1,1),
 	Username VARCHAR(32) NOT NULL UNIQUE,
-	Password VARCHAR(40) NOT NULL,
+	Password VARCHAR(60) NOT NULL,
 	PRIMARY KEY(Id)
 );
 

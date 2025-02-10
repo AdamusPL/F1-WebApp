@@ -1,6 +1,11 @@
 package com.typerf1.typerf1.service;
 
-import com.typerf1.typerf1.dto.*;
+import com.typerf1.typerf1.dto.grandprix.GrandPrixScore;
+import com.typerf1.typerf1.dto.grandprix.GrandPrixScoreWithJokers;
+import com.typerf1.typerf1.dto.joker.JokersUsage;
+import com.typerf1.typerf1.dto.joker.UsedJokersGP;
+import com.typerf1.typerf1.dto.points.Score;
+import com.typerf1.typerf1.dto.points.ScoreWithJokers;
 import com.typerf1.typerf1.repository.StandingsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

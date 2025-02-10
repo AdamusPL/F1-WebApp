@@ -2,8 +2,9 @@
 WebApp which aims to make ability to make predictions of driver standings from Formula 1 session (Sprint/Qualifying/Race) and see statistics from it
 
 ## Functionalities
-After registration/signing-in:
+- JWT & Cookie authorization & authentication
 
+After registration/signing-in:
 - Posting predictions for Sprint/Qualifying/Race and seeing gained points
 - Printing participant standings in specific season;
 - Printing standings from each session, race weekend in the specific year;
@@ -12,13 +13,17 @@ After registration/signing-in:
 
 ## Stack
 - Formula One API - https://documenter.getpostman.com/view/11586746/SztEa7bL#dfa298c3-bd29-4a40-9ea0-8cbd81653905 - to download driver standings from specific sessions, compare it to participant predictions and count points
+- Selenium (for Sprint session results)
+- MS SQL Server 22 + Docker
+- Java 23
 - Java Spring
+- Spring Security
 - HTML/CSS/JS
 
 ## Screenshots
 ### Predicting Qualifying
 - Predicting
-![image](https://github.com/user-attachments/assets/0bcca262-863e-4cc7-98e1-6e5580e4e3bf)
+![image](https://github.com/user-attachments/assets/dce4cd13-969b-44a0-b2fb-c7ce49c93122)
 
 - After posting predictions
 ![image](https://github.com/user-attachments/assets/5c140e74-e7c2-432e-9d1e-3cf453abd799)
@@ -34,7 +39,7 @@ It's the same as with Qualifying
 
 ### Predicting Race
 - Predicting (you have to guess driver with fastest lap additionally)
-![image](https://github.com/user-attachments/assets/f32d5dce-4e5d-434f-a2cc-21ea49036d41)
+![image](https://github.com/user-attachments/assets/123eee3a-5a6c-4861-b0fc-ec4854329921)
 
 - After session ended
 ![image](https://github.com/user-attachments/assets/4d0deae0-03ec-45a3-9a2a-b219a585b423)
@@ -57,10 +62,7 @@ It's the same as with Qualifying
 ![image](https://github.com/user-attachments/assets/0778ae78-a3b3-4c80-bd48-412cce4c8c9f)
 
 ### Sign-in page
-![image](https://github.com/user-attachments/assets/69c5c624-22ea-404f-a345-ded23217bec7)
+![image](https://github.com/user-attachments/assets/2fb83120-ea89-4112-8a35-975700d880b8)
 
 ### Registration page
-![image](https://github.com/user-attachments/assets/337d1bf2-c979-4495-9297-e233f8dd3b34)
-
-
-
+![image](https://github.com/user-attachments/assets/8fde2b08-81e3-49ef-86a8-8bb8f0632ad4)

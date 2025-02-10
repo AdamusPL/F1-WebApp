@@ -1,6 +1,6 @@
 package com.typerf1.typerf1.repository;
 
-import com.typerf1.typerf1.dto.Record;
+import com.typerf1.typerf1.dto.points.Record;
 import com.typerf1.typerf1.model.Points;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface PersonalBestRepository extends JpaRepository<Points, Integer> {
 
-    @Query("SELECT new com.typerf1.typerf1.dto.Record(p.name, p.surname, gp.name, s.year, pt.number) " +
+    @Query("SELECT new Record(p.name, p.surname, gp.name, s.year, pt.number) " +
             "FROM Points pt " +
             "JOIN pt.participant p " +
             "JOIN pt.session ses " +
@@ -36,7 +36,7 @@ public interface PersonalBestRepository extends JpaRepository<Points, Integer> {
             "AND p.surname = :surname ")
     List<Record> findHighest(@Param("session") String session, @Param("firstName") String firstName, @Param("surname") String surname, Pageable pageable);
 
-    @Query("SELECT new com.typerf1.typerf1.dto.Record(p.name, p.surname, gp.name, s.year, pt.number) " +
+    @Query("SELECT new Record(p.name, p.surname, gp.name, s.year, pt.number) " +
             "FROM Points pt " +
             "JOIN pt.participant p " +
             "JOIN pt.session ses " +

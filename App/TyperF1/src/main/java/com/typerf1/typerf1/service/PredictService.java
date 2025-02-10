@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -61,12 +62,13 @@ public class PredictService {
         return sessionRepository.getSessionsFromThatGrandPrix(grandPrixId);
     }
 
-    public ResponseEntity<String> postPredictions(int grandPrixId, int sessionId, String username, boolean joker, Predictions predictions) {
+    public ResponseEntity<String> postPredictions(int grandPrixId, int sessionId, boolean joker, Predictions predictions) {
         GrandPrix grandPrix = grandPrixRepository.findById(grandPrixId)
                 .orElseThrow(() -> new EntityNotFoundException("GrandPrix not found with id: " + grandPrixId));
         Session session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new EntityNotFoundException("Session not found with id: " + sessionId));
-        Participant participant = participantRepository.getParticipantByParticipantLoginDataUsername(username).get(0);
+        Participant participant = participantRepository.getParticipantByParticipantLoginDataUsername(
+                SecurityContextHolder.getContext().getAuthentication().getName()).getFirst();
         predictions.setGrandPrix(grandPrix);
         predictions.setSession(session);
         predictions.setParticipant(participant);
@@ -81,8 +83,8 @@ public class PredictService {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Predictions> checkPredictionsExistence(String sessionType, int year, int grandPrixId, int sessionId, String username) throws ParseException {
-        List<Predictions> predictionsList = predictionsRepository.checkPredictionExistence(grandPrixId, sessionId, username);
+    public ResponseEntity<Predictions> checkPredictionsExistence(String sessionType, int year, int grandPrixId, int sessionId) throws ParseException {
+        List<Predictions> predictionsList = predictionsRepository.checkPredictionExistence(grandPrixId, sessionId, SecurityContextHolder.getContext().getAuthentication().getName());
         if (predictionsList.size() != 0) {
             Predictions predictions = predictionsList.get(0);
             predictions.setParticipant(null);
@@ -116,8 +118,9 @@ public class PredictService {
         return predictionsList.get(0);
     }
 
-    public ResponseEntity<String> F1APIQualifyingParser(int grandPrixId, int sessionId, String username, int year) throws ParseException {
+    public ResponseEntity<String> F1APIQualifyingParser(int grandPrixId, int sessionId, int year) throws ParseException {
         boolean joker = false;
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Predictions predictions = getParticipantPredictions(grandPrixId, sessionId, username);
         if(predictions.getGrandPrix().getJoker() != null){
             joker = true;
@@ -420,8 +423,9 @@ public class PredictService {
         return true;
     }
 
-    public ResponseEntity<String> F1APIRaceParser(int grandPrixId, int sessionId, String username, int year) {
+    public ResponseEntity<String> F1APIRaceParser(int grandPrixId, int sessionId, int year) {
         boolean joker = false;
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Predictions predictions = getParticipantPredictions(grandPrixId, sessionId, username);
         if(predictions.getGrandPrix().getJoker() != null){
             joker = true;
@@ -472,9 +476,10 @@ public class PredictService {
         return updatePredictionsInDB(grandPrixId, sessionId, username, predictions, pointsCalculated);
     }
 
-    public ResponseEntity<String> sprintSeleniumParser(int grandPrixId, int sessionId, String username, int year, String grandPrixName) {
+    public ResponseEntity<String> sprintSeleniumParser(int grandPrixId, int sessionId, int year, String grandPrixName) {
         try {
             boolean joker = false;
+            String username =  SecurityContextHolder.getContext().getAuthentication().getName();
             Predictions predictions = getParticipantPredictions(grandPrixId, sessionId, username);
             if (predictions.getGrandPrix().getJoker() != null) {
                 joker = true;

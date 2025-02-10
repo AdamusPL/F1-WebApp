@@ -4,13 +4,13 @@
     border-color: red; /* Border color */
 }
 
-.me-2:hover{
+.me-2:hover {
     color: darkred;
     background-color: #ffffff; /* Background color */
     border-color: darkred; /* Border color */
 }
 
-.me-2:active:focus{
+.me-2:active:focus {
     color: black;
     background-color: #ffffff; /* Background color */
     border-color: black; /* Border color */
@@ -23,77 +23,98 @@
     border-color: red; /* Border color on hover */
 }
 
-.btn-primary:hover{
+.btn-primary:hover {
     color: #ffffff; /* Text color on hover */
     background-color: darkred; /* Background color on hover */
     border-color: darkred; /* Border color on hover */
 }
 
-.btn-primary:active:focus{
+.btn-primary:active:focus {
     color: #ffffff; /* Text color on hover */
-    background-color: black;/* Background color on hover */
+    background-color: black; /* Background color on hover */
     border-color: black; /* Border color on hover */
 }
 
-.nav-link{
+.nav-link {
     color: red;
 }
 
-.nav-link:hover{
+.nav-link:hover {
     color: darkred;
 }
 
-.nav-link:focus{
+.nav-link:focus {
     color: black;
 }
 
-h1, h2, h3{
+h1, h2, h3 {
     text-align: center;
 }
 
-h2{
+h2 {
     color: red;
 }
 
-h3{
+h3 {
     color: darkred;
 }
 
-h4{
+h4 {
     color: red;
 }
 
-svg{
+svg {
     display: block;
     margin: auto;
 }
 
-#navbar-container{
+#navbar-container {
     display: flex;
     justify-content: center;
     border-bottom: 1px solid #A9A9A9;
 }
 
-#navbar-elements{
+#navbar-elements {
     display: flex;
     list-style: none;
 }
 
-.nav-link{
+.nav-link {
     margin-top: 30px;
     margin-right: 20px;
 }
 
-#logout{
+#logout {
     margin-top: 20px;
 }
 
-#logout:active{
+#logout:active {
     background-color: white;
     color: black;
     border-color: black;
 }
 
-#login{
+#login {
     margin-top: 20px;
+}
+
+.form-control:focus {
+    border-color: red;
+    box-shadow: 0 0 0 0.2rem darkred;
+}
+
+a {
+    text-decoration: none;
+    color: red;
+    font-weight: bold;
+}
+
+#error {
+    color: red;
+    margin-top: 1rem;
+}
+
+#success {
+    color: green;
+    margin-top: 1rem;
 }

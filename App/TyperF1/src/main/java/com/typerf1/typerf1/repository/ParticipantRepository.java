@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface ParticipantRepository extends JpaRepository<Participant, Integer> {
 
-    @Query("SELECT new com.typerf1.typerf1.model.Participant(p.id, p.name, p.surname, p.description, p.profilePicture) " +
+    @Query("SELECT new Participant(p.id, p.name, p.surname, p.description, p.profilePicture) " +
             "FROM Participant p " +
             "JOIN p.participantLoginData pld " +
             "WHERE pld.username = :username")

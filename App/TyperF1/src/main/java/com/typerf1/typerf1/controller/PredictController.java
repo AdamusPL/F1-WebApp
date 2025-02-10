@@ -34,36 +34,34 @@ public class PredictController {
 
     @PostMapping("/post-predictions")
     public ResponseEntity<String> postPredictions(@RequestParam int grandPrixId, @RequestParam int sessionId,
-                                                  @RequestParam String username, @RequestParam boolean joker,
+                                                  @RequestParam boolean joker,
                                                   @ModelAttribute Predictions predictions){
-        return predictService.postPredictions(grandPrixId, sessionId, username, joker, predictions);
+        return predictService.postPredictions(grandPrixId, sessionId, joker, predictions);
     }
 
     @GetMapping("/check-predictions-existence")
     public ResponseEntity<Predictions> checkPredictionsExistence(@RequestParam String sessionType, @RequestParam int year,
-                                                                 @RequestParam int grandPrixId, @RequestParam int sessionId,
-                                                            @RequestParam String username) throws ParseException {
-        return predictService.checkPredictionsExistence(sessionType, year, grandPrixId, sessionId, username);
+                                                                 @RequestParam int grandPrixId, @RequestParam int sessionId
+                                                            ) throws ParseException {
+        return predictService.checkPredictionsExistence(sessionType, year, grandPrixId, sessionId);
     }
 
     @GetMapping("/calculate-points-qualifying")
-    public ResponseEntity<String> calculatePointsQualifying(@RequestParam int grandPrixId, @RequestParam int sessionId,
-                                              @RequestParam String username) throws ParseException {
+    public ResponseEntity<String> calculatePointsQualifying(@RequestParam int grandPrixId, @RequestParam int sessionId) throws ParseException {
         int year = 2024;
-        return predictService.F1APIQualifyingParser(grandPrixId, sessionId, username, year);
+        return predictService.F1APIQualifyingParser(grandPrixId, sessionId, year);
     }
 
     @GetMapping("/calculate-points-race")
-    public ResponseEntity<String> calculatePointsRace(@RequestParam int grandPrixId, @RequestParam int sessionId,
-                                        @RequestParam String username) {
+    public ResponseEntity<String> calculatePointsRace(@RequestParam int grandPrixId, @RequestParam int sessionId) {
         int year = 2024;
-        return predictService.F1APIRaceParser(grandPrixId, sessionId, username, year);
+        return predictService.F1APIRaceParser(grandPrixId, sessionId, year);
     }
 
     @GetMapping("/calculate-points-sprint")
     public ResponseEntity<String> calculatePointsSprint(@RequestParam int grandPrixId, @RequestParam int sessionId,
-                                                      @RequestParam String username, @RequestParam String grandPrixName) {
+                                                        @RequestParam String grandPrixName) {
         int year = 2024;
-        return predictService.sprintSeleniumParser(grandPrixId, sessionId, username, year, grandPrixName);
+        return predictService.sprintSeleniumParser(grandPrixId, sessionId, year, grandPrixName);
     }
 }

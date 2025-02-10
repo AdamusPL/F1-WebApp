@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface SessionRepository extends JpaRepository<Session, Integer> {
 
-    @Query("SELECT new com.typerf1.typerf1.model.Session(s.id, s.name) " +
+    @Query("SELECT new Session(s.id, s.name) " +
             "FROM Session s " +
             "JOIN s.grandPrix gp " +
             "WHERE gp.id = :grandPrixId")

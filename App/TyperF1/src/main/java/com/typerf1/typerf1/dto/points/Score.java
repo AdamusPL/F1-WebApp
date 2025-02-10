@@ -1,4 +1,4 @@
-package com.typerf1.typerf1.dto;
+package com.typerf1.typerf1.dto.points;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,17 +11,22 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class JokersUsed {
+public class Score {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    int year;
+    String grandPrixName;
+    String sessionName;
     String participantName;
     String participantSurname;
-    Long numberOfJokersUsed;
+    double points;
 
-    public JokersUsed(String participantName, String participantSurname, Long numberOfJokersUsed) {
+    public Score(int year, String grandPrixName, String sessionName, String participantName, String participantSurname, double points) {
+        this.year = year;
+        this.grandPrixName = grandPrixName;
+        this.sessionName = sessionName;
         this.participantName = participantName;
         this.participantSurname = participantSurname;
-        this.numberOfJokersUsed = numberOfJokersUsed;
+        this.points = points;
     }
 }

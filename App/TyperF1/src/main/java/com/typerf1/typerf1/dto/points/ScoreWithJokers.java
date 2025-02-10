@@ -1,4 +1,4 @@
-package com.typerf1.typerf1.dto;
+package com.typerf1.typerf1.dto.points;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

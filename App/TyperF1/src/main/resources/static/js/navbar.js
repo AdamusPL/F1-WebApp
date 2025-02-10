@@ -1,23 +1,24 @@
 window.addEventListener('load', printNavbar);
 
 function printNavbar() {
-    if (localStorage.getItem('user') !== null) {
-        const navbarElements = document.getElementById("navbar-elements");
-        createTag(navbarElements, 'results', 'Results')
-        createTag(navbarElements, 'standings', 'Standings')
-        createTag(navbarElements, 'world-records', 'WorldRecords')
-        createTag(navbarElements, 'personal-best', "Personal Best")
-        createTag(navbarElements, 'participants', "Participants")
-        createTag(navbarElements, 'predict', "Predict")
+    validateParticipant()
+        .then(isValid => {
+            if (isValid) {
+                const navbarElements = document.getElementById("navbar-elements");
+                createTag(navbarElements, 'results', 'Results')
+                createTag(navbarElements, 'standings', 'Standings')
+                createTag(navbarElements, 'world-records', 'WorldRecords')
+                createTag(navbarElements, 'personal-best', "Personal Best")
+                createTag(navbarElements, 'participants', "Participants")
+                createTag(navbarElements, 'predict', "Predict")
 
-        createLogOutButton();
-        printParticipant(JSON.parse(localStorage.getItem('user')).username);
+                createLogOutButton();
 
-    } else {
-        createLoginAndRegisterButton();
-    }
-
-    checkSubpage();
+            } else {
+                createLoginAndRegisterButton();
+            }
+            checkSubpage();
+        });
 }
 
 function createTag(navbarElements, id, name) {
@@ -73,20 +74,26 @@ function createLoginAndRegisterButton() {
 }
 
 function logout() {
-    localStorage.removeItem('user');
+    document.cookie = "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
     window.location.href = '/';
 }
 
-function printParticipant(username) {
-    fetch(`/get-full-name?username=${username}`)
+function validateParticipant() {
+    return fetch(`/get-full-name`, {
+        credentials: 'include'
+    })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Error');
+                return false;
             }
             return response.text();
         })
         .then(data => {
-            document.getElementById("welcome").innerText = "Welcome, " + data + ", in the place for the real Formula 1 lovers!";
+            if(data !== false) {
+                if(document.getElementById("welcome") !== null) {
+                    document.getElementById("welcome").innerText = "Welcome, " + data + ", in the place for the real Formula 1 lovers!";
+                }
+                return true;
+            }
         })
-
 }

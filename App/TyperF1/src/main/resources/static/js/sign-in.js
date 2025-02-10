@@ -17,10 +17,20 @@ function submitForm(e) {
             body: JSON.stringify(formData)
         }).then(response => {
             if (response.ok) {
-                localStorage.setItem('user', JSON.stringify(formData));
-                window.location.href = '/';
+                debugger;
+                return response.json();
             } else {
-                document.getElementById("error").innerText = "Error: Wrong username or password"
+                document.getElementById("error").innerText = "Error: Wrong username or password";
+            }
+        }).then(data => {
+            if (typeof data !== 'string') {
+                if(data.accessToken != null) {
+                    document.cookie = data.name + "=" + (data.accessToken || "") + "; path=/";
+                    window.location.href = '/';
+                }
+                else{
+                    document.getElementById("error").innerText = "Error: Wrong username or password";
+                }
             }
         })
     }

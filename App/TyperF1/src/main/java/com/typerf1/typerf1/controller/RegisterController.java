@@ -1,6 +1,6 @@
 package com.typerf1.typerf1.controller;
 
-import com.typerf1.typerf1.dto.RegisterData;
+import com.typerf1.typerf1.dto.participantLoginData.RegisterData;
 import com.typerf1.typerf1.service.RegisterService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

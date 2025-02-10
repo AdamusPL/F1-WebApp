@@ -1,6 +1,6 @@
 function getScores(year) {
     const div = document.getElementById("statistics");
-    if(div !== null){
+    if (div !== null) {
         div.remove()
     }
     const statistics = document.createElement("statistics");
@@ -17,9 +17,9 @@ function getScores(year) {
             })
             .then(data => {
                 const statistics = document.getElementById("statistics");
-                var grandPrix = "";
-                var session = "";
-                data.forEach(item => {
+                let grandPrix = "";
+                let session = "";
+                data.forEach(((item, index) => {
                     if (item.grandPrixName !== grandPrix) {
                         grandPrix = item.grandPrixName;
                         const h1 = document.createElement("h1");
@@ -37,14 +37,14 @@ function getScores(year) {
                                 return insideResponse.json();
                             })
                             .then(sumData => {
-                                sumData.forEach(sumItem => {
+                                sumData.forEach(((sumItem, index) => {
                                     const li = document.createElement("li");
-                                    li.innerText = sumItem.participantName + " " + sumItem.participantSurname + " " + sumItem.pointsSum;
-                                    if(sumItem.numberOfJokersUsed > 0){
+                                    li.innerText = (index + 1) + ". " + sumItem.participantName + " " + sumItem.participantSurname + " " + sumItem.pointsSum;
+                                    if (sumItem.numberOfJokersUsed > 0) {
                                         li.innerText += " J";
                                     }
                                     ol.appendChild(li);
-                                });
+                                }));
                             })
                         statistics.appendChild(ol);
                     }
@@ -58,12 +58,12 @@ function getScores(year) {
                         statistics.appendChild(ol);
                     }
                     const li = document.createElement("li");
-                    li.innerText = item.participantName + " " + item.participantSurname + " " + item.points;
-                    if(item.numberOfJokersUsed > 0){
+                    li.innerText = (index + 1) + ". " + item.participantName + " " + item.participantSurname + " " + item.points;
+                    if (item.numberOfJokersUsed > 0) {
                         li.innerText += " J";
                     }
                     document.getElementById(grandPrix + " " + session).appendChild(li);
-                });
+                }));
                 document.getElementById("season-year").innerText = year;
             })
     } catch (e) {

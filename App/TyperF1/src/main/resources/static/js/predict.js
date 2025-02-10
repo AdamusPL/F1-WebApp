@@ -23,7 +23,7 @@ function getSessions(grandPrixId, grandPrixName) {
                 dropdown.classList.add("dropdown");
                 const a = document.createElement("a");
                 a.id = "participant-choice-weekend";
-                a.classList.add("d-block", "link-body-emphasis", "text-decoration-none", "dropdown-toggle");
+                a.classList.add("d-block", "link-body-emphasis", "text-decoration-none", "dropdown-toggle", "mb-4");
                 a.ariaExpanded = "false";
                 a.dataset.bsToggle = "dropdown";
                 a.innerText = "Choose session";
@@ -64,8 +64,6 @@ async function printPredictionsQualifyingAndSprint(year, sessionName, sessionId,
         document.getElementById("predictions").remove();
     }
 
-    debugger;
-
     let wasPredicted;
     if(sessionType === "qualifying"){
         wasPredicted = await checkIfSessionWasAlreadyPredicted(year, sessionId, sessionName, grandPrixId, "qualifying", grandPrixName);
@@ -87,20 +85,27 @@ function createJokerOption() {
     const divPredictions = document.getElementById("predictions");
     const jokerDiv = document.createElement("div");
     jokerDiv.id = "joker";
+    const column1 = document.createElement("div");
+    column1.classList.add("col-3");
     const jokerLabel = document.createElement("label");
     jokerLabel.innerText = "Joker usage: ";
+    column1.appendChild(jokerLabel);
+    column1.id = "joker-label";
+    const column2 = document.createElement("div");
+    column2.classList.add("col-4");
     const select = document.createElement("select");
-    select.classList.add("form-select");
+    select.classList.add("form-select", "mb-4");
     select.id = "state";
     select.required = true;
     const optionNo = document.createElement("option");
     optionNo.innerText = "No";
     const optionYes = document.createElement("option");
     optionYes.innerText = "Yes";
-    jokerDiv.appendChild(jokerLabel);
+    jokerDiv.appendChild(column1);
     select.appendChild(optionNo);
     select.appendChild(optionYes);
-    jokerDiv.appendChild(select);
+    column2.appendChild(select);
+    jokerDiv.appendChild(column2);
     divPredictions.appendChild(jokerDiv);
 }
 
@@ -120,15 +125,23 @@ async function printPredictionsRace(year, sessionName, sessionId, grandPrixId) {
     const divPrediction = document.createElement("div");
     divPrediction.classList.add("prediction");
 
+    const column1 = document.createElement("div");
+    column1.classList.add("col-3");
     const label = document.createElement("label");
     label.innerText = "Fastest lap: ";
+    label.id = "fastest-lap-label";
+    column1.appendChild(label);
+
+    const column2 = document.createElement("div");
+    column2.classList.add("col-4");
     const input = document.createElement("input");
     input.type = "text";
     input.id = "fastest-lap";
     input.classList.add("form-control");
+    column2.appendChild(input);
 
-    divPrediction.appendChild(label);
-    divPrediction.appendChild(input);
+    divPrediction.appendChild(column1);
+    divPrediction.appendChild(column2);
     divPredictions.appendChild(divPrediction);
     createJokerOption();
     createPredictButton(sessionId, grandPrixId, true);
@@ -137,19 +150,33 @@ async function printPredictionsRace(year, sessionName, sessionId, grandPrixId) {
 function printTextFieldForStandings(sessionName) {
     const div = document.createElement("div");
     div.id = "predictions";
-    for (var i = 0; i < 20; i++) {
-        const divPrediction = document.createElement("div");
-        divPrediction.classList.add("prediction");
+    div.classList.add("container");
+
+    const column1 = document.createElement("div");
+    column1.classList.add("col-5");
+    column1.id = "numbers";
+
+    const column2 = document.createElement("div");
+    column2.classList.add("col-4");
+    const row = document.createElement("div");
+    row.classList.add("row");
+
+    for (let i = 0; i < 20; i++) {
         const label = document.createElement("label");
         label.innerText = i + 1 + ".";
+        column1.appendChild(label);
+
         const input = document.createElement("input");
         input.type = "text";
-        input.classList.add("form-control");
+        input.classList.add("form-control", "form-floating");
         input.id = "prediction-" + (i + 1).toString();
-        divPrediction.appendChild(label);
-        divPrediction.appendChild(input);
-        div.appendChild(divPrediction);
+        column2.appendChild(input);
+
+        row.appendChild(column1);
+        row.appendChild(column2);
+        div.appendChild(row);
     }
+
     const divContainer = document.getElementById("body-container");
     divContainer.appendChild(div);
 }
@@ -172,7 +199,8 @@ function createPredictButton(sessionId, grandPrixId, isRace) {
 
 function postPredictions(grandPrixId, sessionId, isRace) {
     const predictions = new FormData();
-    for (var i = 1; i <= 20; i++) {
+    predictions.append("id", "form-predictions");
+    for (let i = 1; i <= 20; i++) {
         const id = "prediction-" + i;
         const prediction = document.getElementById(id);
         predictions.append("driver" + i, prediction.value);
@@ -190,9 +218,7 @@ function postPredictions(grandPrixId, sessionId, isRace) {
         jokerChoice = true;
     }
 
-    const username = JSON.parse(localStorage.getItem('user')).username;
-
-    fetch(`/post-predictions?grandPrixId=${grandPrixId}&sessionId=${sessionId}&username=${username}&joker=${jokerChoice}`, {
+    fetch(`/post-predictions?grandPrixId=${grandPrixId}&sessionId=${sessionId}&joker=${jokerChoice}`, {
         method: 'POST',
         body: predictions
     }).then(response => {
@@ -201,12 +227,11 @@ function postPredictions(grandPrixId, sessionId, isRace) {
         }
         return response.json();
     });
+
+    document.getElementById("button-div").style.display = "none";
 }
 
 async function checkIfSessionWasAlreadyPredicted(year, sessionId, sessionName, grandPrixId, sessionType, grandPrixName) {
-    debugger;
-    const username = JSON.parse(localStorage.getItem('user')).username;
-
     try {
         //check if participant has already predicted
         let shortcut = "";
@@ -219,9 +244,7 @@ async function checkIfSessionWasAlreadyPredicted(year, sessionId, sessionName, g
         }
 
         const response = await fetch(`/check-predictions-existence?sessionType=${shortcut}&year=${year}&grandPrixId=${grandPrixId}
-        &sessionId=${sessionId}&username=${username}`);
-
-        debugger;
+        &sessionId=${sessionId}`);
 
         if (response.status === 200) {
             const data = await response.json();
@@ -250,7 +273,7 @@ async function checkIfSessionWasAlreadyPredicted(year, sessionId, sessionName, g
 
             //here calculate points from predictions
             if (sessionType === "qualifying") {
-                fetch(`/calculate-points-qualifying?grandPrixId=${grandPrixId}&sessionId=${sessionId}&username=${username}`)
+                fetch(`/calculate-points-qualifying?grandPrixId=${grandPrixId}&sessionId=${sessionId}`)
                     .then(response => {
                         const status = handleResponse(response);
                         if (response.status === 200) {
@@ -273,7 +296,7 @@ async function checkIfSessionWasAlreadyPredicted(year, sessionId, sessionName, g
                         }
                     });
             } else if (sessionType === "race") {
-                fetch(`/calculate-points-race?grandPrixId=${grandPrixId}&sessionId=${sessionId}&username=${username}`)
+                fetch(`/calculate-points-race?grandPrixId=${grandPrixId}&sessionId=${sessionId}`)
                     .then(response => {
                         const status = handleResponse(response);
                         if (response.status === 200) {
@@ -296,7 +319,7 @@ async function checkIfSessionWasAlreadyPredicted(year, sessionId, sessionName, g
                         }
                     });
             } else {
-                fetch(`/calculate-points-sprint?grandPrixId=${grandPrixId}&sessionId=${sessionId}&username=${username}&grandPrixName=${grandPrixName}`)
+                fetch(`/calculate-points-sprint?grandPrixId=${grandPrixId}&sessionId=${sessionId}&grandPrixName=${grandPrixName}`)
                     .then(response => {
                         const status = handleResponse(response);
                         if (response.status === 200) {

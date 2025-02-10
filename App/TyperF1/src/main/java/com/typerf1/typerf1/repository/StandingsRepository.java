@@ -1,9 +1,9 @@
 package com.typerf1.typerf1.repository;
 
-import com.typerf1.typerf1.dto.GrandPrixScore;
-import com.typerf1.typerf1.dto.JokersUsage;
-import com.typerf1.typerf1.dto.Score;
-import com.typerf1.typerf1.dto.UsedJokersGP;
+import com.typerf1.typerf1.dto.grandprix.GrandPrixScore;
+import com.typerf1.typerf1.dto.joker.JokersUsage;
+import com.typerf1.typerf1.dto.points.Score;
+import com.typerf1.typerf1.dto.joker.UsedJokersGP;
 import com.typerf1.typerf1.model.Points;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,7 +15,7 @@ import java.util.List;
 @Repository
 public interface StandingsRepository extends JpaRepository<Points, Integer> {
 
-    @Query("SELECT new com.typerf1.typerf1.dto.Score(s.year, gp.name, ses.name, p.name, p.surname, pt.number) " +
+    @Query("SELECT new Score(s.year, gp.name, ses.name, p.name, p.surname, pt.number) " +
             "FROM Points pt " +
             "JOIN pt.participant p " +
             "JOIN pt.session ses " +
@@ -25,7 +25,7 @@ public interface StandingsRepository extends JpaRepository<Points, Integer> {
             "ORDER BY ses.id, pt.number DESC")
     List<Score> findSeasonScores(@Param("year") Integer year);
 
-    @Query("SELECT new com.typerf1.typerf1.dto.JokersUsage(gp.name, p.name, p.surname) " +
+    @Query("SELECT new JokersUsage(gp.name, p.name, p.surname) " +
             "FROM Joker j " +
             "JOIN j.grandPrix gp " +
             "JOIN j.participant p " +
@@ -34,7 +34,7 @@ public interface StandingsRepository extends JpaRepository<Points, Integer> {
             "GROUP BY gp.name, p.name, p.surname")
     List<JokersUsage> findJokerUsageInSeasonScores(@Param("year") Integer year);
 
-    @Query("SELECT new com.typerf1.typerf1.dto.GrandPrixScore(gp.name, p.name, p.surname, SUM(pt.number)) " +
+    @Query("SELECT new GrandPrixScore(gp.name, p.name, p.surname, SUM(pt.number)) " +
             "FROM Points pt " +
             "JOIN pt.participant p " +
             "JOIN pt.session ses " +
@@ -45,7 +45,7 @@ public interface StandingsRepository extends JpaRepository<Points, Integer> {
             "ORDER BY gp.name, SUM(pt.number) DESC")
     List<GrandPrixScore> findGrandPrixSummaryScores(@Param("year") Integer year, @Param("grandPrixName") String grandPrixName);
 
-    @Query("SELECT new com.typerf1.typerf1.dto.UsedJokersGP(gp.name, p.name, p.surname, SUM(j.id)) " +
+    @Query("SELECT new UsedJokersGP(gp.name, p.name, p.surname, SUM(j.id)) " +
             "FROM Joker j " +
             "JOIN j.participant p " +
             "JOIN j.grandPrix gp " +
