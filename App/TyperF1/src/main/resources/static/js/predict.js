@@ -86,7 +86,7 @@ function createJokerOption() {
     const jokerDiv = document.createElement("div");
     jokerDiv.id = "joker";
     const column1 = document.createElement("div");
-    column1.classList.add("col-4");
+    column1.classList.add("col-3");
     const jokerLabel = document.createElement("label");
     jokerLabel.innerText = "Joker usage: ";
     column1.appendChild(jokerLabel);
@@ -126,7 +126,7 @@ async function printPredictionsRace(year, sessionName, sessionId, grandPrixId) {
     divPrediction.classList.add("prediction");
 
     const column1 = document.createElement("div");
-    column1.classList.add("col-4");
+    column1.classList.add("col-3");
     const label = document.createElement("label");
     label.innerText = "Fastest lap: ";
     label.id = "fastest-lap-label";
@@ -158,18 +158,17 @@ function printTextFieldForStandings(sessionName) {
 
     const column2 = document.createElement("div");
     column2.classList.add("col-4");
+    const row = document.createElement("div");
+    row.classList.add("row");
 
     for (let i = 0; i < 20; i++) {
-        let row = document.createElement("div");
-        row.classList.add("row", "form-floating");
-
         const label = document.createElement("label");
         label.innerText = i + 1 + ".";
         column1.appendChild(label);
 
         const input = document.createElement("input");
         input.type = "text";
-        input.classList.add("form-control");
+        input.classList.add("form-control", "form-floating");
         input.id = "prediction-" + (i + 1).toString();
         column2.appendChild(input);
 
