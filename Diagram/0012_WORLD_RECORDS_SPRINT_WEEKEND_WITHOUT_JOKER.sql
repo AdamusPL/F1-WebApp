@@ -1,6 +1,3 @@
-USE TyperF1;
-GO
-
 --max points Sprint weekend without joker
 SELECT Participant.Name, Participant.Surname, GrandPrix.Name, Season.Year, SUM(Points.Number) AS PointsSum FROM Participant
 INNER JOIN Points ON Participant.Id = Points.ParticipantId

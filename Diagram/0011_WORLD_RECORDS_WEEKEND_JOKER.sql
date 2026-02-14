@@ -1,6 +1,3 @@
-USE TyperF1;
-GO
-
 --max points Sprint weekend with joker
 SELECT p.Name, p.Surname, gp.Name AS GrandPrixName, s.Year, SUM(pt.Number) AS PointsSum
 FROM Participant p

@@ -1,6 +1,8 @@
 package com.typerf1.typerf1.tools;
 
+import java.text.Normalizer;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class PointsCalculator {
 

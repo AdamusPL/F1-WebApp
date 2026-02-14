@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 @NoArgsConstructor
 public class RegisterData {
-    String name;
+    String firstName;
     String surname;
     String username;
     String email;
@@ -20,7 +20,7 @@ public class RegisterData {
     MultipartFile profilePicture;
 
     public RegisterData(String name, String surname, String username, String email){
-        this.name = name;
+        this.firstName = name;
         this.surname = surname;
         this.username = username;
         this.email = email;

@@ -36,12 +36,12 @@ function getSessions(grandPrixId, grandPrixName) {
                     li.innerText = item.name;
                     if (item.name === "Qualifying") {
                         li.addEventListener("click", function () {
-                            printPredictionsQualifyingAndSprint(year, item.name, item.id, grandPrixId, "qualifying", grandPrixName);
+                            printPredictionsQualifyingAndSprint(year, item.name, item.id, grandPrixId, "qualifying");
                         }, false);
                     }
                     else if (item.name === "Sprint") {
                             li.addEventListener("click", function () {
-                                printPredictionsQualifyingAndSprint(year, item.name, item.id, grandPrixId, "sprint", grandPrixName);
+                                printPredictionsQualifyingAndSprint(year, item.name, item.id, grandPrixId, "sprint");
                             }, false);
                     }
                     else {
@@ -59,17 +59,17 @@ function getSessions(grandPrixId, grandPrixName) {
     }
 }
 
-async function printPredictionsQualifyingAndSprint(year, sessionName, sessionId, grandPrixId, sessionType, grandPrixName) {
+async function printPredictionsQualifyingAndSprint(year, sessionName, sessionId, grandPrixId, sessionType) {
     if (document.getElementById("predictions") !== null) {
         document.getElementById("predictions").remove();
     }
 
     let wasPredicted;
     if(sessionType === "qualifying"){
-        wasPredicted = await checkIfSessionWasAlreadyPredicted(year, sessionId, sessionName, grandPrixId, "qualifying", grandPrixName);
+        wasPredicted = await checkIfSessionWasAlreadyPredicted(year, sessionId, sessionName, grandPrixId, "qualifying");
     }
     else{
-        wasPredicted = await checkIfSessionWasAlreadyPredicted(year, sessionId, sessionName, grandPrixId, "sprint", grandPrixName);
+        wasPredicted = await checkIfSessionWasAlreadyPredicted(year, sessionId, sessionName, grandPrixId, "sprint");
     }
 
     document.getElementById("participant-choice-weekend").innerText = sessionName;
@@ -199,7 +199,7 @@ function createPredictButton(sessionId, grandPrixId, isRace) {
 
 function postPredictions(grandPrixId, sessionId, isRace) {
     const predictions = new FormData();
-    predictions.append("id", "form-predictions");
+    // predictions.append("id", "form-predictions");
     for (let i = 1; i <= 20; i++) {
         const id = "prediction-" + i;
         const prediction = document.getElementById(id);
@@ -231,7 +231,7 @@ function postPredictions(grandPrixId, sessionId, isRace) {
     document.getElementById("button-div").style.display = "none";
 }
 
-async function checkIfSessionWasAlreadyPredicted(year, sessionId, sessionName, grandPrixId, sessionType, grandPrixName) {
+async function checkIfSessionWasAlreadyPredicted(year, sessionId, sessionName, grandPrixId, sessionType) {
     try {
         //check if participant has already predicted
         let shortcut = "";
@@ -319,7 +319,7 @@ async function checkIfSessionWasAlreadyPredicted(year, sessionId, sessionName, g
                         }
                     });
             } else {
-                fetch(`/calculate-points-sprint?grandPrixId=${grandPrixId}&sessionId=${sessionId}&grandPrixName=${grandPrixName}`)
+                fetch(`/calculate-points-sprint?grandPrixId=${grandPrixId}&sessionId=${sessionId}`)
                     .then(response => {
                         const status = handleResponse(response);
                         if (response.status === 200) {
