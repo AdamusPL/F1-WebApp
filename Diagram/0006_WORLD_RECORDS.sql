@@ -1,8 +1,3 @@
-USE TyperF1;
-GO
-
-SELECT * FROM Points;
-
 --max points race no matter if joker was used
 SELECT Participant.Name, Participant.Surname, GrandPrix.Name, Season.Year, Points.Number FROM Participant
 INNER JOIN Points ON Participant.Id = Points.ParticipantId

@@ -1,21 +1,8 @@
-USE TyperF1;
-GO
-
-DELETE FROM [ParticipantLoginData] WHERE Id=1006;
-DELETE FROM [Participant] WHERE Id=1003;
-DELETE FROM [Email] WHERE Id=1004;
-
-SELECT * FROM [ParticipantLoginData];
-SELECT * FROM [Participant];
-SELECT * FROM [Email];
-
 CREATE TABLE Season(
     Id INT UNIQUE NOT NULL IDENTITY(1,1),
     Year INT UNIQUE NOT NULL,
     PRIMARY KEY(Id)
 )
-
-SELECT * FROM Season;
 
 CREATE TABLE GrandPrix(
     Id INT UNIQUE NOT NULL IDENTITY(1,1),
@@ -24,8 +11,6 @@ CREATE TABLE GrandPrix(
     PRIMARY KEY(Id),
     FOREIGN KEY(SeasonId) REFERENCES Season(Id)
 );
-
-SELECT * FROM GrandPrix;
 
 CREATE TABLE Track(
 	Id INT UNIQUE NOT NULL IDENTITY(1,1),
@@ -37,8 +22,6 @@ CREATE TABLE Track(
 	FOREIGN KEY(GrandPrixId) REFERENCES GrandPrix(Id)
 );
 
-SELECT * FROM Track;
-
 CREATE TABLE Session(
 	Id INT UNIQUE NOT NULL IDENTITY(1,1),
 	Name VARCHAR(255) NOT NULL,
@@ -47,8 +30,6 @@ CREATE TABLE Session(
 	FOREIGN KEY(GrandPrixId) REFERENCES GrandPrix(Id)
 );
 
-SELECT * FROM Session;
-
 CREATE TABLE Stats(
 	IsRainy BIT NOT NULL,
 	IsFastestLapGuessed BIT NOT NULL,
@@ -56,8 +37,6 @@ CREATE TABLE Stats(
 	SessionId INT NOT NULL,
 	FOREIGN KEY(SessionId) REFERENCES Session(Id)
 );
-
-SELECT * FROM Stats;
 
 CREATE TABLE Email(
 	Id INT UNIQUE NOT NULL IDENTITY(1,1),

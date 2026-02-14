@@ -1,6 +1,3 @@
-USE TyperF1;
-GO
-
 --races with joker used
 SELECT GrandPrix.Name, Participant.Name, Participant.Surname, COUNT(Joker.Id) FROM Participant
 INNER JOIN Joker ON Participant.Id = Joker.ParticipantId
