@@ -92,10 +92,13 @@ public class PredictService {
 
             if (sessionType.equals("R")) {
                 isAbleToPost = checkBeginningTimeOfRace(year, grandPrixId);
+//                isAbleToPost = true;
             } else if (sessionType.equals("Q")) {
                 isAbleToPost = checkBeginningTimeOfQualifying(year, grandPrixId);
+//                isAbleToPost = true;
             } else {
                 isAbleToPost = checkBeginningTimeOfSprint(year, grandPrixId);
+//                isAbleToPost = true;
             }
 
             //if session has already begun
@@ -110,6 +113,41 @@ public class PredictService {
         List<Predictions> predictionsList = predictionsRepository.checkPredictionExistence(grandPrixId, sessionId, username);
         return predictionsList.getFirst();
     }
+
+    private List<String> getQualifyingResults(String url) {
+        var restClient = RestClient.create();
+
+        var response = restClient.get()
+                .uri(url)
+                .retrieve()
+                .body(F1ResponseQualifying.class);
+
+        if (response != null && !response.mrData().raceTable().races().isEmpty()) {
+            List<QualifyingResult> results = response.mrData().raceTable().races().getFirst().results();
+            return results.stream()
+                    .map(result -> stripAccents(result.driver().familyName())) // Extract the field
+                    .toList();
+        }
+
+        return Collections.emptyList();
+    }
+
+    public record F1ResponseQualifying(@JsonProperty("MRData") MRDataQualifying mrData) {
+    }
+
+    public record MRDataQualifying(@JsonProperty("RaceTable") QualifyingTable raceTable) {
+    }
+
+    public record QualifyingTable(@JsonProperty("Races") List<Qualifying> races) {
+    }
+
+    public record Qualifying(
+            @JsonProperty("QualifyingResults") List<QualifyingResult> results
+    ) {}
+
+    public record QualifyingResult(
+            @JsonProperty("Driver") Driver driver
+    ) {}
 
     public ResponseEntity<String> F1APIQualifyingParser(int grandPrixId, int sessionId, int year) {
         boolean joker = false;
@@ -157,10 +195,10 @@ public class PredictService {
     public record Driver(String familyName) {
     }
 
-    private List<String> getQualifyingResults(String url) {
-        RestClient restClient = RestClient.create();
+    private List<String> getSprintResults(String url) {
+        var restClient = RestClient.create();
 
-        F1ResponseSprint response = restClient.get()
+        var response = restClient.get()
                 .uri(url)
                 .retrieve()
                 .body(F1ResponseSprint.class);
@@ -199,9 +237,9 @@ public class PredictService {
     ) {}
 
     private LinkedHashMap<String, Boolean> getRaceResults(String url) {
-        RestClient restClient = RestClient.create();
+        var restClient = RestClient.create();
 
-        F1ResponseRace response = restClient.get()
+        var response = restClient.get()
                 .uri(url)
                 .retrieve()
                 .body(F1ResponseRace.class);
@@ -296,7 +334,7 @@ public class PredictService {
 
         //page with api with F1 race results (standings)
         String url = "https://api.jolpi.ca/ergast/f1/" + year + "/" + grandPrixId + "/sprint.json";
-        List<String> sprintResults = getQualifyingResults(url);
+        List<String> sprintResults = getSprintResults(url);
         PointsCalculator pointsCalculator = initPointsCalculator(predictions, sprintResults, joker);
         pointsCalculated = pointsCalculator.countPointsFromSprint();
 
@@ -346,7 +384,7 @@ public class PredictService {
     private boolean checkBeginningTimeOfRace(int year, int grandPrixId) throws ParseException {
         String url = "https://api.jolpi.ca/ergast/f1/" + year + "/" + grandPrixId + ".json";
 
-        RestClient restClient = RestClient.create();
+        var restClient = RestClient.create();
 
         var response = restClient.get()
                 .uri(url)
