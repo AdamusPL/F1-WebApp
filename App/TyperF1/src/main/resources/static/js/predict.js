@@ -229,9 +229,18 @@ function postPredictions(grandPrixId, sessionId, isRace) {
     });
 
     document.getElementById("button-div").style.display = "none";
+
+    const label = document.createElement("label");
+    label.innerText = "Predictions posted.";
+    const bodyContainer = document.getElementById("predictions");
+    bodyContainer.appendChild(label);
 }
 
 async function checkIfSessionWasAlreadyPredicted(year, sessionId, sessionName, grandPrixId, sessionType) {
+    const element = document.getElementById("label");
+    if (element) {
+        element.remove();
+    }
     try {
         //check if participant has already predicted
         let shortcut = "";
