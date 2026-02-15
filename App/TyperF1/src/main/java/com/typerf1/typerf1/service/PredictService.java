@@ -1,9 +1,9 @@
 package com.typerf1.typerf1.service;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.typerf1.typerf1.model.*;
 import com.typerf1.typerf1.repository.*;
-import com.typerf1.typerf1.tools.URL;
-import com.typerf1.typerf1.tools.UrlFromTxtParser;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
@@ -11,23 +11,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 
-import java.text.Normalizer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.typerf1.typerf1.model.Predictions;
 
 import com.typerf1.typerf1.tools.PointsCalculator;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
+import static com.typerf1.typerf1.tools.StringUtils.stripAccents;
 
 @Service
 public class PredictService {
@@ -72,7 +67,7 @@ public class PredictService {
         predictions.setGrandPrix(grandPrix);
         predictions.setSession(session);
         predictions.setParticipant(participant);
-        if(joker && predictions.getGrandPrix().getJoker() == null){
+        if (joker && predictions.getGrandPrix().getJoker() == null) {
             Joker jokerObject = new Joker();
             jokerObject.setParticipant(participant);
             jokerObject.setGrandPrix(grandPrix);
@@ -85,8 +80,8 @@ public class PredictService {
 
     public ResponseEntity<Predictions> checkPredictionsExistence(String sessionType, int year, int grandPrixId, int sessionId) throws ParseException {
         List<Predictions> predictionsList = predictionsRepository.checkPredictionExistence(grandPrixId, sessionId, SecurityContextHolder.getContext().getAuthentication().getName());
-        if (predictionsList.size() != 0) {
-            Predictions predictions = predictionsList.get(0);
+        if (!predictionsList.isEmpty()) {
+            Predictions predictions = predictionsList.getFirst();
             predictions.setParticipant(null);
             predictions.setSession(null);
             predictions.setGrandPrix(null);
@@ -95,14 +90,15 @@ public class PredictService {
             //check if user can still post predictions
             boolean isAbleToPost;
 
-            if(sessionType.equals("R")) {
+            if (sessionType.equals("R")) {
                 isAbleToPost = checkBeginningTimeOfRace(year, grandPrixId);
-            }
-            else if(sessionType.equals("Q")){
+//                isAbleToPost = true;
+            } else if (sessionType.equals("Q")) {
                 isAbleToPost = checkBeginningTimeOfQualifying(year, grandPrixId);
-            }
-            else{
+//                isAbleToPost = true;
+            } else {
                 isAbleToPost = checkBeginningTimeOfSprint(year, grandPrixId);
+//                isAbleToPost = true;
             }
 
             //if session has already begun
@@ -115,14 +111,49 @@ public class PredictService {
 
     public Predictions getParticipantPredictions(int grandPrixId, int sessionId, String username) {
         List<Predictions> predictionsList = predictionsRepository.checkPredictionExistence(grandPrixId, sessionId, username);
-        return predictionsList.get(0);
+        return predictionsList.getFirst();
     }
 
-    public ResponseEntity<String> F1APIQualifyingParser(int grandPrixId, int sessionId, int year) throws ParseException {
+    private List<String> getQualifyingResults(String url) {
+        var restClient = RestClient.create();
+
+        var response = restClient.get()
+                .uri(url)
+                .retrieve()
+                .body(F1ResponseQualifying.class);
+
+        if (response != null && !response.mrData().raceTable().races().isEmpty()) {
+            List<QualifyingResult> results = response.mrData().raceTable().races().getFirst().results();
+            return results.stream()
+                    .map(result -> stripAccents(result.driver().familyName())) // Extract the field
+                    .toList();
+        }
+
+        return Collections.emptyList();
+    }
+
+    public record F1ResponseQualifying(@JsonProperty("MRData") MRDataQualifying mrData) {
+    }
+
+    public record MRDataQualifying(@JsonProperty("RaceTable") QualifyingTable raceTable) {
+    }
+
+    public record QualifyingTable(@JsonProperty("Races") List<Qualifying> races) {
+    }
+
+    public record Qualifying(
+            @JsonProperty("QualifyingResults") List<QualifyingResult> results
+    ) {}
+
+    public record QualifyingResult(
+            @JsonProperty("Driver") Driver driver
+    ) {}
+
+    public ResponseEntity<String> F1APIQualifyingParser(int grandPrixId, int sessionId, int year) {
         boolean joker = false;
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Predictions predictions = getParticipantPredictions(grandPrixId, sessionId, username);
-        if(predictions.getGrandPrix().getJoker() != null){
+        if (predictions.getGrandPrix().getJoker() != null) {
             joker = true;
         }
 
@@ -134,20 +165,12 @@ public class PredictService {
         }
 
         //page with api with F1 race results
-        String url = "https://ergast.com/api/f1/" + year + "/" + grandPrixId + "/qualifying";
-        LinkedHashMap<?, ?> raceMap = getTreeToRaces(url);
+        String url = "https://api.jolpi.ca/ergast/f1/" + year + "/" + grandPrixId + "/qualifying.json";
+        List<String> driverStandings = getQualifyingResults(url);
 
-        if (raceMap == null) {
+        if (driverStandings == null) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
-
-        // Step 3: Access the "ResultsList" LinkedHashMap
-        LinkedHashMap<?, ?> resultsListMap = (LinkedHashMap<?, ?>) raceMap.get("QualifyingList");
-
-        // Step 4: Access the "Result" LinkedHashMap
-        ArrayList<?> resultsArray = (ArrayList<?>) resultsListMap.get("QualifyingResult");
-
-        List<String> driverStandings = parseSurnames(resultsArray);
 
         PointsCalculator pointsCalculator = initPointsCalculator(predictions, driverStandings, joker);
 
@@ -160,7 +183,7 @@ public class PredictService {
         Points points = new Points(pointsCalculated);
         points.setParticipant(predictions.getParticipant());
         points.setSession(predictions.getSession());
-        Predictions predictions1 = predictionsRepository.checkPredictionExistence(grandPrixId, sessionId, username).get(0);
+        Predictions predictions1 = predictionsRepository.checkPredictionExistence(grandPrixId, sessionId, username).getFirst();
         points.setPredictions(predictions1);
 
         predictions1.setPoints(points);
@@ -169,40 +192,153 @@ public class PredictService {
         return ResponseEntity.ok(String.valueOf(pointsCalculated));
     }
 
-    private LinkedHashMap<?, ?> getTreeToRaces(String url) {
-        RestTemplate restTemplate = new RestTemplate();
-
-        Object[] results = restTemplate.getForObject(url, Object[].class);
-        // Step 1: Access the first element of the array, cast it to LinkedHashMap
-        LinkedHashMap<?, ?> rootMap = (LinkedHashMap<?, ?>) results[1];
-
-        if (rootMap.isEmpty()) {
-            return null;
-        }
-
-        // Step 2: Access the "Race" LinkedHashMap
-        LinkedHashMap<?, ?> raceMap = (LinkedHashMap<?, ?>) rootMap.get("Race");
-
-        return raceMap;
+    public record Driver(String familyName) {
     }
 
-    private List<String> parseSurnames(ArrayList<?> resultsArray) {
-        List<String> driverStandings = new ArrayList<>();
-        // Step 5: Iterate through the ArrayList
-        for (Object resultObject : resultsArray) {
-            // Each element in the ArrayList is a LinkedHashMap
-            LinkedHashMap<?, ?> resultMap = (LinkedHashMap<?, ?>) resultObject;
+    private List<String> getSprintResults(String url) {
+        var restClient = RestClient.create();
 
-            LinkedHashMap<?, ?> resultDriver = (LinkedHashMap<?, ?>) resultMap.get("Driver");
+        var response = restClient.get()
+                .uri(url)
+                .retrieve()
+                .body(F1ResponseSprint.class);
 
-            String resultFamilyName = (String) resultDriver.get("FamilyName");
-            //to match letters like é or ü in Pérez or Hülkenberg with participant predictions
-            String normalized = Normalizer.normalize(resultFamilyName, Normalizer.Form.NFD);
-            String result = normalized.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
-
-            driverStandings.add(result);
+        if (response != null && !response.mrData().raceTable().races().isEmpty()) {
+            List<SprintResult> results = response.mrData().raceTable().races().getFirst().results();
+            return results.stream()
+                    .map(result -> stripAccents(result.driver().familyName())) // Extract the field
+                    .toList();
         }
-        return driverStandings;
+
+        return Collections.emptyList();
+    }
+
+    public record F1ResponseRace(@JsonProperty("MRData") MRDataRace mrData) {
+    }
+
+    public record MRDataRace(@JsonProperty("RaceTable") RaceTable raceTable) {
+    }
+
+    public record RaceTable(@JsonProperty("Races") List<Race> races) {
+    }
+
+    public record Race(
+            @JsonProperty("Results") List<RaceResult> results
+    ) {}
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record FastestLap(
+            @JsonProperty("rank") String rank
+    ) {}
+
+    public record RaceResult(
+       @JsonProperty("Driver") Driver driver,
+       @JsonProperty("FastestLap") FastestLap fastestLap
+    ) {}
+
+    private LinkedHashMap<String, Boolean> getRaceResults(String url) {
+        var restClient = RestClient.create();
+
+        var response = restClient.get()
+                .uri(url)
+                .retrieve()
+                .body(F1ResponseRace.class);
+
+        if (response != null && !response.mrData().raceTable().races().isEmpty()) {
+            List<RaceResult> results = response.mrData().raceTable().races().getFirst().results();
+            return results.stream()
+                    .collect(Collectors.toMap(
+                            result -> stripAccents(result.driver().familyName()),
+                            result -> result.fastestLap() != null && result.fastestLap().rank().equals("1"),
+                            (oldValue, newValue) -> oldValue,
+                            LinkedHashMap::new
+                    ));// Extract the field
+        }
+
+        return new LinkedHashMap<>();
+    }
+
+    public List<String> getAllSurnames(Map<String, Boolean> resultsMap) {
+        return new ArrayList<>(resultsMap.keySet());
+    }
+
+    public ResponseEntity<String> F1APIRaceParser(int grandPrixId, int sessionId, int year) {
+        boolean joker = false;
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Predictions predictions = getParticipantPredictions(grandPrixId, sessionId, username);
+        if (predictions.getGrandPrix().getJoker() != null) {
+            joker = true;
+        }
+
+        double pointsCalculated;
+
+        //if points were already calculated
+        if (predictions.getPoints() != null) {
+            return ResponseEntity.ok(predictions.getPoints().getNumber().toString());
+        }
+
+        //page with api with F1 race results (standings)
+        String url = "https://api.jolpi.ca/ergast/f1/" + year + "/" + grandPrixId + "/results.json";
+        Map<String, Boolean> raceResults = getRaceResults(url);
+
+        String actualFastestLap = raceResults.entrySet().stream()
+                .filter(Map.Entry::getValue)
+                .map(Map.Entry::getKey)
+                .findFirst()
+                .orElse("No one");
+
+        List<String> driverStandings = getAllSurnames(raceResults);
+
+        if (driverStandings == null) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+
+        PointsCalculator pointsCalculator = initPointsCalculator(predictions, driverStandings, joker);
+
+        pointsCalculated = pointsCalculator.countPointsFromRace(predictions.getFastestLap(), actualFastestLap);
+
+        return updatePredictionsInDB(grandPrixId, sessionId, username, predictions, pointsCalculated);
+    }
+
+    public record F1ResponseSprint(@JsonProperty("MRData") MRDataSprint mrData) {
+    }
+
+    public record MRDataSprint(@JsonProperty("RaceTable") SprintTable raceTable) {
+    }
+
+    public record SprintTable(@JsonProperty("Races") List<Sprint> races) {
+    }
+
+    public record Sprint(
+            @JsonProperty("SprintResults") List<SprintResult> results
+    ) {}
+
+    public record SprintResult(
+            @JsonProperty("Driver") Driver driver
+    ) {}
+
+    public ResponseEntity<String> F1APISprintParser(int grandPrixId, int sessionId, int year) {
+        boolean joker = false;
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Predictions predictions = getParticipantPredictions(grandPrixId, sessionId, username);
+        if (predictions.getGrandPrix().getJoker() != null) {
+            joker = true;
+        }
+
+        double pointsCalculated;
+
+        //if points were already calculated
+        if (predictions.getPoints() != null) {
+            return ResponseEntity.ok(predictions.getPoints().getNumber().toString());
+        }
+
+        //page with api with F1 race results (standings)
+        String url = "https://api.jolpi.ca/ergast/f1/" + year + "/" + grandPrixId + "/sprint.json";
+        List<String> sprintResults = getSprintResults(url);
+        PointsCalculator pointsCalculator = initPointsCalculator(predictions, sprintResults, joker);
+        pointsCalculated = pointsCalculator.countPointsFromSprint();
+
+        return updatePredictionsInDB(grandPrixId, sessionId, username, predictions, pointsCalculated);
     }
 
     private PointsCalculator initPointsCalculator(Predictions predictions, List<String> driverStandings, boolean joker) {
@@ -233,314 +369,223 @@ public class PredictService {
         return new PointsCalculator(driverStandings, participantPredictions, joker);
     }
 
+    public record F1ScheduleResponse(@JsonProperty("MRData") MRDataSchedule mrData) {}
+
+    public record MRDataSchedule(@JsonProperty("RaceTable") RaceTableSchedule raceTable) {}
+
+    public record RaceTableSchedule(@JsonProperty("Races") List<RaceSchedule> races) {}
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record RaceSchedule(
+            @JsonProperty("date") String raceDate, // Date of the RACE
+            @JsonProperty("time") String raceTime // Time of the RACE
+    ) {}
+
     private boolean checkBeginningTimeOfRace(int year, int grandPrixId) throws ParseException {
-        String url = "https://ergast.com/api/f1/" + year;
+        String url = "https://api.jolpi.ca/ergast/f1/" + year + "/" + grandPrixId + ".json";
 
-        RestTemplate restTemplate = new RestTemplate();
+        var restClient = RestClient.create();
 
-        Object[] results = restTemplate.getForObject(url, Object[].class);
-        // Step 1: Access the first element of the array, cast it to LinkedHashMap
-        LinkedHashMap<?, ?> rootMap = (LinkedHashMap<?, ?>) results[1];
+        var response = restClient.get()
+                .uri(url)
+                .retrieve()
+                .body(F1ScheduleResponse.class);
 
-        ArrayList<?> racesArray = (ArrayList<?>) rootMap.get("Race");
+        if (response != null && !response.mrData().raceTable().races().isEmpty()) {
+            String date = response.mrData().raceTable().races().getFirst().raceDate();
+            String time = response.mrData().raceTable().races().getFirst().raceTime();
 
-        LinkedHashMap<?, ?> raceMap = (LinkedHashMap<?, ?>) racesArray.get(grandPrixId - 1);
+            // Create date object
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+            dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC")); // Ensure date parsing in UTC
+            Date dateToCompare = dateFormatter.parse(date);
 
-        // Date and time of the beginning of the session
-        String beginningDate = (String) raceMap.get("Date");
-        String beginningTime = (String) raceMap.get("Time");
+            // Current date and hour in computer (system default time zone)
+            Date currentDate = new Date();
 
-        // Create date object
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC")); // Ensure date parsing in UTC
-        Date dateToCompare = dateFormatter.parse(beginningDate);
+            // Check if it's not too late to post predictions based on the date
+            if (currentDate.after(dateToCompare)) {
+                return false;
+            }
 
-        // Current date and hour in computer (system default time zone)
-        Date currentDate = new Date();
+            // Create combined date-time string for parsing
+            String dateTimeString = date + " " + time;
 
-        // Check if it's not too late to post predictions based on the date
-        if (currentDate.after(dateToCompare)) {
-            return false;
-        }
+            // Parse the date and time together with UTC timezone
+            SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssX");
+            dateTimeFormatter.setTimeZone(TimeZone.getTimeZone("UTC")); // Parse as UTC
+            Date dateTimeToCompare = dateTimeFormatter.parse(dateTimeString);
 
-        // Create combined date-time string for parsing
-        String dateTimeString = beginningDate + " " + beginningTime;
+            // Create a Calendar instance for the parsed time in UTC
+            Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+            calendar.setTime(dateTimeToCompare);
 
-        // Parse the date and time together with UTC timezone
-        SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssX");
-        dateTimeFormatter.setTimeZone(TimeZone.getTimeZone("UTC")); // Parse as UTC
-        Date dateTimeToCompare = dateTimeFormatter.parse(dateTimeString);
+            // Subtract 30 minutes from the race start time
+            calendar.add(Calendar.MINUTE, -30);
+            Date adjustedTime = calendar.getTime(); // New time after subtracting 30 minutes
 
-        // Create a Calendar instance for the parsed time in UTC
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        calendar.setTime(dateTimeToCompare);
+            // Get the current time in UTC for comparison
+            Calendar currentCal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+            currentCal.setTime(currentDate);
 
-        // Subtract 30 minutes from the race start time
-        calendar.add(Calendar.MINUTE, -30);
-        Date adjustedTime = calendar.getTime(); // New time after subtracting 30 minutes
-
-        // Get the current time in UTC for comparison
-        Calendar currentCal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        currentCal.setTime(currentDate);
-
-        // Check if it's not too late to post predictions based on the adjusted time
-        if (currentCal.getTime().after(adjustedTime)) {
-            return false;
+            // Check if it's not too late to post predictions based on the adjusted time
+            if (currentCal.getTime().after(adjustedTime)) {
+                return false;
+            }
         }
 
         return true;
     }
+
+    public record F1ScheduleQualifyingResponse(@JsonProperty("MRData") MRDataQualifyingSchedule mrData) {}
+
+    public record MRDataQualifyingSchedule(@JsonProperty("RaceTable") QualifyingTableSchedule raceTable) {}
+
+    public record QualifyingTableSchedule(@JsonProperty("Races") List<QualifyingSchedule> races) {}
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record QualifyingSchedule(
+            @JsonProperty("raceName") String raceName,
+            @JsonProperty("date") String raceDate, // Date of the RACE
+            @JsonProperty("time") String raceTime, // Time of the RACE
+            @JsonProperty("Qualifying") SessionSchedule qualifying // <--- This is what you want
+    ) {}
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record SessionSchedule(
+            @JsonProperty("date") String date,
+            @JsonProperty("time") String time
+    ) {}
 
     private boolean checkBeginningTimeOfQualifying(int year, int grandPrixId) throws ParseException {
-        String url = "https://ergast.com/api/f1/" + year + "/" + grandPrixId + ".json";
+        String url = "https://api.jolpi.ca/ergast/f1/" + year + "/" + grandPrixId + ".json";
 
-        RestTemplate restTemplate = new RestTemplate();
+        var restClient = RestClient.create();
 
-        // Build the URI with placeholders
-        String uri = UriComponentsBuilder.fromUriString(url)
-                .buildAndExpand(Map.of("season", year, "round", grandPrixId))
-                .toString();
+        var response = restClient.get()
+                .uri(url)
+                .retrieve()
+                .body(F1ScheduleQualifyingResponse.class);
 
-        // Fetch data from the API
-        Map response = restTemplate.getForObject(uri, Map.class);
-        String beginningDate = "";
-        String beginningTime = "";
+        if (response != null && !response.mrData().raceTable().races().isEmpty()) {
+            String date = response.mrData().raceTable().races().getFirst().qualifying().date();
+            String time = response.mrData().raceTable().races().getFirst().qualifying().time();
 
-        if (response != null) {
-            Map raceTable = (Map) response.get("MRData");
-            Map raceData = (Map) ((Map) ((List) ((Map) raceTable.get("RaceTable")).get("Races")).get(0)).get("Qualifying");
+            // Create date object
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+            dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC")); // Ensure date parsing in UTC
+            Date dateToCompare = dateFormatter.parse(date);
 
-            if (raceData != null) {
-                beginningDate = (String) raceData.get("date");
-                beginningTime = (String) raceData.get("time");
+            // Current date and hour in computer (system default time zone)
+            Date currentDate = new Date();
+
+            // Check if it's not too late to post predictions based on the date
+            if (currentDate.after(dateToCompare)) {
+                return false;
             }
-        }
 
-        // Create date object
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC")); // Ensure date parsing in UTC
-        Date dateToCompare = dateFormatter.parse(beginningDate);
+            // Create combined date-time string for parsing
+            String dateTimeString = date + " " + time;
 
-        // Current date and hour in computer (system default time zone)
-        Date currentDate = new Date();
+            // Parse the date and time together with UTC timezone
+            SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssX");
+            dateTimeFormatter.setTimeZone(TimeZone.getTimeZone("UTC")); // Parse as UTC
+            Date dateTimeToCompare = dateTimeFormatter.parse(dateTimeString);
 
-        // Check if it's not too late to post predictions based on the date
-        if (currentDate.after(dateToCompare)) {
-            return false;
-        }
+            // Create a Calendar instance for the parsed time in UTC
+            Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+            calendar.setTime(dateTimeToCompare);
 
-        // Create combined date-time string for parsing
-        String dateTimeString = beginningDate + " " + beginningTime;
+            // Subtract 30 minutes from the race start time
+            calendar.add(Calendar.MINUTE, -30);
+            Date adjustedTime = calendar.getTime(); // New time after subtracting 30 minutes
 
-        // Parse the date and time together with UTC timezone
-        SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssX");
-        dateTimeFormatter.setTimeZone(TimeZone.getTimeZone("UTC")); // Parse as UTC
-        Date dateTimeToCompare = dateTimeFormatter.parse(dateTimeString);
+            // Get the current time in UTC for comparison
+            Calendar currentCal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+            currentCal.setTime(currentDate);
 
-        // Create a Calendar instance for the parsed time in UTC
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        calendar.setTime(dateTimeToCompare);
-
-        // Subtract 30 minutes from the race start time
-        calendar.add(Calendar.MINUTE, -30);
-        Date adjustedTime = calendar.getTime(); // New time after subtracting 30 minutes
-
-        // Get the current time in UTC for comparison
-        Calendar currentCal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        currentCal.setTime(currentDate);
-
-        // Check if it's not too late to post predictions based on the adjusted time
-        if (currentCal.getTime().after(adjustedTime)) {
-            return false;
+            // Check if it's not too late to post predictions based on the adjusted time
+            if (currentCal.getTime().after(adjustedTime)) {
+                return false;
+            }
         }
 
         return true;
     }
+
+    public record F1ScheduleSprintResponse(@JsonProperty("MRData") MRDataSprintSchedule mrData) {}
+
+    public record MRDataSprintSchedule(@JsonProperty("RaceTable") SprintTableSchedule raceTable) {}
+
+    public record SprintTableSchedule(@JsonProperty("Races") List<SprintSchedule> races) {}
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record SprintSchedule(
+            @JsonProperty("raceName") String raceName,
+            @JsonProperty("date") String raceDate, // Date of the RACE
+            @JsonProperty("time") String raceTime, // Time of the RACE
+            @JsonProperty("Sprint") SprintSessionSchedule sprint // <--- This is what you want
+    ) {}
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record SprintSessionSchedule(
+            @JsonProperty("date") String date,
+            @JsonProperty("time") String time
+    ) {}
 
     private boolean checkBeginningTimeOfSprint(int year, int grandPrixId) throws ParseException {
-        String url = "https://ergast.com/api/f1/" + year + "/" + grandPrixId + ".json";
+        String url = "https://api.jolpi.ca/ergast/f1/" + year + "/" + grandPrixId + ".json";
 
-        RestTemplate restTemplate = new RestTemplate();
+        var restClient = RestClient.create();
 
-        // Build the URI with placeholders
-        String uri = UriComponentsBuilder.fromUriString(url)
-                .buildAndExpand(Map.of("season", year, "round", grandPrixId))
-                .toString();
+        var response = restClient.get()
+                .uri(url)
+                .retrieve()
+                .body(F1ScheduleSprintResponse.class);
 
-        // Fetch data from the API
-        Map response = restTemplate.getForObject(uri, Map.class);
-        String beginningDate = "";
-        String beginningTime = "";
+        if (response != null && !response.mrData().raceTable().races().isEmpty()) {
+            String date = response.mrData().raceTable().races().getFirst().sprint().date();
+            String time = response.mrData().raceTable().races().getFirst().sprint().time();
 
-        if (response != null) {
-            Map raceTable = (Map) response.get("MRData");
-            Map raceData = (Map) ((Map) ((List) ((Map) raceTable.get("RaceTable")).get("Races")).get(0)).get("Sprint");
+            // Create date object
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+            dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC")); // Ensure date parsing in UTC
+            Date dateToCompare = dateFormatter.parse(date);
 
-            if (raceData != null) {
-                beginningDate = (String) raceData.get("date");
-                beginningTime = (String) raceData.get("time");
+            // Current date and hour in computer (system default time zone)
+            Date currentDate = new Date();
+
+            // Check if it's not too late to post predictions based on the date
+            if (currentDate.after(dateToCompare)) {
+                return false;
             }
-        }
 
-        // Create date object
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC")); // Ensure date parsing in UTC
-        Date dateToCompare = dateFormatter.parse(beginningDate);
+            // Create combined date-time string for parsing
+            String dateTimeString = date + " " + time;
 
-        // Current date and hour in computer (system default time zone)
-        Date currentDate = new Date();
+            // Parse the date and time together with UTC timezone
+            SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssX");
+            dateTimeFormatter.setTimeZone(TimeZone.getTimeZone("UTC")); // Parse as UTC
+            Date dateTimeToCompare = dateTimeFormatter.parse(dateTimeString);
 
-        // Check if it's not too late to post predictions based on the date
-        if (currentDate.after(dateToCompare)) {
-            return false;
-        }
+            // Create a Calendar instance for the parsed time in UTC
+            Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+            calendar.setTime(dateTimeToCompare);
 
-        // Create combined date-time string for parsing
-        String dateTimeString = beginningDate + " " + beginningTime;
+            // Subtract 30 minutes from the race start time
+            calendar.add(Calendar.MINUTE, -30);
+            Date adjustedTime = calendar.getTime(); // New time after subtracting 30 minutes
 
-        // Parse the date and time together with UTC timezone
-        SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssX");
-        dateTimeFormatter.setTimeZone(TimeZone.getTimeZone("UTC")); // Parse as UTC
-        Date dateTimeToCompare = dateTimeFormatter.parse(dateTimeString);
+            // Get the current time in UTC for comparison
+            Calendar currentCal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+            currentCal.setTime(currentDate);
 
-        // Create a Calendar instance for the parsed time in UTC
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        calendar.setTime(dateTimeToCompare);
-
-        // Subtract 30 minutes from the race start time
-        calendar.add(Calendar.MINUTE, -30);
-        Date adjustedTime = calendar.getTime(); // New time after subtracting 30 minutes
-
-        // Get the current time in UTC for comparison
-        Calendar currentCal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        currentCal.setTime(currentDate);
-
-        // Check if it's not too late to post predictions based on the adjusted time
-        if (currentCal.getTime().after(adjustedTime)) {
-            return false;
+            // Check if it's not too late to post predictions based on the adjusted time
+            if (currentCal.getTime().after(adjustedTime)) {
+                return false;
+            }
         }
 
         return true;
-    }
-
-    public ResponseEntity<String> F1APIRaceParser(int grandPrixId, int sessionId, int year) {
-        boolean joker = false;
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Predictions predictions = getParticipantPredictions(grandPrixId, sessionId, username);
-        if(predictions.getGrandPrix().getJoker() != null){
-            joker = true;
-        }
-
-        double pointsCalculated;
-
-        //if points were already calculated
-        if (predictions.getPoints() != null) {
-            return ResponseEntity.ok(predictions.getPoints().getNumber().toString());
-        }
-
-        //page with api with F1 race results (standings)
-        String url = "https://ergast.com/api/f1/" + year + "/" + grandPrixId + "/results";
-        LinkedHashMap<?, ?> raceMap = getTreeToRaces(url);
-
-        //if race hasn't finished yet
-        if (raceMap == null) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        }
-
-        // Step 3: Access the "ResultsList" LinkedHashMap
-        LinkedHashMap<?, ?> resultsListMap = (LinkedHashMap<?, ?>) raceMap.get("ResultsList");
-
-        // Step 4: Access the "Result" LinkedHashMap
-        ArrayList<?> resultsArray = (ArrayList<?>) resultsListMap.get("Result");
-
-        List<String> driverStandings = parseSurnames(resultsArray);
-
-        PointsCalculator pointsCalculator = initPointsCalculator(predictions, driverStandings, joker);
-
-        //page with the fastest laps in race
-        String urlFastestLap = "https://ergast.com/api/f1/" + year + "/" + grandPrixId + "/fastest/" + 1 + "/results";
-
-        LinkedHashMap<?, ?> raceMapFL = getTreeToRaces(urlFastestLap);
-
-        // Step 3: Access the "ResultsList" LinkedHashMap
-        LinkedHashMap<?, ?> resultsListMapFL = (LinkedHashMap<?, ?>) raceMapFL.get("ResultsList");
-
-        LinkedHashMap<?, ?> result = (LinkedHashMap<?, ?>) resultsListMapFL.get("Result");
-
-        LinkedHashMap<?, ?> resultDriver = (LinkedHashMap<?, ?>) result.get("Driver");
-
-        String actualFastestLap = (String) resultDriver.get("FamilyName");
-
-        pointsCalculated = pointsCalculator.countPointsFromRace(predictions.getFastestLap(), actualFastestLap);
-
-        return updatePredictionsInDB(grandPrixId, sessionId, username, predictions, pointsCalculated);
-    }
-
-    public ResponseEntity<String> sprintSeleniumParser(int grandPrixId, int sessionId, int year, String grandPrixName) {
-        try {
-            boolean joker = false;
-            String username =  SecurityContextHolder.getContext().getAuthentication().getName();
-            Predictions predictions = getParticipantPredictions(grandPrixId, sessionId, username);
-            if (predictions.getGrandPrix().getJoker() != null) {
-                joker = true;
-            }
-
-            double pointsCalculated;
-
-            //if points were already calculated
-            if (predictions.getPoints() != null) {
-                return ResponseEntity.ok(predictions.getPoints().getNumber().toString());
-            }
-
-            ArrayList<String> driverArrayList = new ArrayList<>();
-            WebDriver driver;
-            System.setProperty("webdriver.firefox.marionette","C:\\apps\\geckodriver.exe");
-
-            // Create an instance of FirefoxOptions
-            FirefoxOptions options = new FirefoxOptions();
-            options.addArguments("--headless=new");
-
-            driver = new FirefoxDriver(options);
-
-            String file = "2024_s.txt";
-            UrlFromTxtParser urlFromTxtParser = new UrlFromTxtParser();
-            ArrayList<URL> urls = urlFromTxtParser.add(file, resourceLoader);
-
-            String baseUrl = null;
-
-            grandPrixName = grandPrixName.toLowerCase();
-            grandPrixName = grandPrixName.replace(" ", "-");
-
-            for(URL url : urls){
-                if(url.getGpName().equals(grandPrixName)){
-                    baseUrl = url.getUrl();
-                    baseUrl += "/sprint-results";
-                    break;
-                }
-            }
-
-            if(baseUrl != null) {
-                driver.get(baseUrl);
-
-                List<WebElement> sth = driver.findElements(By.className("max-tablet:hidden"));
-
-                for (WebElement webElement : sth) {
-                    String surname = webElement.getText();
-                    driverArrayList.add(surname);
-                }
-
-                PointsCalculator pointsCalculator = initPointsCalculator(predictions, driverArrayList, joker);
-                pointsCalculated = pointsCalculator.countPointsFromSprint();
-
-                return updatePredictionsInDB(grandPrixId, sessionId, username, predictions, pointsCalculated);
-            }
-            else{
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 }

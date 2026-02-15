@@ -1,3 +1,4 @@
-
+FrontEnd/typerf1/node_modules
 App/TyperF1/src/main/java/com/typerf1/typerf1/config/SecurityConstants.java
 FrontEnd/typerf1/.env
+App/TyperF1/src/main/resources/application-dev.properties

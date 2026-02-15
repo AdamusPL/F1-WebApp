@@ -59,9 +59,8 @@ public class PredictController {
     }
 
     @GetMapping("/calculate-points-sprint")
-    public ResponseEntity<String> calculatePointsSprint(@RequestParam int grandPrixId, @RequestParam int sessionId,
-                                                        @RequestParam String grandPrixName) {
+    public ResponseEntity<String> calculatePointsSprint(@RequestParam int grandPrixId, @RequestParam int sessionId) {
         int year = 2024;
-        return predictService.sprintSeleniumParser(grandPrixId, sessionId, year, grandPrixName);
+        return predictService.F1APISprintParser(grandPrixId, sessionId, year);
     }
 }

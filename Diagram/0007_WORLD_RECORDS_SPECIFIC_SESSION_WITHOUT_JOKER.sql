@@ -1,6 +1,3 @@
-USE TyperF1;
-GO
-
 --max points race without joker
 SELECT p.Name, p.Surname, gp.Name AS GrandPrixName, s.Year, pt.Number AS Points
 FROM Participant p

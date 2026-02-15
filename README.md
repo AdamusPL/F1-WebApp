@@ -12,8 +12,7 @@ After registration/signing-in:
 - Printing Personal Best Records - minimum/maximum points ever gained in specific session;
 
 ## Stack
-- Formula One API - https://documenter.getpostman.com/view/11586746/SztEa7bL#dfa298c3-bd29-4a40-9ea0-8cbd81653905 - to download driver standings from specific sessions, compare it to participant predictions and count points
-- Selenium (for Sprint session results)
+- Jolpica F1 - https://api.jolpi.ca/ergast/f1/ - to download driver standings from specific sessions, compare it to participant predictions and count points
 - MS SQL Server 22 + Docker
 - Java 23
 - Java Spring
