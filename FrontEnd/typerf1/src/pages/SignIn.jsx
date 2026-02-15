@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 import logo from '../assets/logo.png'
 
@@ -8,6 +9,7 @@ export default function SignIn() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [cookies, setCookie] = useCookies(['token']);
 
     const navigate = useNavigate();
 
@@ -33,7 +35,9 @@ export default function SignIn() {
             }).then(data => {
                 if (typeof data !== 'string') {
                     if (data.accessToken != null) {
-                        document.cookie = data.name + "=" + (data.accessToken || "") + "; path=/";
+                        setCookie(data.name, data.accessToken || "", {
+                            path: '/'
+                        });
                         navigate('/');
                     }
                     else {

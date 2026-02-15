@@ -37,8 +37,9 @@ public class WebSecurityConfig {
                         .requestMatchers("/participants", "/personal-best", "/get-personal-best", "/predict",
                                 "/get-sessions", "/post-predictions", "/check-predictions-existence",
                                 "/calculate-points-qualifying", "/calculate-points-race", "/calculate-points-sprint",
-                                "/get-participant-standings", "/results", "/standings", "/get-full-name",
-                                "/get-season-scores", "/get-grandprix-summary", "/world-records", "/get-records")
+                                "/get-participant-standings", "/get-season-years", "/standings", "/get-full-name",
+                                "/get-season-scores", "/get-grandprix-summary", "/world-records", "/get-records",
+                                "/results")
                         .authenticated()
                 )
                 .addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class);

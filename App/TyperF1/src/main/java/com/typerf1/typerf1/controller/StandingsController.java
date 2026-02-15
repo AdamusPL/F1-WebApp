@@ -1,7 +1,7 @@
 package com.typerf1.typerf1.controller;
 
 import com.typerf1.typerf1.dto.grandprix.GrandPrixScoreWithJokers;
-import com.typerf1.typerf1.dto.points.ScoreWithJokers;
+import com.typerf1.typerf1.dto.standings.GrandPrixDto;
 import com.typerf1.typerf1.service.StandingsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,12 +20,17 @@ public class StandingsController {
     }
 
     @GetMapping("/get-season-scores")
-    public @ResponseBody List<ScoreWithJokers> scores(@RequestParam Integer year){
+    public @ResponseBody List<GrandPrixDto> scores(@RequestParam Integer year){
         return standingsRepository.getScores(year);
     }
 
     @GetMapping("/get-grandprix-summary")
     public @ResponseBody List<GrandPrixScoreWithJokers> scores(@RequestParam Integer year, @RequestParam String grandPrixName){
         return standingsRepository.getGrandPrixSummaryScores(year, grandPrixName);
+    }
+
+    @GetMapping("/results")
+    public String results(){
+        return "results";
     }
 }
