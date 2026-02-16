@@ -15,13 +15,11 @@ export default function Results() {
     }, [year]);
 
     function getScores() {
-        debugger;
         try {
             fetch(`${import.meta.env.VITE_API_BASE_URL}/get-season-scores?year=${year}`, {
                 credentials: 'include'
             })
                 .then(response => {
-                    debugger;
                     if (!response.ok) {
                         throw new Error('Error');
                     }
@@ -37,6 +35,7 @@ export default function Results() {
     }
 
     return (<>
+        <h1>Results</h1>
         <SeasonYearChooser />
 
         {year != 0 ?

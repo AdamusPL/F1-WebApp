@@ -1,15 +1,15 @@
 package com.typerf1.typerf1.service;
 
 import com.typerf1.typerf1.dto.points.Record;
+import com.typerf1.typerf1.dto.worldRecord.WorldRecord;
 import com.typerf1.typerf1.repository.PersonalBestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class PersonalBestService {
@@ -21,30 +21,33 @@ public class PersonalBestService {
         this.personalBestRepository = personalBestRepository;
     }
 
-    public Map<String, Record> getPersonalBest(String firstName, String surname){
-        Map<String, Record> personalBestList = new HashMap<>();
+    public List<WorldRecord> getPersonalBest(Integer id){
+        List<WorldRecord> personalBestList = new ArrayList<>();
 
         //without joker
-        putRecord(personalBestList, true, firstName, surname, "Race", "highest-race");
-        putRecord(personalBestList, true, firstName, surname,"Qualifying", "highest-qualifying");
-        putRecord(personalBestList, true, firstName, surname,"Sprint", "highest-sprint");
-        putRecord(personalBestList, false, firstName, surname,"Race", "lowest-race");
-        putRecord(personalBestList, false, firstName, surname,"Qualifying", "lowest-qualifying");
-        putRecord(personalBestList, false, firstName, surname,"Sprint", "lowest-sprint");
+        putRecord(personalBestList, true, id, "Race", "The highest number of points gained with prediction on Race");
+        putRecord(personalBestList, true, id,"Qualifying", "The highest number of points gained with prediction on Qualifying");
+        putRecord(personalBestList, true, id,"Sprint", "The highest number of points gained with prediction on Sprint");
+        putRecord(personalBestList, false, id,"Race", "The lowest number of points gained with prediction on Race");
+        putRecord(personalBestList, false, id,"Qualifying", "The lowest number of points gained with prediction on Qualifying");
+        putRecord(personalBestList, false, id,"Sprint", "The lowest number of points gained with prediction on Sprint");
 
         return personalBestList;
     }
 
-    void putRecord(Map<String, Record> recordList, boolean highest, String firstName, String surname, String find, String key) {
+    void putRecord(List<WorldRecord> recordList, boolean highest, Integer id, String find, String key) {
         Pageable pageable = PageRequest.of(0, 1);
         List<Record> toFind;
         if (highest) {
-            toFind = personalBestRepository.findHighest(find, firstName, surname, pageable);
+            toFind = personalBestRepository.findHighest(find, id, pageable);
         } else {
-            toFind = personalBestRepository.findLowest(find, firstName, surname, pageable);
+            toFind = personalBestRepository.findLowest(find, id, pageable);
         }
         if (!toFind.isEmpty()) {
-            recordList.put(key, toFind.get(0));
+            var worldRecord = new WorldRecord();
+            worldRecord.setName(key);
+            worldRecord.setRecord(toFind.getFirst());
+            recordList.add(worldRecord);
         }
     }
 

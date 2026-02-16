@@ -25,16 +25,14 @@ public interface PersonalBestRepository extends JpaRepository<Points, Integer> {
             "JOIN ses.grandPrix gp " +
             "JOIN gp.season s " +
             "WHERE ses.name = :session " +
-            "AND p.name = :firstName " +
-            "AND p.surname = :surname " +
+            "AND p.id = :id " +
             "AND p.id NOT IN ( " +
             "SELECT j.participant.id " +
             "FROM Joker j " +
             "JOIN j.grandPrix gp2 " +
             "WHERE gp2.id = gp.id)) " +
-            "AND p.name = :firstName " +
-            "AND p.surname = :surname ")
-    List<Record> findHighest(@Param("session") String session, @Param("firstName") String firstName, @Param("surname") String surname, Pageable pageable);
+            "AND p.id = :id ")
+    List<Record> findHighest(@Param("session") String session, @Param("id") Integer id, Pageable pageable);
 
     @Query("SELECT new Record(p.name, p.surname, gp.name, s.year, pt.number) " +
             "FROM Points pt " +
@@ -48,14 +46,12 @@ public interface PersonalBestRepository extends JpaRepository<Points, Integer> {
             "JOIN ses.grandPrix gp " +
             "JOIN gp.season s " +
             "WHERE ses.name = :session " +
-            "AND p.name = :firstName " +
-            "AND p.surname = :surname " +
+            "AND p.id = :id " +
             "AND p.id NOT IN ( " +
             "SELECT j.participant.id " +
             "FROM Joker j " +
             "JOIN j.grandPrix gp2 " +
             "WHERE gp2.id = gp.id)) " +
-            "AND p.name = :firstName " +
-            "AND p.surname = :surname ")
-    List<Record> findLowest(@Param("session") String session, @Param("firstName") String firstName, @Param("surname") String surname, Pageable pageable);
+            "AND p.id = :id ")
+    List<Record> findLowest(@Param("session") String session, @Param("id") Integer id, Pageable pageable);
 }

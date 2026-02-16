@@ -11,7 +11,6 @@ export default function NavigationBar({ children }) {
 
     const [cookies, setCookie, removeCookie] = useCookies(['token']);
     const [menuOpen, setMenuOpen] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
@@ -37,7 +36,7 @@ export default function NavigationBar({ children }) {
                         <Nav.Link href="/about">About</Nav.Link>
                         <Nav.Link href="/results">Results</Nav.Link>
                         <Nav.Link href="/standings">Standings</Nav.Link>
-                        <Nav.Link href="/standings">WorldRecords</Nav.Link>
+                        <Nav.Link href="/world-records">WorldRecords</Nav.Link>
                         <Nav.Link href="/personal-best">Personal Best</Nav.Link>
                         <Nav.Link href="/participants">Participants</Nav.Link>
                         <Nav.Link href="/predict">Predict</Nav.Link>
