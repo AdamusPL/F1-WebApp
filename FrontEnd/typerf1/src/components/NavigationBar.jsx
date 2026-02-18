@@ -34,12 +34,18 @@ export default function NavigationBar({ children }) {
                         <Nav.Link href="/">Home</Nav.Link>
                         <Nav.Link href="/rules">Rules</Nav.Link>
                         <Nav.Link href="/about">About</Nav.Link>
-                        <Nav.Link href="/results">Results</Nav.Link>
-                        <Nav.Link href="/standings">Standings</Nav.Link>
-                        <Nav.Link href="/world-records">WorldRecords</Nav.Link>
-                        <Nav.Link href="/personal-best">Personal Best</Nav.Link>
-                        <Nav.Link href="/participants">Participants</Nav.Link>
-                        <Nav.Link href="/predict">Predict</Nav.Link>
+                        {cookies.token ?
+                            <>
+                            <Nav.Link href="/results">Results</Nav.Link>
+                            <Nav.Link href="/standings">Standings</Nav.Link>
+                            <Nav.Link href="/world-records">WorldRecords</Nav.Link>
+                            <Nav.Link href="/personal-best">Personal Best</Nav.Link>
+                            <Nav.Link href="/participants">Participants</Nav.Link>
+                            <Nav.Link href="/predict">Predict</Nav.Link>
+                            </>
+                        :
+                            null
+                        }
                     </Nav>
                     {cookies.token ?
                         <Button id='logout' variant='outline-primary' onClick={logout}>Log-out</Button>

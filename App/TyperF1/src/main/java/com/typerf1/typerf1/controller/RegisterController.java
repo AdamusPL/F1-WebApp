@@ -2,6 +2,7 @@ package com.typerf1.typerf1.controller;
 
 import com.typerf1.typerf1.dto.participantLoginData.RegisterData;
 import com.typerf1.typerf1.service.RegisterService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +25,7 @@ public class RegisterController {
         return "register";
     }
 
-    @PostMapping("/register-user")
+    @PostMapping(value = "/register-user", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> registerUser(@ModelAttribute RegisterData registerData) throws IOException {
         return registerService.checkExistence(registerData);
     }

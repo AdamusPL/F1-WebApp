@@ -1,6 +1,7 @@
 package com.typerf1.typerf1.controller;
 
 import com.typerf1.typerf1.dto.participant.BetterFullName;
+import com.typerf1.typerf1.dto.participant.ParticipantPage;
 import com.typerf1.typerf1.service.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,6 +30,11 @@ public class ParticipantController {
     @GetMapping("/get-participants")
     public @ResponseBody List<BetterFullName> getParticipants() {
         return participantService.getParticipantFullNames();
+    }
+
+    @GetMapping("/get-participants-for-subpage")
+    public @ResponseBody List<ParticipantPage> getParticipantsForSubpage() {
+        return participantService.getParticipantPages();
     }
 
     @GetMapping("/personal-best")
