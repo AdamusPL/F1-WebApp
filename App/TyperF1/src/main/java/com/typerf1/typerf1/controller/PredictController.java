@@ -1,5 +1,7 @@
 package com.typerf1.typerf1.controller;
 
+import com.typerf1.typerf1.dto.predictions.PredictionsDto;
+import com.typerf1.typerf1.model.GrandPrix;
 import com.typerf1.typerf1.model.Predictions;
 import com.typerf1.typerf1.model.Session;
 import com.typerf1.typerf1.service.PredictService;
@@ -27,6 +29,12 @@ public class PredictController {
         return "predict";
     }
 
+    @GetMapping("/get-grand-prix")
+    public @ResponseBody List<GrandPrix> getGrandPrix(){
+        int year = 2024;
+        return predictService.getThisYearGrandPrix(year);
+    }
+
     @GetMapping("/get-sessions")
     public @ResponseBody List<Session> getSessions(@RequestParam int grandPrixId){
         return predictService.getSessionsOfGrandPrix(grandPrixId);
@@ -40,8 +48,8 @@ public class PredictController {
     }
 
     @GetMapping("/check-predictions-existence")
-    public ResponseEntity<Predictions> checkPredictionsExistence(@RequestParam String sessionType, @RequestParam int year,
-                                                                 @RequestParam int grandPrixId, @RequestParam int sessionId
+    public ResponseEntity<PredictionsDto> checkPredictionsExistence(@RequestParam String sessionType, @RequestParam int year,
+                                                                    @RequestParam int grandPrixId, @RequestParam int sessionId
                                                             ) throws ParseException {
         return predictService.checkPredictionsExistence(sessionType, year, grandPrixId, sessionId);
     }

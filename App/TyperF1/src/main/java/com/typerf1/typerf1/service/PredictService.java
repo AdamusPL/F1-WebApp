@@ -2,6 +2,7 @@ package com.typerf1.typerf1.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.typerf1.typerf1.dto.predictions.PredictionsDto;
 import com.typerf1.typerf1.model.*;
 import com.typerf1.typerf1.repository.*;
 import jakarta.persistence.EntityNotFoundException;
@@ -78,27 +79,52 @@ public class PredictService {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Predictions> checkPredictionsExistence(String sessionType, int year, int grandPrixId, int sessionId) throws ParseException {
+    public ResponseEntity<PredictionsDto> checkPredictionsExistence(String sessionType, int year, int grandPrixId, int sessionId) throws ParseException {
         List<Predictions> predictionsList = predictionsRepository.checkPredictionExistence(grandPrixId, sessionId, SecurityContextHolder.getContext().getAuthentication().getName());
         if (!predictionsList.isEmpty()) {
             Predictions predictions = predictionsList.getFirst();
-            predictions.setParticipant(null);
-            predictions.setSession(null);
-            predictions.setGrandPrix(null);
-            return ResponseEntity.ok(predictions);
+            var predictionsDto = new PredictionsDto();
+            predictionsDto.setId(predictions.getId());
+            predictionsDto.setPoints(predictions.getPoints().getNumber());
+            if (predictions.getSession().getName().equals("Race")) {
+                predictionsDto.setFastestLap(predictions.getFastestLap());
+            }
+            List<String> predictionsListDto = new ArrayList<>();
+            predictionsListDto.add(predictions.getDriver1());
+            predictionsListDto.add(predictions.getDriver2());
+            predictionsListDto.add(predictions.getDriver3());
+            predictionsListDto.add(predictions.getDriver4());
+            predictionsListDto.add(predictions.getDriver5());
+            predictionsListDto.add(predictions.getDriver6());
+            predictionsListDto.add(predictions.getDriver7());
+            predictionsListDto.add(predictions.getDriver8());
+            predictionsListDto.add(predictions.getDriver9());
+            predictionsListDto.add(predictions.getDriver10());
+            predictionsListDto.add(predictions.getDriver11());
+            predictionsListDto.add(predictions.getDriver12());
+            predictionsListDto.add(predictions.getDriver13());
+            predictionsListDto.add(predictions.getDriver14());
+            predictionsListDto.add(predictions.getDriver15());
+            predictionsListDto.add(predictions.getDriver16());
+            predictionsListDto.add(predictions.getDriver17());
+            predictionsListDto.add(predictions.getDriver18());
+            predictionsListDto.add(predictions.getDriver19());
+            predictionsListDto.add(predictions.getDriver20());
+            predictionsDto.setDrivers(predictionsListDto);
+            return ResponseEntity.ok(predictionsDto);
         } else {
             //check if user can still post predictions
             boolean isAbleToPost;
 
-            if (sessionType.equals("R")) {
+            if (sessionType.equals("Race")) {
                 isAbleToPost = checkBeginningTimeOfRace(year, grandPrixId);
-//                isAbleToPost = true;
-            } else if (sessionType.equals("Q")) {
+                isAbleToPost = true;
+            } else if (sessionType.equals("Qualifying")) {
                 isAbleToPost = checkBeginningTimeOfQualifying(year, grandPrixId);
-//                isAbleToPost = true;
+                isAbleToPost = true;
             } else {
                 isAbleToPost = checkBeginningTimeOfSprint(year, grandPrixId);
-//                isAbleToPost = true;
+                isAbleToPost = true;
             }
 
             //if session has already begun

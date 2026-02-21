@@ -39,7 +39,7 @@ public class WebSecurityConfig {
                                 "/calculate-points-qualifying", "/calculate-points-race", "/calculate-points-sprint",
                                 "/get-participant-standings", "/get-season-years", "/standings", "/get-full-name",
                                 "/get-season-scores", "/get-grandprix-summary", "/world-records", "/get-records",
-                                "/results", "/get-participants", "/get-participants-for-subpage")
+                                "/results", "/get-participants", "/get-participants-for-subpage", "/get-grand-prix")
                         .authenticated()
                 )
                 .addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class);
