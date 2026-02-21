@@ -67,7 +67,7 @@ export default function PredictionFields() {
         const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/check-predictions-existence?sessionType=${session.name}&year=${year}&grandPrixId=${grandPrix.id}&sessionId=${session.id}`, {
             credentials: 'include'
         });
-        
+        debugger;
         if (response.status === 200) {
             setIsAbleToPost(false);
             setIsDeadlinePassed(false);
@@ -111,6 +111,7 @@ export default function PredictionFields() {
                         <Dropdown.Item onClick={() => setJoker(true)}>Yes</Dropdown.Item>
                         <Dropdown.Item onClick={() => setJoker(false)}>No</Dropdown.Item>
                     </DropdownButton>
+                    <p>{joker ? "Yes" : "No"}</p>
                     {session.name === 'Race' ?
                         <div className="d-flex align-items-center mb-2">
                             <span className="me-2">Fastest Lap:</span>

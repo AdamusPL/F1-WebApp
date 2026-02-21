@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -16,13 +18,15 @@ public class Points {
     @jakarta.persistence.Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     Integer id;
+
+    @Column(columnDefinition = "DECIMAL(6,2)")
     Double number;
 
     public Points(Double number){
         this.number = number;
     }
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "SessionId")
     Session session;
 

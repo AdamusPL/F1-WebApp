@@ -13,20 +13,20 @@ import java.util.List;
 @Controller
 public class StandingsController {
 
-    public final StandingsService standingsRepository;
+    public final StandingsService standingsService;
 
-    public StandingsController(StandingsService standingsRepository){
-        this.standingsRepository = standingsRepository;
+    public StandingsController(StandingsService standingsService){
+        this.standingsService = standingsService;
     }
 
     @GetMapping("/get-season-scores")
     public @ResponseBody List<GrandPrixDto> scores(@RequestParam Integer year){
-        return standingsRepository.getScores(year);
+        return standingsService.getScores(year);
     }
 
     @GetMapping("/get-grandprix-summary")
     public @ResponseBody List<GrandPrixScoreWithJokers> scores(@RequestParam Integer year, @RequestParam String grandPrixName){
-        return standingsRepository.getGrandPrixSummaryScores(year, grandPrixName);
+        return standingsService.getGrandPrixSummaryScores(year, grandPrixName);
     }
 
     @GetMapping("/results")

@@ -252,7 +252,7 @@ public class PredictService {
     private ResponseEntity<String> updatePredictionsInDB(int grandPrixId, int sessionId, String username, Predictions predictions, double pointsCalculated) {
         Points points = new Points(pointsCalculated);
         points.setParticipant(predictions.getParticipant());
-        points.setSession(predictions.getSession());
+        points.setSession(predictions.getPoints().getSession());
         Predictions predictions1 = predictionsRepository.checkPredictionExistence(grandPrixId, sessionId, username).getFirst();
         points.setPredictions(predictions1);
 

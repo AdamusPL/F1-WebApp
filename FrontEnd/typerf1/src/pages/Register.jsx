@@ -68,7 +68,7 @@ export default function Register() {
         <>
             <main className="form-signin w-100 m-auto">
                 <Form>
-                    <img className="mb-4" src={logo} alt="" width="72" height="72" />
+                    <img className="mb-4" src={logo} alt="" width="72" height="72" style={{ marginTop: "50px" }} />
                     <h1 className="h3 mb-3 fw-normal">Register your account</h1>
 
                     <Form.Group className="form-floating">

@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 public interface ResultsRepository extends JpaRepository<Points, Integer> {
 
-    @Query("SELECT new SeasonScore(s.id, p.name, p.surname, SUM(pt.number)) " +
+    @Query("SELECT new com.typerf1.typerf1.dto.season.SeasonScore(s.id, p.name, p.surname, SUM(pt.number)) " +
             "FROM Points pt " +
             "JOIN pt.participant p " +
             "JOIN pt.session ses " +
@@ -25,7 +25,7 @@ public interface ResultsRepository extends JpaRepository<Points, Integer> {
             "ORDER BY s.id, SUM(pt.number) DESC")
     List<SeasonScore> getParticipantStandings(@Param("year") Integer year);
 
-    @Query("SELECT new JokersUsed(p.name, p.surname, COUNT(j.id)) " +
+    @Query("SELECT new com.typerf1.typerf1.dto.joker.JokersUsed(p.name, p.surname, COUNT(j.id)) " +
             "FROM Joker j " +
             "JOIN j.participant p " +
             "JOIN j.grandPrix gp " +
@@ -34,7 +34,7 @@ public interface ResultsRepository extends JpaRepository<Points, Integer> {
             "GROUP BY p.name, p.surname")
     List<JokersUsed> getParticipantJokers(@Param("year") Integer year);
 
-    @Query("SELECT new ScoresDto(p.id, pa.name, pa.surname, s.name, gp.name, p.number) " +
+    @Query("SELECT new com.typerf1.typerf1.dto.plot.ScoresDto(p.id, pa.name, pa.surname, s.name, gp.name, p.number) " +
             "FROM Points p " +
             "JOIN p.participant pa " +
             "JOIN p.session s " +

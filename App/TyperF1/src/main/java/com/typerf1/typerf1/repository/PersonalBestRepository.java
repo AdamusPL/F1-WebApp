@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface PersonalBestRepository extends JpaRepository<Points, Integer> {
 
-    @Query("SELECT new Record(p.name, p.surname, gp.name, s.year, pt.number) " +
+    @Query("SELECT new com.typerf1.typerf1.dto.points.Record(p.name, p.surname, gp.name, s.year, pt.number) " +
             "FROM Points pt " +
             "JOIN pt.participant p " +
             "JOIN pt.session ses " +
@@ -34,7 +34,7 @@ public interface PersonalBestRepository extends JpaRepository<Points, Integer> {
             "AND p.id = :id ")
     List<Record> findHighest(@Param("session") String session, @Param("id") Integer id, Pageable pageable);
 
-    @Query("SELECT new Record(p.name, p.surname, gp.name, s.year, pt.number) " +
+    @Query("SELECT new com.typerf1.typerf1.dto.points.Record(p.name, p.surname, gp.name, s.year, pt.number) " +
             "FROM Points pt " +
             "JOIN pt.participant p " +
             "JOIN pt.session ses " +

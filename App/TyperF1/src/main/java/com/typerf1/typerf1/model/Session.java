@@ -27,8 +27,8 @@ public class Session {
     @JoinColumn(name = "GrandPrixId")
     GrandPrix grandPrix;
 
-    @OneToOne(mappedBy = "session")
-    private Points points;
+    @OneToMany(mappedBy = "session")
+    private List<Points> points;
 
     @OneToMany(mappedBy = "session")
     private List<Predictions> predictions;

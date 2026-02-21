@@ -11,11 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.LinkedHashMap;
 
 import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.*;
 
 @Service
 public class StandingsService {
@@ -26,21 +27,41 @@ public class StandingsService {
         this.standingsRepository = standingsRepository;
     }
 
+    private static final List<String> SESSION_ORDER = List.of(
+            "Free Practice 1",
+            "Free Practice 2",
+            "Free Practice 3",
+            "Qualifying",
+            "Sprint",
+            "Race"
+    );
+
+    Comparator<SessionDto> sessionComparator = Comparator.comparingInt(s -> {
+        int index = SESSION_ORDER.indexOf(s.getName());
+        return index == -1 ? Integer.MAX_VALUE : index;
+    });
+
     public List<GrandPrixDto> getScores(Integer year) {
         List<Score> scoreList = standingsRepository.findSeasonScores(year);
-        var scores = scoreList
-                .stream()
-                .collect(collectingAndThen(groupingBy(Score::getGrandPrixName,
-                                collectingAndThen(groupingBy(Score::getSessionName),
-                                        sessionName -> sessionName.entrySet().stream()
-                                                .map(e -> new SessionDto(e.getKey(), e.getValue()))
-                                                .toList()
-                                )
-                        ),
-                        gpMap -> gpMap.entrySet().stream()
-                                .map(e -> new GrandPrixDto(e.getKey(), e.getValue()))
-                                .sorted(comparing(GrandPrixDto::getName))
-                                .toList()));
+        var scores = scoreList.stream()
+                .collect(groupingBy(
+                        Score::getGrandPrixName,
+                        LinkedHashMap::new, // This preserves the DB order for GPs
+                        groupingBy(
+                                Score::getSessionName,
+                                LinkedHashMap::new, // This preserves the DB order for Sessions
+                                toList()
+                        )
+                ))
+                .entrySet().stream()
+                .map(gpEntry -> {
+                    var sessions = gpEntry.getValue().entrySet().stream()
+                            .map(sEntry -> new SessionDto(sEntry.getKey(), sEntry.getValue()))
+                            .toList(); // No .sorted() needed if DB order is correct
+
+                    return new GrandPrixDto(gpEntry.getKey(), sessions);
+                })
+                .toList(); // No .sorted() needed here either
 
 //        String currentGrandPrixName = "";
 //        String current = "";

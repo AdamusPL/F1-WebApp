@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface ParticipantLoginDataRepository extends JpaRepository<ParticipantLoginData, Integer> {
     @Query(
-            "SELECT new FullName(p.name, p.surname) " +
+            "SELECT new com.typerf1.typerf1.dto.participant.FullName(p.name, p.surname) " +
                     "FROM ParticipantLoginData pld " +
                     "JOIN pld.participant p " +
                     "WHERE pld.username = :username "
