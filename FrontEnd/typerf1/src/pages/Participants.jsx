@@ -21,7 +21,7 @@ export default function Participants() {
                     return response.json();
                 })
                 .then(data => {
-                    debugger;
+                    
                     setParticipantsData(data);
                 })
         } catch (e) {

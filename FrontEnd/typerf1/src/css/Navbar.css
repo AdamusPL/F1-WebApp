@@ -16,6 +16,24 @@
     border-color: black; /* Border color */
 }
 
+.btn-outline-primary {
+    color: red; /* Text color on hover */
+    background-color: white; /* Background color on hover */
+    border-color: red; /* Border color on hover */
+}
+
+.btn-outline-primary:hover {
+    color: darkred; /* Text color on hover */
+    background-color: white; /* Background color on hover */
+    border-color: darkred; /* Border color on hover */
+}
+
+.btn-outline-primary:active:focus {
+    color: black; /* Text color on hover */
+    background-color: white; /* Background color on hover */
+    border-color: black; /* Border color on hover */
+}
+
 /* Define the hover effect */
 .btn-primary {
     color: #ffffff; /* Text color on hover */
@@ -103,9 +121,19 @@ svg {
     box-shadow: 0 0 0 0.2rem darkred;
 }
 
+.form-check-input:checked {
+    background-color: red;
+}
+
 a {
     text-decoration: none;
     color: red;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: none;
+    color: darkred;
     font-weight: bold;
 }
 
@@ -148,4 +176,14 @@ a {
     #menu-icon {
         display: block;
     }
+}
+
+.dropdown-item:active:focus{
+    background-color: red;
+}
+
+.btn-check:checked+.btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check)+.btn:active {
+    color: var(--bs-btn-active-color);
+    background-color: darkred;
+    border-color: darkred;
 }

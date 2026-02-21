@@ -31,7 +31,7 @@ export default function PredictionFields() {
     };
 
     const handleFLChange = (value) => {
-        debugger;
+        
         console.log(predictions);
         setPredictions(prevState => {
             return {
@@ -67,7 +67,7 @@ export default function PredictionFields() {
         const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/check-predictions-existence?sessionType=${session.name}&year=${year}&grandPrixId=${grandPrix.id}&sessionId=${session.id}`, {
             credentials: 'include'
         });
-        debugger;
+        
         if (response.status === 200) {
             setIsAbleToPost(false);
             setIsDeadlinePassed(false);

@@ -44,7 +44,7 @@ export default function Plot() {
             credentials: 'include'
         });
         const data = await response.json();
-        debugger;
+        
 
         const colors = ['orange', 'red'];
         setLineChartData({

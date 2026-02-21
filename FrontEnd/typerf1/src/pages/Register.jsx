@@ -33,7 +33,7 @@ export default function Register() {
     const navigate = useNavigate();
 
     function submitForm() {
-        debugger;
+        
         const formData = new FormData();
 
         formData.append('firstName', user.firstName);
