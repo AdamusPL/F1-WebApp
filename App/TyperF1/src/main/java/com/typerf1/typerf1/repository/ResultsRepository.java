@@ -3,6 +3,7 @@ package com.typerf1.typerf1.repository;
 import com.typerf1.typerf1.dto.joker.JokersUsed;
 import com.typerf1.typerf1.dto.season.SeasonScore;
 import com.typerf1.typerf1.model.Points;
+import com.typerf1.typerf1.dto.plot.ScoresDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -32,4 +33,11 @@ public interface ResultsRepository extends JpaRepository<Points, Integer> {
             "WHERE s.year = 2024 " +
             "GROUP BY p.name, p.surname")
     List<JokersUsed> getParticipantJokers(@Param("year") Integer year);
+
+    @Query("SELECT new ScoresDto(p.id, pa.name, pa.surname, s.name, gp.name, p.number) " +
+            "FROM Points p " +
+            "JOIN p.participant pa " +
+            "JOIN p.session s " +
+            "JOIN s.grandPrix gp")
+    List<ScoresDto> getPlotData();
 }

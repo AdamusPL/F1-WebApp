@@ -39,7 +39,8 @@ public class WebSecurityConfig {
                                 "/calculate-points-qualifying", "/calculate-points-race", "/calculate-points-sprint",
                                 "/get-participant-standings", "/get-season-years", "/standings", "/get-full-name",
                                 "/get-season-scores", "/get-grandprix-summary", "/world-records", "/get-records",
-                                "/results", "/get-participants", "/get-participants-for-subpage", "/get-grand-prix")
+                                "/results", "/get-participants", "/get-participants-for-subpage", "/get-grand-prix",
+                                        "/get-data-plot")
                         .authenticated()
                 )
                 .addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -57,7 +58,7 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public CorsFilter corsFilter(){
+    public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowCredentials(true);

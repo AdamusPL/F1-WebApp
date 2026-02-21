@@ -1,5 +1,6 @@
 package com.typerf1.typerf1.controller;
 
+import com.typerf1.typerf1.dto.plot.PlotDto;
 import com.typerf1.typerf1.dto.season.SeasonScoreWithJokers;
 import com.typerf1.typerf1.service.ResultsService;
 import org.springframework.stereotype.Controller;
@@ -18,7 +19,12 @@ public class ResultsController {
     }
 
     @GetMapping("/get-participant-standings")
-    public @ResponseBody List<SeasonScoreWithJokers> standings(@RequestParam int year){
+    public @ResponseBody List<SeasonScoreWithJokers> standings(@RequestParam int year) {
         return resultsService.getParticipantStandings(year);
+    }
+
+    @GetMapping("/get-data-plot")
+    public @ResponseBody List<PlotDto> getDataPlot() {
+        return resultsService.getDataPlot();
     }
 }

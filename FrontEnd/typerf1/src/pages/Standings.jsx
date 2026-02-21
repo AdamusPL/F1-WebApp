@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import SeasonYearChooser from '../components/SeasonYearChooser';
 import { useYear } from '../components/YearProvider';
+import Plot from '../components/Plot';
 
 export default function Standings() {
     const { year, isLoading } = useYear();
@@ -37,11 +38,14 @@ export default function Standings() {
         <SeasonYearChooser />
 
         {year != 0 ?
-            <ol>
-                {standings.map(item => (
-                    <li>{item.participantName} {item.participantSurname} {item.pointsSum}</li>
-                ))}
-            </ol>
+            <Fragment>
+                <ol>
+                    {standings.map(item => (
+                        <li>{item.participantName} {item.participantSurname} {item.pointsSum}</li>
+                    ))}
+                </ol>
+                <Plot />
+            </Fragment>
             : null
         }
     </>);
