@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useParticipant } from "./ParticipantProvider";
 
 export default function ParticipantChooser() {
-    const { setParticipant } = useParticipant();
+    const { participant, setParticipant } = useParticipant();
     const { setIsLoading } = useParticipant();
     const [participants, setParticipants] = useState([]);
 
@@ -21,15 +21,18 @@ export default function ParticipantChooser() {
     }
 
     return (<>
-        <DropdownButton
-            id='season-year'
-            title='Choose participant'
-        >
-            {
-                participants.map(item => (
-                    <Dropdown.Item id={item.id} onClick={() => setParticipant(item)}>{item.firstName} {item.surname}</Dropdown.Item>
-                ))
-            }
-        </DropdownButton>
+        <Fragment>
+            <DropdownButton
+                id='season-year'
+                title='Choose participant'
+            >
+                {
+                    participants.map(item => (
+                        <Dropdown.Item id={item.id} onClick={() => setParticipant(item)}>{item.firstName} {item.surname}</Dropdown.Item>
+                    ))
+                }
+            </DropdownButton>
+            <p>{participant.firstName} {participant.surname}</p>
+        </Fragment>
     </>);
 }
