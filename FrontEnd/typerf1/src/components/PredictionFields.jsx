@@ -10,7 +10,6 @@ export default function PredictionFields() {
     const { grandPrix } = useGrandPrix();
     const { session } = useSession();
     const [joker, setJoker] = useState(false);
-    const [info, setInfo] = useState("");
 
     useEffect(() => {
         if (session?.id) {
@@ -19,10 +18,27 @@ export default function PredictionFields() {
     }, [session]);
 
     const handleChange = (id, value) => {
-        setPredictions(prevState => ({
-            ...prevState,
-            [id]: value
-        }));
+        console.log(predictions);
+        setPredictions(prevState => {
+            const newDrivers = [...prevState.drivers];
+            newDrivers[id - 1] = value;
+
+            return {
+                ...prevState,
+                drivers: newDrivers
+            };
+        });
+    };
+
+    const handleFLChange = (value) => {
+        debugger;
+        console.log(predictions);
+        setPredictions(prevState => {
+            return {
+                ...prevState,
+                fastestLap: value
+            };
+        });
     };
 
     const renderInputsPredictions = () => {
@@ -38,7 +54,7 @@ export default function PredictionFields() {
                 <div key={i} className="d-flex align-items-center mb-2">
                     <span className="me-2">{i}.</span>
                     <Form.Group className="flex-grow-1">
-                        <Form.Control type="password" id={`f-${i}`} />
+                        <Form.Control onChange={(e) => handleChange(i, e.target.value)} id={`f-${i}`} />
                     </Form.Group>
                 </div>
             );
@@ -77,6 +93,10 @@ export default function PredictionFields() {
             },
             body: JSON.stringify(predictions)
         });
+
+        if (response.ok) {
+            setIsAbleToPost(false);
+        }
     }
 
     return (
@@ -95,7 +115,7 @@ export default function PredictionFields() {
                         <div className="d-flex align-items-center mb-2">
                             <span className="me-2">Fastest Lap:</span>
                             <Form.Group className="flex-grow-1">
-                                <Form.Control type="fastestLap" />
+                                <Form.Control onChange={(e) => handleFLChange(e.target.value)} type="fastestLap" />
                             </Form.Group>
                         </div>
                         :

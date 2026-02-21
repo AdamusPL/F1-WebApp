@@ -3,7 +3,7 @@ import { createContext, useContext, useState } from "react";
 const PredictionContext = createContext();
 
 export function PredictionProvider({ children }) {
-    const [predictions, setPredictions] = useState({});
+    const [predictions, setPredictions] = useState({drivers: [], fastestLap: ""});
     const [isAbleToPost, setIsAbleToPost] = useState(false);
     const [isDeadlinePassed, setIsDeadlinePassed] = useState(true);
 

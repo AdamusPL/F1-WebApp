@@ -2,10 +2,12 @@ import { useState, useEffect, Fragment } from "react";
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useSession } from "./SessionProvider";
 import { useGrandPrix } from "./GrandPrixProvider";
+import { usePredictions } from "./PredictionProvider";
 
 export default function SessionChooser() {
     const { grandPrix } = useGrandPrix();
     const { session, setSession } = useSession();
+    const { setPredictions } = usePredictions();
     const [sessions, setSessions] = useState([]);
 
     useEffect(() => {
@@ -20,6 +22,11 @@ export default function SessionChooser() {
         setSessions(data);
     }
 
+    function setSessionAndResetPredictions(session) {
+        setPredictions({drivers: [], fastestLap: ""});
+        setSession(session);
+    }
+
     return (<>
         <Fragment>
             <DropdownButton
@@ -28,7 +35,7 @@ export default function SessionChooser() {
             >
                 {
                     sessions.map(item => (
-                        <Dropdown.Item id={item.id} onClick={() => setSession(item)}>{item.name}</Dropdown.Item>
+                        <Dropdown.Item id={item.id} onClick={() => setSessionAndResetPredictions(item)}>{item.name}</Dropdown.Item>
                     ))
                 }
             </DropdownButton>

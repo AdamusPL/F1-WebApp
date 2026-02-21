@@ -3,6 +3,7 @@ package com.typerf1.typerf1.service;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.typerf1.typerf1.dto.predictions.PredictionsDto;
+import com.typerf1.typerf1.dto.predictions.PredictionsPostDto;
 import com.typerf1.typerf1.model.*;
 import com.typerf1.typerf1.repository.*;
 import jakarta.persistence.EntityNotFoundException;
@@ -58,16 +59,43 @@ public class PredictService {
         return sessionRepository.getSessionsFromThatGrandPrix(grandPrixId);
     }
 
-    public ResponseEntity<String> postPredictions(int grandPrixId, int sessionId, boolean joker, Predictions predictions) {
+    public ResponseEntity<String> postPredictions(int grandPrixId, int sessionId, boolean joker, PredictionsPostDto predictionsPostDto) {
         GrandPrix grandPrix = grandPrixRepository.findById(grandPrixId)
                 .orElseThrow(() -> new EntityNotFoundException("GrandPrix not found with id: " + grandPrixId));
         Session session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new EntityNotFoundException("Session not found with id: " + sessionId));
         Participant participant = participantRepository.getParticipantByParticipantLoginDataUsername(
                 SecurityContextHolder.getContext().getAuthentication().getName()).getFirst();
+        Predictions predictions = new Predictions();
         predictions.setGrandPrix(grandPrix);
         predictions.setSession(session);
         predictions.setParticipant(participant);
+
+        predictions.setDriver1(predictionsPostDto.getDrivers().get(0));
+        predictions.setDriver2(predictionsPostDto.getDrivers().get(1));
+        predictions.setDriver3(predictionsPostDto.getDrivers().get(2));
+        predictions.setDriver4(predictionsPostDto.getDrivers().get(3));
+        predictions.setDriver5(predictionsPostDto.getDrivers().get(4));
+        predictions.setDriver6(predictionsPostDto.getDrivers().get(5));
+        predictions.setDriver7(predictionsPostDto.getDrivers().get(6));
+        predictions.setDriver8(predictionsPostDto.getDrivers().get(7));
+        predictions.setDriver9(predictionsPostDto.getDrivers().get(8));
+        predictions.setDriver10(predictionsPostDto.getDrivers().get(9));
+        predictions.setDriver11(predictionsPostDto.getDrivers().get(10));
+        predictions.setDriver12(predictionsPostDto.getDrivers().get(11));
+        predictions.setDriver13(predictionsPostDto.getDrivers().get(12));
+        predictions.setDriver14(predictionsPostDto.getDrivers().get(13));
+        predictions.setDriver15(predictionsPostDto.getDrivers().get(14));
+        predictions.setDriver16(predictionsPostDto.getDrivers().get(15));
+        predictions.setDriver17(predictionsPostDto.getDrivers().get(16));
+        predictions.setDriver18(predictionsPostDto.getDrivers().get(17));
+        predictions.setDriver19(predictionsPostDto.getDrivers().get(18));
+        predictions.setDriver20(predictionsPostDto.getDrivers().get(19));
+
+        if (session.getName().equals("Race")) {
+            predictions.setFastestLap(predictionsPostDto.getFastestLap());
+        }
+
         if (joker && predictions.getGrandPrix().getJoker() == null) {
             Joker jokerObject = new Joker();
             jokerObject.setParticipant(participant);
@@ -85,6 +113,9 @@ public class PredictService {
             Predictions predictions = predictionsList.getFirst();
             var predictionsDto = new PredictionsDto();
             predictionsDto.setId(predictions.getId());
+            if (predictions.getPoints() == null) {
+                calculatePoints(sessionType, grandPrixId, sessionId);
+            }
             predictionsDto.setPoints(predictions.getPoints().getNumber());
             if (predictions.getSession().getName().equals("Race")) {
                 predictionsDto.setFastestLap(predictions.getFastestLap());
@@ -118,13 +149,13 @@ public class PredictService {
 
             if (sessionType.equals("Race")) {
                 isAbleToPost = checkBeginningTimeOfRace(year, grandPrixId);
-                isAbleToPost = true;
+//                isAbleToPost = true;
             } else if (sessionType.equals("Qualifying")) {
                 isAbleToPost = checkBeginningTimeOfQualifying(year, grandPrixId);
-                isAbleToPost = true;
+//                isAbleToPost = true;
             } else {
                 isAbleToPost = checkBeginningTimeOfSprint(year, grandPrixId);
-                isAbleToPost = true;
+//                isAbleToPost = true;
             }
 
             //if session has already begun
@@ -132,6 +163,17 @@ public class PredictService {
                 return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
             }
             return ResponseEntity.noContent().build();
+        }
+    }
+
+    public ResponseEntity<String> calculatePoints(String sessionType, int grandPrixId, int sessionId) {
+        int year = 2024;
+        if (sessionType.equals("Race")) {
+            return F1APIRaceParser(grandPrixId, sessionId, year);
+        } else if (sessionType.equals("Qualifying")) {
+            return F1APIQualifyingParser(grandPrixId, sessionId, year);
+        } else {
+            return F1APISprintParser(grandPrixId, sessionId, year);
         }
     }
 
@@ -169,11 +211,13 @@ public class PredictService {
 
     public record Qualifying(
             @JsonProperty("QualifyingResults") List<QualifyingResult> results
-    ) {}
+    ) {
+    }
 
     public record QualifyingResult(
             @JsonProperty("Driver") Driver driver
-    ) {}
+    ) {
+    }
 
     public ResponseEntity<String> F1APIQualifyingParser(int grandPrixId, int sessionId, int year) {
         boolean joker = false;
@@ -250,17 +294,20 @@ public class PredictService {
 
     public record Race(
             @JsonProperty("Results") List<RaceResult> results
-    ) {}
+    ) {
+    }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record FastestLap(
             @JsonProperty("rank") String rank
-    ) {}
+    ) {
+    }
 
     public record RaceResult(
-       @JsonProperty("Driver") Driver driver,
-       @JsonProperty("FastestLap") FastestLap fastestLap
-    ) {}
+            @JsonProperty("Driver") Driver driver,
+            @JsonProperty("FastestLap") FastestLap fastestLap
+    ) {
+    }
 
     private LinkedHashMap<String, Boolean> getRaceResults(String url) {
         var restClient = RestClient.create();
@@ -337,11 +384,13 @@ public class PredictService {
 
     public record Sprint(
             @JsonProperty("SprintResults") List<SprintResult> results
-    ) {}
+    ) {
+    }
 
     public record SprintResult(
             @JsonProperty("Driver") Driver driver
-    ) {}
+    ) {
+    }
 
     public ResponseEntity<String> F1APISprintParser(int grandPrixId, int sessionId, int year) {
         boolean joker = false;
@@ -395,17 +444,21 @@ public class PredictService {
         return new PointsCalculator(driverStandings, participantPredictions, joker);
     }
 
-    public record F1ScheduleResponse(@JsonProperty("MRData") MRDataSchedule mrData) {}
+    public record F1ScheduleResponse(@JsonProperty("MRData") MRDataSchedule mrData) {
+    }
 
-    public record MRDataSchedule(@JsonProperty("RaceTable") RaceTableSchedule raceTable) {}
+    public record MRDataSchedule(@JsonProperty("RaceTable") RaceTableSchedule raceTable) {
+    }
 
-    public record RaceTableSchedule(@JsonProperty("Races") List<RaceSchedule> races) {}
+    public record RaceTableSchedule(@JsonProperty("Races") List<RaceSchedule> races) {
+    }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record RaceSchedule(
             @JsonProperty("date") String raceDate, // Date of the RACE
             @JsonProperty("time") String raceTime // Time of the RACE
-    ) {}
+    ) {
+    }
 
     private boolean checkBeginningTimeOfRace(int year, int grandPrixId) throws ParseException {
         String url = "https://api.jolpi.ca/ergast/f1/" + year + "/" + grandPrixId + ".json";
@@ -463,11 +516,14 @@ public class PredictService {
         return true;
     }
 
-    public record F1ScheduleQualifyingResponse(@JsonProperty("MRData") MRDataQualifyingSchedule mrData) {}
+    public record F1ScheduleQualifyingResponse(@JsonProperty("MRData") MRDataQualifyingSchedule mrData) {
+    }
 
-    public record MRDataQualifyingSchedule(@JsonProperty("RaceTable") QualifyingTableSchedule raceTable) {}
+    public record MRDataQualifyingSchedule(@JsonProperty("RaceTable") QualifyingTableSchedule raceTable) {
+    }
 
-    public record QualifyingTableSchedule(@JsonProperty("Races") List<QualifyingSchedule> races) {}
+    public record QualifyingTableSchedule(@JsonProperty("Races") List<QualifyingSchedule> races) {
+    }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record QualifyingSchedule(
@@ -475,13 +531,15 @@ public class PredictService {
             @JsonProperty("date") String raceDate, // Date of the RACE
             @JsonProperty("time") String raceTime, // Time of the RACE
             @JsonProperty("Qualifying") SessionSchedule qualifying // <--- This is what you want
-    ) {}
+    ) {
+    }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record SessionSchedule(
             @JsonProperty("date") String date,
             @JsonProperty("time") String time
-    ) {}
+    ) {
+    }
 
     private boolean checkBeginningTimeOfQualifying(int year, int grandPrixId) throws ParseException {
         String url = "https://api.jolpi.ca/ergast/f1/" + year + "/" + grandPrixId + ".json";
@@ -539,11 +597,14 @@ public class PredictService {
         return true;
     }
 
-    public record F1ScheduleSprintResponse(@JsonProperty("MRData") MRDataSprintSchedule mrData) {}
+    public record F1ScheduleSprintResponse(@JsonProperty("MRData") MRDataSprintSchedule mrData) {
+    }
 
-    public record MRDataSprintSchedule(@JsonProperty("RaceTable") SprintTableSchedule raceTable) {}
+    public record MRDataSprintSchedule(@JsonProperty("RaceTable") SprintTableSchedule raceTable) {
+    }
 
-    public record SprintTableSchedule(@JsonProperty("Races") List<SprintSchedule> races) {}
+    public record SprintTableSchedule(@JsonProperty("Races") List<SprintSchedule> races) {
+    }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record SprintSchedule(
@@ -551,13 +612,15 @@ public class PredictService {
             @JsonProperty("date") String raceDate, // Date of the RACE
             @JsonProperty("time") String raceTime, // Time of the RACE
             @JsonProperty("Sprint") SprintSessionSchedule sprint // <--- This is what you want
-    ) {}
+    ) {
+    }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record SprintSessionSchedule(
             @JsonProperty("date") String date,
             @JsonProperty("time") String time
-    ) {}
+    ) {
+    }
 
     private boolean checkBeginningTimeOfSprint(int year, int grandPrixId) throws ParseException {
         String url = "https://api.jolpi.ca/ergast/f1/" + year + "/" + grandPrixId + ".json";

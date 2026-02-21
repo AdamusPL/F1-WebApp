@@ -25,7 +25,7 @@ export default function GrandPrixChooser() {
 
     function setGrandPrixAndResetSession(grandPrix) {
         setSession({});
-        setPredictions({});
+        setPredictions({drivers: [], fastestLap: ""});
         setIsAbleToPost(false);
         setIsDeadlinePassed(true);
         setGrandPrix(grandPrix);
