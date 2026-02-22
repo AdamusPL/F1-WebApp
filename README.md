@@ -25,7 +25,7 @@ After registration/signing-in:
 <img width="740" height="907" alt="image" src="https://github.com/user-attachments/assets/1105533f-dc1b-4a3c-bc32-cb70c2f5c901" />
 
 - After posting predictions
-<img width="835" height="868" alt="image" src="https://github.com/user-attachments/assets/c536d160-d735-4367-9d2a-cbe36bf3c177" />
+<img width="833" height="875" alt="image" src="https://github.com/user-attachments/assets/565af20b-5687-464f-af2f-3bec70db44ce" />
 
 - After session ended
 <img width="820" height="868" alt="image" src="https://github.com/user-attachments/assets/2b1e25e2-fe2e-472a-919d-5a018d14f469" />
