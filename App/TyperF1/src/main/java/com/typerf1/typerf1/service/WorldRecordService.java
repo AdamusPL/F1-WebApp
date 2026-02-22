@@ -2,6 +2,7 @@ package com.typerf1.typerf1.service;
 
 import com.typerf1.typerf1.dto.points.Record;
 import com.typerf1.typerf1.dto.worldRecord.WorldRecord;
+import com.typerf1.typerf1.dto.worldRecord.WorldRecordDto;
 import com.typerf1.typerf1.repository.WorldRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -20,34 +21,50 @@ public class WorldRecordService {
         this.worldRecordRepository = worldRecordRepository;
     }
 
-    public List<WorldRecord> getRecords() {
+    public List<WorldRecordDto> getRecords() {
         List<WorldRecord> recordList = new ArrayList<>();
+        List<WorldRecordDto> recordDtoList = new ArrayList<>();
 
         //without joker
         putRecord(recordList, true, "Race", "The highest number of points gained with prediction on Race");
         putRecord(recordList, true, "Qualifying", "The highest number of points gained with prediction on Qualifying");
         putRecord(recordList, true, "Sprint", "The highest number of points gained with prediction on Sprint");
+        //weekend without joker
+        putRecordWeekend(recordList, true, "The highest number of points gained in non-Sprint race weekend");
+
+        WorldRecordDto worldRecordDto = new WorldRecordDto(false, true, recordList);
+        recordDtoList.add(worldRecordDto);
+
+        recordList = new ArrayList<>();
         putRecord(recordList, false, "Race", "The lowest number of points gained with prediction on Race");
         putRecord(recordList, false, "Qualifying", "The lowest number of points gained with prediction on Qualifying");
         putRecord(recordList, false, "Sprint", "The lowest number of points gained with prediction on Sprint");
+        putRecordWeekend(recordList, false, "The lowest number of points gained in non-Sprint race weekend");
 
+        worldRecordDto = new WorldRecordDto(false, false, recordList);
+        recordDtoList.add(worldRecordDto);
+
+        recordList = new ArrayList<>();
         //with joker
         putRecordJoker(recordList, true, "Race", "The highest number of points gained with prediction on Race");
         putRecordJoker(recordList, true, "Qualifying", "The highest number of points gained with prediction on Qualifying");
-        putRecordJoker(recordList, false, "Race", "The lowest number of points gained with prediction on Race");
-        putRecordJoker(recordList, false, "Qualifying", "The lowest number of points gained with prediction on Qualifying");
-
-        //weekend without joker
-        putRecordWeekend(recordList, true, "The highest number of points gained in non-Sprint race weekend");
-        putRecordWeekend(recordList, false, "The lowest number of points gained in non-Sprint race weekend");
-
         //weekend with joker
         putRecordSprintWeekendJoker(recordList, true, "The highest number of points gained in Sprint race weekend");
+
+        worldRecordDto = new WorldRecordDto(true, true, recordList);
+        recordDtoList.add(worldRecordDto);
+
+        recordList = new ArrayList<>();
+        putRecordJoker(recordList, false, "Race", "The lowest number of points gained with prediction on Race");
+        putRecordJoker(recordList, false, "Qualifying", "The lowest number of points gained with prediction on Qualifying");
         putRecordSprintWeekendJoker(recordList, false, "The lowest number of points gained in Sprint race weekend");
 
-        //sprint weekend without joker
+        worldRecordDto = new WorldRecordDto(true, false, recordList);
+        recordDtoList.add(worldRecordDto);
 
-        return recordList;
+        //sprint weekend without joker (to-do...)
+
+        return recordDtoList;
     }
 
     void putRecord(List<WorldRecord> recordList, boolean highest, String find, String key) {

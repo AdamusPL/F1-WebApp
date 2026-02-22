@@ -1,6 +1,6 @@
 package com.typerf1.typerf1.controller;
 
-import com.typerf1.typerf1.dto.worldRecord.WorldRecord;
+import com.typerf1.typerf1.dto.worldRecord.WorldRecordDto;
 import com.typerf1.typerf1.service.WorldRecordService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +22,7 @@ public class WorldRecordController {
     }
 
     @GetMapping("/get-records")
-    public @ResponseBody List<WorldRecord> getRecords(){
+    public @ResponseBody List<WorldRecordDto> getRecords(){
         return worldRecordService.getRecords();
     }
 }

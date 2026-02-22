@@ -1,8 +1,6 @@
 package com.typerf1.typerf1.tools;
 
-import java.text.Normalizer;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class PointsCalculator {
 
@@ -78,22 +76,24 @@ public class PointsCalculator {
         for (String actualDriver : driverStandings) {
             int predictionsIndex = 0;
             for (String participantPrediction : participantPredictions) {
-                if (participantPrediction.equals(actualDriver)) {
-                    if (actualIndex == predictionsIndex) {
-                        switch (predictionsIndex + 1) {
-                            case 1:
-                                points += 3;
-                                break;
-                            case 2:
-                                points += 2;
-                                break;
-                            case 3:
-                                points += 1;
-                                break;
+                if (participantPrediction != null) {
+                    if (participantPrediction.equals(actualDriver)) {
+                        if (actualIndex == predictionsIndex) {
+                            switch (predictionsIndex + 1) {
+                                case 1:
+                                    points += 3;
+                                    break;
+                                case 2:
+                                    points += 2;
+                                    break;
+                                case 3:
+                                    points += 1;
+                                    break;
+                            }
+                            points += 2;
+                        } else if (predictionsIndex == actualIndex - 1 || predictionsIndex == actualIndex + 1) {
+                            points += 1;
                         }
-                        points += 2;
-                    } else if (predictionsIndex == actualIndex - 1 || predictionsIndex == actualIndex + 1) {
-                        points += 1;
                     }
                 }
                 predictionsIndex++;

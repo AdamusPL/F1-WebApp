@@ -8,7 +8,7 @@ import { usePredictions } from "./PredictionProvider";
 export default function GrandPrixChooser() {
     const { grandPrix, setGrandPrix } = useGrandPrix();
     const { session, setSession } = useSession();
-    const { predictions, setPredictions, isAbleToPost, setIsAbleToPost, isDeadlinePassed, setIsDeadlinePassed } = usePredictions();
+    const { predictions, setPredictions, arePredictionsPosted, setArePredictionsPosted, isDeadlinePassed, setIsDeadlinePassed } = usePredictions();
     const [grandPrixs, setGrandPrixs] = useState([]);
 
     useEffect(() => {
@@ -26,7 +26,7 @@ export default function GrandPrixChooser() {
     function setGrandPrixAndResetSession(grandPrix) {
         setSession({});
         setPredictions({drivers: [], fastestLap: ""});
-        setIsAbleToPost(false);
+        setArePredictionsPosted(true);
         setIsDeadlinePassed(true);
         setGrandPrix(grandPrix);
     }

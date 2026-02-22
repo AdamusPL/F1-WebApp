@@ -71,26 +71,30 @@ public class PredictService {
         predictions.setSession(session);
         predictions.setParticipant(participant);
 
-        predictions.setDriver1(predictionsPostDto.getDrivers().get(0));
-        predictions.setDriver2(predictionsPostDto.getDrivers().get(1));
-        predictions.setDriver3(predictionsPostDto.getDrivers().get(2));
-        predictions.setDriver4(predictionsPostDto.getDrivers().get(3));
-        predictions.setDriver5(predictionsPostDto.getDrivers().get(4));
-        predictions.setDriver6(predictionsPostDto.getDrivers().get(5));
-        predictions.setDriver7(predictionsPostDto.getDrivers().get(6));
-        predictions.setDriver8(predictionsPostDto.getDrivers().get(7));
-        predictions.setDriver9(predictionsPostDto.getDrivers().get(8));
-        predictions.setDriver10(predictionsPostDto.getDrivers().get(9));
-        predictions.setDriver11(predictionsPostDto.getDrivers().get(10));
-        predictions.setDriver12(predictionsPostDto.getDrivers().get(11));
-        predictions.setDriver13(predictionsPostDto.getDrivers().get(12));
-        predictions.setDriver14(predictionsPostDto.getDrivers().get(13));
-        predictions.setDriver15(predictionsPostDto.getDrivers().get(14));
-        predictions.setDriver16(predictionsPostDto.getDrivers().get(15));
-        predictions.setDriver17(predictionsPostDto.getDrivers().get(16));
-        predictions.setDriver18(predictionsPostDto.getDrivers().get(17));
-        predictions.setDriver19(predictionsPostDto.getDrivers().get(18));
-        predictions.setDriver20(predictionsPostDto.getDrivers().get(19));
+        if (!predictionsPostDto.getDrivers().isEmpty()) {
+            predictions.setDriver1(predictionsPostDto.getDrivers().get(0));
+            predictions.setDriver2(predictionsPostDto.getDrivers().get(1));
+            predictions.setDriver3(predictionsPostDto.getDrivers().get(2));
+            predictions.setDriver4(predictionsPostDto.getDrivers().get(3));
+            predictions.setDriver5(predictionsPostDto.getDrivers().get(4));
+            predictions.setDriver6(predictionsPostDto.getDrivers().get(5));
+            predictions.setDriver7(predictionsPostDto.getDrivers().get(6));
+            predictions.setDriver8(predictionsPostDto.getDrivers().get(7));
+            predictions.setDriver9(predictionsPostDto.getDrivers().get(8));
+            predictions.setDriver10(predictionsPostDto.getDrivers().get(9));
+            predictions.setDriver11(predictionsPostDto.getDrivers().get(10));
+            predictions.setDriver12(predictionsPostDto.getDrivers().get(11));
+            predictions.setDriver13(predictionsPostDto.getDrivers().get(12));
+            predictions.setDriver14(predictionsPostDto.getDrivers().get(13));
+            predictions.setDriver15(predictionsPostDto.getDrivers().get(14));
+            predictions.setDriver16(predictionsPostDto.getDrivers().get(15));
+            predictions.setDriver17(predictionsPostDto.getDrivers().get(16));
+            predictions.setDriver18(predictionsPostDto.getDrivers().get(17));
+            predictions.setDriver19(predictionsPostDto.getDrivers().get(18));
+            if (predictionsPostDto.getDrivers().size() > 19) {
+                predictions.setDriver20(predictionsPostDto.getDrivers().get(19));
+            }
+        }
 
         if (session.getName().equals("Race")) {
             predictions.setFastestLap(predictionsPostDto.getFastestLap());
@@ -114,7 +118,10 @@ public class PredictService {
             var predictionsDto = new PredictionsDto();
             predictionsDto.setId(predictions.getId());
             if (predictions.getPoints() == null) {
-                calculatePoints(sessionType, grandPrixId, sessionId);
+                ResponseEntity<String> status = calculatePoints(sessionType, grandPrixId, sessionId);
+                if (status.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
+                    return ResponseEntity.noContent().build();
+                }
             }
             predictionsDto.setPoints(predictions.getPoints().getNumber());
             if (predictions.getSession().getName().equals("Race")) {
@@ -149,20 +156,20 @@ public class PredictService {
 
             if (sessionType.equals("Race")) {
                 isAbleToPost = checkBeginningTimeOfRace(year, grandPrixId);
-//                isAbleToPost = true;
+                isAbleToPost = true;
             } else if (sessionType.equals("Qualifying")) {
                 isAbleToPost = checkBeginningTimeOfQualifying(year, grandPrixId);
-//                isAbleToPost = true;
+                isAbleToPost = true;
             } else {
                 isAbleToPost = checkBeginningTimeOfSprint(year, grandPrixId);
-//                isAbleToPost = true;
+                isAbleToPost = true;
             }
 
             //if session has already begun
             if (!isAbleToPost) {
                 return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
             }
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.accepted().build();
         }
     }
 
@@ -234,11 +241,12 @@ public class PredictService {
             return ResponseEntity.ok(predictions.getPoints().getNumber().toString());
         }
 
+//        year = 2026;
         //page with api with F1 race results
         String url = "https://api.jolpi.ca/ergast/f1/" + year + "/" + grandPrixId + "/qualifying.json";
         List<String> driverStandings = getQualifyingResults(url);
 
-        if (driverStandings == null) {
+        if (driverStandings == null || driverStandings.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
 
@@ -252,7 +260,7 @@ public class PredictService {
     private ResponseEntity<String> updatePredictionsInDB(int grandPrixId, int sessionId, String username, Predictions predictions, double pointsCalculated) {
         Points points = new Points(pointsCalculated);
         points.setParticipant(predictions.getParticipant());
-        points.setSession(predictions.getPoints().getSession());
+        points.setSession(predictions.getSession());
         Predictions predictions1 = predictionsRepository.checkPredictionExistence(grandPrixId, sessionId, username).getFirst();
         points.setPredictions(predictions1);
 
@@ -362,7 +370,7 @@ public class PredictService {
 
         List<String> driverStandings = getAllSurnames(raceResults);
 
-        if (driverStandings == null) {
+        if (driverStandings == null || driverStandings.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
 
@@ -542,6 +550,7 @@ public class PredictService {
     }
 
     private boolean checkBeginningTimeOfQualifying(int year, int grandPrixId) throws ParseException {
+//        year = 2026;
         String url = "https://api.jolpi.ca/ergast/f1/" + year + "/" + grandPrixId + ".json";
 
         var restClient = RestClient.create();

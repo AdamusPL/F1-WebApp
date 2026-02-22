@@ -6,7 +6,7 @@ import { usePredictions } from "./PredictionProvider";
 
 export default function PredictionFields() {
 
-    const { predictions, setPredictions, isAbleToPost, setIsAbleToPost, isDeadlinePassed, setIsDeadlinePassed } = usePredictions();
+    const { predictions, setPredictions, arePredictionsPosted, setArePredictionsPosted, isDeadlinePassed, setIsDeadlinePassed } = usePredictions();
     const { grandPrix } = useGrandPrix();
     const { session } = useSession();
     const [joker, setJoker] = useState(false);
@@ -31,7 +31,7 @@ export default function PredictionFields() {
     };
 
     const handleFLChange = (value) => {
-        
+
         console.log(predictions);
         setPredictions(prevState => {
             return {
@@ -68,19 +68,30 @@ export default function PredictionFields() {
             credentials: 'include'
         });
         debugger;
+        //predictions exist, deadline passed
         if (response.status === 200) {
-            setIsAbleToPost(false);
-            setIsDeadlinePassed(false);
+            setArePredictionsPosted(true);
+            setIsDeadlinePassed(true);
             const data = await response.json();
             setPredictions(data);
             console.log(data);
         }
+        //predictions exist, deadline not passed
         else if (response.status === 204) {
-            setIsAbleToPost(true);
+            setArePredictionsPosted(true);
+            setIsDeadlinePassed(false);
+            const data = await response.json();
+            setPredictions(data);
+        }
+        //predictions don't exist, deadline not passed
+        else if (response.status === 202) {
+            setArePredictionsPosted(false);
             setIsDeadlinePassed(false);
         }
+        //406, predictions do not exist, deadline passed
         else {
-            setIsAbleToPost(true);
+            setArePredictionsPosted(false);
+            setIsDeadlinePassed(true);
         }
     }
 
@@ -95,13 +106,13 @@ export default function PredictionFields() {
         });
 
         if (response.ok) {
-            setIsAbleToPost(false);
+            setArePredictionsPosted(true);
         }
     }
 
     return (
         <>
-            {isAbleToPost ?
+            {!arePredictionsPosted && !isDeadlinePassed ?
                 (<Fragment>
                     {renderInputs()}
                     <DropdownButton
@@ -125,12 +136,13 @@ export default function PredictionFields() {
                     <Button type="button" onClick={submitPredictions}>Send predictions</Button>
                 </Fragment>)
                 :
-                (!isDeadlinePassed ? <Fragment>
+                (arePredictionsPosted ? <Fragment>
                     {renderInputsPredictions()}
                     {predictions?.fastestLap ?
                         <p>Fastest Lap: {predictions.fastestLap}</p>
                         : null}
-                    {<p>Points gained by participant: {predictions.points}</p>}
+                    {isDeadlinePassed ? <p>Points gained by participant: {predictions.points}</p>
+                        : <p>Session hasn't finished yet</p>}
                 </Fragment>
                     :
                     (session.id ? <p>You cannot post predictions for this session anymore!</p>
