@@ -17,51 +17,55 @@ After registration/signing-in:
 - Java 23
 - Java Spring
 - Spring Security
-- HTML/CSS/JS
+- React.js with Bootstrap, ChartJS
 
 ## Screenshots
 ### Predicting Qualifying
 - Predicting
-![image](https://github.com/user-attachments/assets/dce4cd13-969b-44a0-b2fb-c7ce49c93122)
+<img width="740" height="907" alt="image" src="https://github.com/user-attachments/assets/1105533f-dc1b-4a3c-bc32-cb70c2f5c901" />
 
 - After posting predictions
-![image](https://github.com/user-attachments/assets/5c140e74-e7c2-432e-9d1e-3cf453abd799)
+<img width="833" height="862" alt="image" src="https://github.com/user-attachments/assets/d46ad7df-8736-4693-9b1f-ccb150dc7f7f" />
 
 - After session ended
-![image](https://github.com/user-attachments/assets/4598a7f7-60e2-44f6-9fe4-2d6c738445f0)
+<img width="820" height="868" alt="image" src="https://github.com/user-attachments/assets/2b1e25e2-fe2e-472a-919d-5a018d14f469" />
 
 - Session which wasn't predicted 30 minutes before its start by participant
-![image](https://github.com/user-attachments/assets/30524ba6-20c3-4568-8cba-a39bc100685e)
+<img width="734" height="234" alt="image" src="https://github.com/user-attachments/assets/3929b331-e909-4dd8-b248-c2eee10d7c84" />
 
 ### Predicting Sprint
 It's the same as with Qualifying
 
 ### Predicting Race
 - Predicting (you have to guess driver with fastest lap additionally)
-![image](https://github.com/user-attachments/assets/123eee3a-5a6c-4861-b0fc-ec4854329921)
+<img width="744" height="907" alt="image" src="https://github.com/user-attachments/assets/0f9a6cb9-8d21-4b10-86fc-ac2b3988317f" />
 
 - After session ended
-![image](https://github.com/user-attachments/assets/4d0deae0-03ec-45a3-9a2a-b219a585b423)
+<img width="836" height="887" alt="image" src="https://github.com/user-attachments/assets/1ce31c04-47ec-4a53-901f-51233c364957" />
 
 - After posting predictions and if session wasn't predicted in time, it's similar cases to Qualifying
 
 ### World Records
-![image](https://github.com/user-attachments/assets/ec3161e1-9fa1-448b-92e5-4f596da96341)
+<img width="882" height="856" alt="image" src="https://github.com/user-attachments/assets/21613433-2233-4e12-9148-f4c1ab010610" />
 
 ### Personal Best
-![image](https://github.com/user-attachments/assets/bf1df44c-dbc8-44a8-a339-1325ed7e466e)
+<img width="1091" height="467" alt="image" src="https://github.com/user-attachments/assets/1c3e9bfe-13d5-4c8c-b547-42784d86d301" />
 
 ### Participant standings
-![image](https://github.com/user-attachments/assets/8da07ae7-a0b1-47eb-8f6d-72ae080fb18f)
+<img width="1111" height="849" alt="image" src="https://github.com/user-attachments/assets/71cbf171-d096-4c30-8434-194197c41555" />
 
 ### Season results
-![image](https://github.com/user-attachments/assets/ae8fc6f9-3c8a-4d2c-85bc-c120f11dd664)
+<img width="1086" height="866" alt="image" src="https://github.com/user-attachments/assets/3a7a815d-e969-4f9a-a6fe-0557f7198f22" />
+
+### Participants page
+<img width="1325" height="738" alt="image" src="https://github.com/user-attachments/assets/4ee4b5fc-cf7a-4bbf-820d-8af354bfb1b3" />
 
 ### Home page
-![image](https://github.com/user-attachments/assets/0778ae78-a3b3-4c80-bd48-412cce4c8c9f)
+<img width="1092" height="802" alt="image" src="https://github.com/user-attachments/assets/e702f963-44cd-422d-97b4-e776036db917" />
 
 ### Sign-in page
-![image](https://github.com/user-attachments/assets/2fb83120-ea89-4112-8a35-975700d880b8)
+<img width="533" height="481" alt="image" src="https://github.com/user-attachments/assets/68627a80-c78d-4294-b787-17bd0642d059" />
 
 ### Registration page
-![image](https://github.com/user-attachments/assets/8fde2b08-81e3-49ef-86a8-8bb8f0632ad4)
+<img width="523" height="741" alt="image" src="https://github.com/user-attachments/assets/5c7c90bf-9099-4ccb-9a9f-bf72a408a42e" />
+
