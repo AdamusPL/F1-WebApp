@@ -20,62 +20,63 @@ export default function WorldRecords() {
             })
             .then(data => {
                 setWorldRecords(data);
-                debugger;
             })
     }
 
     return (<>
-        <h1>World Records</h1>
+        <h1 className="mt-4">World Records</h1>
 
-        {worldRecords.map(record => (
-            <Fragment>
-                {!record.jokerUsed ? (
-                    <Fragment>
-                        <h2>Without using Joker</h2>
-                        {record.best ? (
-                            <Fragment>
-                                <h3>Best</h3>
-                                {record.worldRecords.map(worldRecord => (
-                                    <Fragment>
-                                        <p>{worldRecord.name}: {worldRecord.record.points} ({worldRecord.record.participantName} {worldRecord.record.participantSurname}, {worldRecord.record.grandPrixName} {worldRecord.record.year})</p>
-                                    </Fragment>
-                                ))}
-                            </Fragment>
-                        )
-                            :
-                            <Fragment>
-                                <h3>Worst</h3>
-                                {record.worldRecords.map(worldRecord => (
-                                    <Fragment>
+        {worldRecords.length !== 0 ?
+            worldRecords.map(record => (
+                <Fragment>
+                    {!record.jokerUsed ? (
+                        <Fragment>
+                            <h2>Without using Joker</h2>
+                            {record.best ? (
+                                <Fragment>
+                                    <h3>Best</h3>
+                                    {record.worldRecords.map(worldRecord => (
+                                        <Fragment>
+                                            <p>{worldRecord.name}: {worldRecord.record.points} ({worldRecord.record.participantName} {worldRecord.record.participantSurname}, {worldRecord.record.grandPrixName} {worldRecord.record.year})</p>
+                                        </Fragment>
+                                    ))}
+                                </Fragment>
+                            )
+                                :
+                                <Fragment>
+                                    <h3>Worst</h3>
+                                    {record.worldRecords.map(worldRecord => (
+                                        <Fragment>
+                                            <p>{worldRecord.name}: {worldRecord.record.points} ({worldRecord.record.participantName} {worldRecord.record.participantSurname}, {worldRecord.record.grandPrixName} {worldRecord.record.year})</p>
+                                        </Fragment>))}
+                                </Fragment>
+                            }
+                        </Fragment>
+                    )
+                        :
+                        (<Fragment>
+                            <h2>Using Joker</h2>
+                            {record.best ?
+                                <Fragment>
+                                    <h3>Best</h3>
+                                    {record.worldRecords.map(worldRecord => (<Fragment>
                                         <p>{worldRecord.name}: {worldRecord.record.points} ({worldRecord.record.participantName} {worldRecord.record.participantSurname}, {worldRecord.record.grandPrixName} {worldRecord.record.year})</p>
                                     </Fragment>))}
-                            </Fragment>
-                        }
-                    </Fragment>
-                )
-                    :
-                    (<Fragment>
-                        <h2>Using Joker</h2>
-                        {record.best ?
-                            <Fragment>
-                                <h3>Best</h3>
-                                {record.worldRecords.map(worldRecord => (<Fragment>
-                                    <p>{worldRecord.name}: {worldRecord.record.points} ({worldRecord.record.participantName} {worldRecord.record.participantSurname}, {worldRecord.record.grandPrixName} {worldRecord.record.year})</p>
-                                </Fragment>))}
-                            </Fragment>
-                            :
-                            <Fragment>
-                                <h3>Worst</h3>
-                                {record.worldRecords.map(worldRecord => (
-                                    <Fragment>
+                                </Fragment>
+                                :
+                                <Fragment>
+                                    <h3>Worst</h3>
+                                    {record.worldRecords.map(worldRecord => (
+                                        <Fragment>
 
-                                        <p>{worldRecord.name}: {worldRecord.record.points} ({worldRecord.record.participantName} {worldRecord.record.participantSurname}, {worldRecord.record.grandPrixName} {worldRecord.record.year})</p>
-                                    </Fragment>))}
-                            </Fragment>
-                        }
-                    </Fragment>)
-                }
-            </Fragment>
-        ))}
+                                            <p>{worldRecord.name}: {worldRecord.record.points} ({worldRecord.record.participantName} {worldRecord.record.participantSurname}, {worldRecord.record.grandPrixName} {worldRecord.record.year})</p>
+                                        </Fragment>))}
+                                </Fragment>
+                            }
+                        </Fragment>)
+                    }
+                </Fragment>
+            )) :
+            <p>No results at the moment</p>}
     </>);
 }

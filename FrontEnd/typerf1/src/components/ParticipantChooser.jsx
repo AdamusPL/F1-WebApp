@@ -32,7 +32,7 @@ export default function ParticipantChooser() {
                     ))
                 }
             </DropdownButton>
-            <p>{participant.firstName} {participant.surname}</p>
+            <p className="mt-2">{participant.firstName} {participant.surname}</p>
         </Fragment>
     </>);
 }

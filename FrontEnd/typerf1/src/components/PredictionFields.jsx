@@ -67,7 +67,6 @@ export default function PredictionFields() {
         const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/check-predictions-existence?sessionType=${session.name}&year=${year}&grandPrixId=${grandPrix.id}&sessionId=${session.id}`, {
             credentials: 'include'
         });
-        debugger;
         //predictions exist, deadline passed
         if (response.status === 200) {
             setArePredictionsPosted(true);
@@ -138,6 +137,7 @@ export default function PredictionFields() {
                 :
                 (arePredictionsPosted ? <Fragment>
                     {renderInputsPredictions()}
+                    {predictions?.jokerUsed ? <p>Joker used: Yes</p> : <p>Joker used: No</p>}
                     {predictions?.fastestLap ?
                         <p>Fastest Lap: {predictions.fastestLap}</p>
                         : null}

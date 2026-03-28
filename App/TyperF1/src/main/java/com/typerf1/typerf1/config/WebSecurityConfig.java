@@ -40,7 +40,7 @@ public class WebSecurityConfig {
                                 "/get-participant-standings", "/get-season-years", "/standings", "/get-full-name",
                                 "/get-season-scores", "/get-grandprix-summary", "/world-records", "/get-records",
                                 "/results", "/get-participants", "/get-participants-for-subpage", "/get-grand-prix",
-                                        "/get-data-plot")
+                                        "/get-data-plot", "/check-cookie")
                         .authenticated()
                 )
                 .addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class);

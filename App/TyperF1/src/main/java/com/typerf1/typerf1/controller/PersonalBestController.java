@@ -1,7 +1,6 @@
 package com.typerf1.typerf1.controller;
 
 import com.typerf1.typerf1.dto.worldRecord.WorldRecord;
-import com.typerf1.typerf1.model.Participant;
 import com.typerf1.typerf1.service.PersonalBestService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

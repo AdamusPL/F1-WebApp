@@ -12,6 +12,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -126,6 +127,12 @@ public class PredictService {
             predictionsDto.setPoints(predictions.getPoints().getNumber());
             if (predictions.getSession().getName().equals("Race")) {
                 predictionsDto.setFastestLap(predictions.getFastestLap());
+            }
+            if (predictions.getGrandPrix().getJoker() != null) {
+                predictionsDto.setJokerUsed(true);
+            }
+            else {
+                predictionsDto.setJokerUsed(false);
             }
             List<String> predictionsListDto = new ArrayList<>();
             predictionsListDto.add(predictions.getDriver1());

@@ -33,15 +33,17 @@ export default function PersonalBest() {
 
     return (
         <>
-            <h1>Personal Best</h1>
+            <h1 className="mt-4">Personal Best</h1>
 
             <ParticipantChooser />
 
-            {personalBest.map(record => (
-                <Fragment>
-                    <p>{record.name}: {record.record.points} ({record.record.participantName} {record.record.participantSurname}, {record.record.grandPrixName} {record.record.year})</p>
-                </Fragment>
-            ))}
+            {participant ?
+                personalBest.map(record => (
+                    <Fragment>
+                        <p>{record.name}: {record.record.points} ({record.record.participantName} {record.record.participantSurname}, {record.record.grandPrixName} {record.record.year})</p>
+                    </Fragment>
+                ))
+                : <p>No results at the moment</p>}
         </>
     );
 }

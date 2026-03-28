@@ -28,9 +28,4 @@ public class StandingsController {
     public @ResponseBody List<GrandPrixScoreWithJokers> scores(@RequestParam Integer year, @RequestParam String grandPrixName){
         return standingsService.getGrandPrixSummaryScores(year, grandPrixName);
     }
-
-    @GetMapping("/results")
-    public String results(){
-        return "results";
-    }
 }

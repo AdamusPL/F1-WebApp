@@ -3,7 +3,7 @@ import { createContext, useContext, useState } from "react";
 const ParticipantContext = createContext();
 
 export function ParticipantProvider({ children }) {
-    const [participant, setParticipant] = useState("");
+    const [participant, setParticipant] = useState({});
 
     return (
         <ParticipantContext.Provider value={{ participant, setParticipant }}>

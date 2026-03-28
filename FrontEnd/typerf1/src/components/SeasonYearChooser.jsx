@@ -32,7 +32,7 @@ export default function SeasonYearChooser() {
                     ))
                 }
             </DropdownButton>
-            <p>{year != 0 ? year : null}</p>
+            <p className="mt-2">{year != 0 ? year : null}</p>
         </Fragment>
     </>);
 }

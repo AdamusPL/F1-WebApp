@@ -5,7 +5,6 @@ import com.typerf1.typerf1.service.RegisterService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -18,11 +17,6 @@ public class RegisterController {
 
     public RegisterController(RegisterService registerService){
         this.registerService = registerService;
-    }
-
-    @GetMapping("/register")
-    public String register(){
-        return "register";
     }
 
     @PostMapping(value = "/register-user", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
