@@ -18,7 +18,6 @@ export default function PredictionFields() {
     }, [session]);
 
     const handleChange = (id, value) => {
-        console.log(predictions);
         setPredictions(prevState => {
             const newDrivers = [...prevState.drivers];
             newDrivers[id - 1] = value;
@@ -31,8 +30,6 @@ export default function PredictionFields() {
     };
 
     const handleFLChange = (value) => {
-
-        console.log(predictions);
         setPredictions(prevState => {
             return {
                 ...prevState,
@@ -73,7 +70,6 @@ export default function PredictionFields() {
             setIsDeadlinePassed(true);
             const data = await response.json();
             setPredictions(data);
-            console.log(data);
         }
         //predictions exist, deadline not passed
         else if (response.status === 204) {

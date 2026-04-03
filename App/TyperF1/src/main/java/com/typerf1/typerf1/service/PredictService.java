@@ -163,13 +163,13 @@ public class PredictService {
 
             if (sessionType.equals("Race")) {
                 isAbleToPost = checkBeginningTimeOfRace(year, grandPrixId);
-                isAbleToPost = true;
+//                isAbleToPost = true;
             } else if (sessionType.equals("Qualifying")) {
                 isAbleToPost = checkBeginningTimeOfQualifying(year, grandPrixId);
-                isAbleToPost = true;
+//                isAbleToPost = true;
             } else {
                 isAbleToPost = checkBeginningTimeOfSprint(year, grandPrixId);
-                isAbleToPost = true;
+//                isAbleToPost = true;
             }
 
             //if session has already begun

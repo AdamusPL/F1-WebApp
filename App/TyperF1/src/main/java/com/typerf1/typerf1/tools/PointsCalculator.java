@@ -98,7 +98,7 @@ public class PointsCalculator {
                 }
                 predictionsIndex++;
             }
-            System.out.println(points);
+//            System.out.println(points);
             actualIndex++;
         }
         return points;

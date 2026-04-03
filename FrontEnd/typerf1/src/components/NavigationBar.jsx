@@ -16,7 +16,6 @@ export default function NavigationBar({ children }) {
     }, [cookies]);
 
     async function checkCookieExpiration(){
-        debugger;
         const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/check-cookie`, {
             credentials: 'include'
         });

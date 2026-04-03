@@ -15,7 +15,6 @@ export default function Results() {
     }, [year]);
 
     function getScores() {
-        debugger;
         try {
             fetch(`${import.meta.env.VITE_API_BASE_URL}/get-season-scores?year=${year}`, {
                 credentials: 'include'
