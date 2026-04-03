@@ -37,7 +37,7 @@ export default function PersonalBest() {
 
             <ParticipantChooser />
 
-            {participant ?
+            {personalBest.length !== 0 ?
                 personalBest.map(record => (
                     <Fragment>
                         <p>{record.name}: {record.record.points} ({record.record.participantName} {record.record.participantSurname}, {record.record.grandPrixName} {record.record.year})</p>

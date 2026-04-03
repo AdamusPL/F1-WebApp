@@ -137,12 +137,19 @@ export default function PredictionFields() {
                 :
                 (arePredictionsPosted ? <Fragment>
                     {renderInputsPredictions()}
-                    {predictions?.jokerUsed ? <p>Joker used: Yes</p> : <p>Joker used: No</p>}
+                    {predictions.drivers.length !== 0 ?
+                        predictions?.jokerUsed ?
+                            <p>Joker used: Yes</p>
+                            : <p>Joker used: No</p>
+                        : null}
                     {predictions?.fastestLap ?
                         <p>Fastest Lap: {predictions.fastestLap}</p>
                         : null}
-                    {isDeadlinePassed ? <p>Points gained by participant: {predictions.points}</p>
-                        : <p>Session hasn't finished yet</p>}
+                    {predictions.drivers.length !== 0 ?
+                        isDeadlinePassed ?
+                            <p>Points gained by participant: {predictions.points}</p>
+                            : <p>Session hasn't finished yet</p>
+                        : null}
                 </Fragment>
                     :
                     (session.id ? <p>You cannot post predictions for this session anymore!</p>
