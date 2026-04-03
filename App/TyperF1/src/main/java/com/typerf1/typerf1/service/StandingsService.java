@@ -2,6 +2,7 @@ package com.typerf1.typerf1.service;
 
 import com.typerf1.typerf1.dto.grandprix.GrandPrixScore;
 import com.typerf1.typerf1.dto.grandprix.GrandPrixScoreWithJokers;
+import com.typerf1.typerf1.dto.joker.JokersUsage;
 import com.typerf1.typerf1.dto.joker.UsedJokersGP;
 import com.typerf1.typerf1.dto.points.Score;
 import com.typerf1.typerf1.dto.standings.GrandPrixDto;
@@ -62,26 +63,19 @@ public class StandingsService {
                 })
                 .toList(); // No .sorted() needed here either
 
-//        String currentGrandPrixName = "";
-//        String current = "";
-//        for (Score score : scoreList) {
-//            if (!score.getGrandPrixName().equals(currentGrandPrixName)) {
-//                currentGrandPrixName = score.getGrandPrixName();
-//            }
-//        }
-//        List<JokersUsage> usedJokersGPList = standingsRepository.findJokerUsageInSeasonScores(year);
-//        List<ScoreWithJokers> scoreWithJokersList = new ArrayList<>();
-//
-//        for (Score score : scoreList) {
-//            Double numberOfJokersUsed = 0D;
-//            for (JokersUsage jokersUsed : usedJokersGPList) {
-//                if (jokersUsed.getParticipantName().equals(score.getParticipantName()) && jokersUsed.getParticipantSurname().equals(score.getParticipantSurname()) && jokersUsed.getGrandPrixName().equals(score.getGrandPrixName())) {
-//                    numberOfJokersUsed = 1D;
-//                }
-//            }
-//            ScoreWithJokers scoreWithJokers = new ScoreWithJokers(score.getGrandPrixName(), score.getSessionName(), score.getParticipantName(), score.getParticipantSurname(), score.getPoints(), numberOfJokersUsed);
-//            scoreWithJokersList.add(scoreWithJokers);
-//        }
+        List<JokersUsage> usedJokersGPList = standingsRepository.findJokerUsageInSeasonScores(year);
+
+        for (var weekend : scores) {
+            for (var session : weekend.getSessionDto()) {
+                for (var score : session.getScores()) {
+                    for (JokersUsage jokersUsed : usedJokersGPList) {
+                        if (jokersUsed.getParticipantName().equals(score.getParticipantName()) && jokersUsed.getParticipantSurname().equals(score.getParticipantSurname()) && jokersUsed.getGrandPrixName().equals(score.getGrandPrixName())) {
+                            score.setJokerUsed(true);
+                        }
+                    }
+                }
+            }
+        }
 
         return scores;
     }
