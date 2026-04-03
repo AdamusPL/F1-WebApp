@@ -12,6 +12,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -127,6 +128,12 @@ public class PredictService {
             if (predictions.getSession().getName().equals("Race")) {
                 predictionsDto.setFastestLap(predictions.getFastestLap());
             }
+            if (predictions.getGrandPrix().getJoker() != null) {
+                predictionsDto.setJokerUsed(true);
+            }
+            else {
+                predictionsDto.setJokerUsed(false);
+            }
             List<String> predictionsListDto = new ArrayList<>();
             predictionsListDto.add(predictions.getDriver1());
             predictionsListDto.add(predictions.getDriver2());
@@ -156,13 +163,13 @@ public class PredictService {
 
             if (sessionType.equals("Race")) {
                 isAbleToPost = checkBeginningTimeOfRace(year, grandPrixId);
-                isAbleToPost = true;
+//                isAbleToPost = true;
             } else if (sessionType.equals("Qualifying")) {
                 isAbleToPost = checkBeginningTimeOfQualifying(year, grandPrixId);
-                isAbleToPost = true;
+//                isAbleToPost = true;
             } else {
                 isAbleToPost = checkBeginningTimeOfSprint(year, grandPrixId);
-                isAbleToPost = true;
+//                isAbleToPost = true;
             }
 
             //if session has already begun

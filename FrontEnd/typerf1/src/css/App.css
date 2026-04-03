@@ -28,6 +28,13 @@
     border-color: darkred; /* Border color on hover */
 }
 
+.btn-outline-primary:focus {
+    color: darkred; /* Text color on hover */
+    background-color: white; /* Background color on hover */
+    border-color: darkred; /* Border color on hover */
+    box-shadow: 0 0 0 0.25rem darkred;
+}
+
 .btn-outline-primary:active:focus {
     color: black; /* Text color on hover */
     background-color: white; /* Background color on hover */
@@ -53,6 +60,13 @@
     border-color: black; /* Border color on hover */
 }
 
+.btn-primary:focus {
+    color: #ffffff; /* Text color on hover */
+    background-color: darkred; /* Background color on hover */
+    border-color: darkred; /* Border color on hover */
+    box-shadow: 0 0 0 0.25rem black;
+}
+
 .nav-link {
     color: red;
 }
@@ -63,6 +77,7 @@
 
 .nav-link:focus {
     color: black;
+    box-shadow: 0 0 0 0.25rem darkred;
 }
 
 h1, h2, h3 {
@@ -126,6 +141,11 @@ svg {
     border-color: darkred;
 }
 
+.form-check-input:focus {
+    border-color: black;
+    box-shadow: 0 0 0 0.25rem darkred;
+}
+
 a {
     text-decoration: none;
     color: red;
@@ -187,4 +207,5 @@ a:hover {
     color: var(--bs-btn-active-color);
     background-color: darkred;
     border-color: darkred;
+    box-shadow: black;
 }

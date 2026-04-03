@@ -16,11 +16,6 @@ public class WorldRecordController {
         this.worldRecordService = worldRecordService;
     }
 
-    @GetMapping("/world-records")
-    public String worldrecords() {
-        return "world-records";
-    }
-
     @GetMapping("/get-records")
     public @ResponseBody List<WorldRecordDto> getRecords(){
         return worldRecordService.getRecords();

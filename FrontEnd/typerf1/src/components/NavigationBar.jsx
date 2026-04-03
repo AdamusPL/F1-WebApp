@@ -2,15 +2,28 @@ import { useEffect, useState } from 'react';
 import logo from '../assets/logo.png';
 import { useNavigate } from 'react-router-dom';
 
-import { Button, Navbar, Nav, Container, Col } from 'react-bootstrap';
+import { Button, Navbar, Nav, Container } from 'react-bootstrap';
 import { useCookies } from 'react-cookie';
-import '../css/Navbar.css';
 
 export default function NavigationBar({ children }) {
     const navigate = useNavigate();
 
     const [cookies, setCookie, removeCookie] = useCookies(['token']);
     const [menuOpen, setMenuOpen] = useState(false);
+
+    useEffect(() => {
+        checkCookieExpiration();
+    }, [cookies]);
+
+    async function checkCookieExpiration(){
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/check-cookie`, {
+            credentials: 'include'
+        });
+        if (response.status === 403) {
+            removeCookie('token', { path: '/' });
+            navigate('/sign-in');
+        }
+    }
 
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);

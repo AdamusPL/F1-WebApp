@@ -5,7 +5,6 @@ import com.typerf1.typerf1.dto.participant.ParticipantPage;
 import com.typerf1.typerf1.service.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -21,12 +20,6 @@ public class ParticipantController {
         this.participantService = participantService;
     }
 
-    @GetMapping("/participants")
-    public String participants(Model model) {
-        model.addAttribute("participants", participantService.getAllParticipants());
-        return "participants";
-    }
-
     @GetMapping("/get-participants")
     public @ResponseBody List<BetterFullName> getParticipants() {
         return participantService.getParticipantFullNames();
@@ -36,11 +29,4 @@ public class ParticipantController {
     public @ResponseBody List<ParticipantPage> getParticipantsForSubpage() {
         return participantService.getParticipantPages();
     }
-
-    @GetMapping("/personal-best")
-    public String personalBest(Model model) {
-        model.addAttribute("participants", participantService.getAllParticipants());
-        return "personal-best"; // Name of your HTML file without .html extension
-    }
-
 }

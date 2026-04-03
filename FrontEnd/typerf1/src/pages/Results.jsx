@@ -35,29 +35,31 @@ export default function Results() {
     }
 
     return (<>
-        <h1>Results</h1>
+        <h1 className='mt-4'>Results</h1>
         <SeasonYearChooser />
 
         {year != 0 ?
-            scores.map(gp => (
-                <Fragment>
-                    <h2>{gp.name}</h2>
-                    {
-                        gp.sessionDto.map(session => (
-                            <Fragment>
-                                <h3>{session.name}</h3>
-                                {
-                                    <ol>
-                                        {session.scores.map(item => (
-                                            <li>{item.participantName} {item.participantSurname} {item.points}</li>
-                                        ))}
-                                    </ol>
-                                }
-                            </Fragment>
-                        ))
-                    }
-                </Fragment>
-            ))
+            scores.length !== 0 ?
+                scores.map(gp => (
+                    <Fragment>
+                        <h2>{gp.name}</h2>
+                        {
+                            gp.sessionDto.map(session => (
+                                <Fragment>
+                                    <h3>{session.name}</h3>
+                                    {
+                                        <ol>
+                                            {session.scores.map(item => (
+                                                <li>{item.participantName} {item.participantSurname} {item.points}</li>
+                                            ))}
+                                        </ol>
+                                    }
+                                </Fragment>
+                            ))
+                        }
+                    </Fragment>
+                ))
+                : <p>No results at the moment</p>
             : null}
     </>);
 }

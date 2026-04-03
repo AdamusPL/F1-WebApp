@@ -71,23 +71,23 @@ export default function Register() {
                     <img className="mb-4" src={logo} alt="" width="72" height="72" style={{ marginTop: "50px" }} />
                     <h1 className="h3 mb-3 fw-normal">Register your account</h1>
 
-                    <Form.Group className="form-floating">
+                    <Form.Group className="form-floating mb-1">
                         <Form.Control type="text" name="firstName" onChange={handleChange} id="floatingName" />
                         <Form.Label htmlFor="floatingName">First Name*</Form.Label>
                     </Form.Group>
-                    <Form.Group className="form-floating">
+                    <Form.Group className="form-floating mb-4">
                         <Form.Control type="text" name="surname" onChange={handleChange} id="floatingSurname" />
                         <Form.Label htmlFor="floatingSurname">Surname*</Form.Label>
                     </Form.Group>
-                    <Form.Group className="form-floating">
+                    <Form.Group className="form-floating mb-1">
                         <Form.Control type="text" name="username" onChange={handleChange} id="floatingUsername" />
                         <Form.Label htmlFor="floatingUsername">Login*</Form.Label>
                     </Form.Group>
-                    <Form.Group className="form-floating">
+                    <Form.Group className="form-floating mb-1">
                         <Form.Control type="email" name="email" onChange={handleChange} id="floatingEmail" />
                         <Form.Label htmlFor="floatingEmail">E-mail Address*</Form.Label>
                     </Form.Group>
-                    <Form.Group className="form-floating">
+                    <Form.Group className="form-floating mb-4">
                         <Form.Control type="password" name="password" onChange={handleChange} id="floatingPassword" />
                         <Form.Label htmlFor="floatingPassword">Password*</Form.Label>
                     </Form.Group>
@@ -95,16 +95,16 @@ export default function Register() {
                         <Form.Control type="password" name="confirmPassword" onChange={handleChange} id="floatingConfirmPassword" />
                         <Form.Label htmlFor="floatingPassword">Confirm password*</Form.Label>
                     </Form.Group> */}
-                    <Form.Group className="form-floating">
+                    <Form.Group className="form-floating mb-4">
                         <Form.Control type="text" name="description" onChange={handleChange} id="floatingDescription" />
                         <Form.Label htmlFor="floatingDescription">Profile description</Form.Label>
                     </Form.Group>
-                    <Form.Group className="mb-3">
+                    <Form.Group className="mb-5">
                         <Form.Label>Profile Picture (.jpg format)*</Form.Label>
                         <Form.Control onChange={handleFileChange} name="profilePicture" type="file" accept="image/jpeg" id="floatingImage" />
                     </Form.Group>
 
-                    <Button onClick={submitForm} type="button" className="btn btn-primary w-100 py-2">Create an account</Button>
+                    <Button onClick={submitForm} type="button" className="btn btn-primary w-100 py-2 mb-3">Create an account</Button>
 
                     <p>* - required fields</p>
 

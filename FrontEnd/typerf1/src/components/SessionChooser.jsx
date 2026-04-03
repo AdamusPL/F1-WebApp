@@ -39,7 +39,7 @@ export default function SessionChooser() {
                     ))
                 }
             </DropdownButton>
-            <p>{session.name}</p>
+            <p className="mt-2">{session.name}</p>
         </Fragment>
     </>);
 }

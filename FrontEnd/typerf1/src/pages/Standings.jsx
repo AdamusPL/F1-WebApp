@@ -32,20 +32,33 @@ export default function Standings() {
         }
     }
 
+    const printJokers = (item) => {
+        let jokers = "";
+        for (let i = 0; i < item.numberOfJokersUsed; i++) {
+            jokers += "J";
+        }
+
+        return (<>
+            {jokers}
+        </>)
+    }
+
     return (<>
-        <h1>Standings</h1>
+        <h1 className='mt-4'>Standings</h1>
 
         <SeasonYearChooser />
 
         {year != 0 ?
-            <Fragment>
-                <ol>
-                    {standings.map(item => (
-                        <li>{item.participantName} {item.participantSurname} {item.pointsSum}</li>
-                    ))}
-                </ol>
-                <Plot />
-            </Fragment>
+            standings.length !== 0 ?
+                <Fragment>
+                    <ol>
+                        {standings.map(item => (
+                            <li>{item.participantName} {item.participantSurname} {item.pointsSum} {printJokers(item)}</li>
+                        ))}
+                    </ol>
+                    <Plot />
+                </Fragment>
+                : <p>No results at the moment</p>
             : null
         }
     </>);

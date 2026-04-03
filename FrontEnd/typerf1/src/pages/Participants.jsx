@@ -30,7 +30,7 @@ export default function Participants() {
     }
 
     return (<>
-        <h1>Participants</h1>
+        <h1 className='mt-4'>Participants</h1>
 
         <Container>
             <Row>

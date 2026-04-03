@@ -43,7 +43,7 @@ export default function GrandPrixChooser() {
                     ))
                 }
             </DropdownButton>
-            <p>{grandPrix.name}</p>
+            <p className="mt-2">{grandPrix.name}</p>
         </Fragment>
     </>);
 }

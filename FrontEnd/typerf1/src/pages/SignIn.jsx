@@ -57,24 +57,24 @@ export default function SignIn() {
                 <img className="mb-4" src={logo} alt="" width="72" height="72" style={{ marginTop: "100px" }} />
                 <h1 className="h3 mb-3 fw-normal">Please sign in</h1>
 
-                <Form.Group className="form-floating">
+                <Form.Group className="form-floating mb-2">
                     <Form.Control type="text" onChange={(e) => setUsername(e.target.value)} id="floatingInput" />
                     <Form.Label htmlFor="floatingInput">Login</Form.Label>
                 </Form.Group>
-                <Form.Group className="form-floating">
+                <Form.Group className="form-floating mb-3">
                     <Form.Control type="password" onChange={(e) => setPassword(e.target.value)} id="floatingPassword" />
                     <Form.Label htmlFor="floatingPassword">Password</Form.Label>
                 </Form.Group>
 
                 <Form.Check type="checkbox" label="Remember me" id="flexCheckDefault" />
 
-                <p>Don't have an account? Register <a href="/register">here</a></p>
+                <p className="mb-4">Don't have an account? Register <a href="/register">here</a></p>
 
                 <Button onClick={submitForm} className="btn btn-primary w-100 py-2">Sign in</Button>
 
                 <p id="error">{error}</p>
 
-                <p className="mt-5 mb-3 text-body-secondary">&copy; 2020–2024</p>
+                <p className="text-body-secondary mt-5">&copy; 2020–2024</p>
             </Form>
         </main>
     </>)

@@ -18,7 +18,6 @@ export default function PredictionFields() {
     }, [session]);
 
     const handleChange = (id, value) => {
-        console.log(predictions);
         setPredictions(prevState => {
             const newDrivers = [...prevState.drivers];
             newDrivers[id - 1] = value;
@@ -31,8 +30,6 @@ export default function PredictionFields() {
     };
 
     const handleFLChange = (value) => {
-
-        console.log(predictions);
         setPredictions(prevState => {
             return {
                 ...prevState,
@@ -67,14 +64,12 @@ export default function PredictionFields() {
         const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/check-predictions-existence?sessionType=${session.name}&year=${year}&grandPrixId=${grandPrix.id}&sessionId=${session.id}`, {
             credentials: 'include'
         });
-        debugger;
         //predictions exist, deadline passed
         if (response.status === 200) {
             setArePredictionsPosted(true);
             setIsDeadlinePassed(true);
             const data = await response.json();
             setPredictions(data);
-            console.log(data);
         }
         //predictions exist, deadline not passed
         else if (response.status === 204) {
@@ -138,11 +133,19 @@ export default function PredictionFields() {
                 :
                 (arePredictionsPosted ? <Fragment>
                     {renderInputsPredictions()}
+                    {predictions.drivers.length !== 0 ?
+                        predictions?.jokerUsed ?
+                            <p>Joker used: Yes</p>
+                            : <p>Joker used: No</p>
+                        : null}
                     {predictions?.fastestLap ?
                         <p>Fastest Lap: {predictions.fastestLap}</p>
                         : null}
-                    {isDeadlinePassed ? <p>Points gained by participant: {predictions.points}</p>
-                        : <p>Session hasn't finished yet</p>}
+                    {predictions.drivers.length !== 0 ?
+                        isDeadlinePassed ?
+                            <p>Points gained by participant: {predictions.points}</p>
+                            : <p>Session hasn't finished yet</p>
+                        : null}
                 </Fragment>
                     :
                     (session.id ? <p>You cannot post predictions for this session anymore!</p>

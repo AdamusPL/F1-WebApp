@@ -11,5 +11,6 @@ public class PredictionsDto {
     Integer id;
     List<String> drivers;
     String fastestLap;
+    boolean jokerUsed;
     Double points;
 }

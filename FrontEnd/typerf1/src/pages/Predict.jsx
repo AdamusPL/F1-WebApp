@@ -10,7 +10,7 @@ export default function Predict() {
     const { session } = useSession();
 
     return (<>
-        <h1>Predict</h1>
+        <h1 className="mt-4">Predict</h1>
 
         <GrandPrixChooser />
 

@@ -16,11 +16,6 @@ public class SignInController {
         this.participantLoginDataService = participantLoginDataService;
     }
 
-    @GetMapping("/sign-in")
-    public String signin() {
-        return "sign-in";
-    }
-
     @PostMapping("/check-data")
     public ResponseEntity<SecurityFilterDto> login(@RequestBody ParticipantLoginData participantLoginData) {
         return participantLoginDataService.isLoginAndPasswordCorrect(participantLoginData);
