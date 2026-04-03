@@ -18,6 +18,7 @@ public class Score {
     String participantName;
     String participantSurname;
     double points;
+    boolean jokerUsed;
 
     public Score(int year, String grandPrixName, String sessionName, String participantName, String participantSurname, double points) {
         this.year = year;
@@ -26,5 +27,6 @@ public class Score {
         this.participantName = participantName;
         this.participantSurname = participantSurname;
         this.points = points;
+        this.jokerUsed = false;
     }
 }

@@ -50,7 +50,7 @@ export default function Results() {
                                     {
                                         <ol>
                                             {session.scores.map(item => (
-                                                <li>{item.participantName} {item.participantSurname} {item.points}</li>
+                                                <li>{item.participantName} {item.participantSurname} {item.points} {item.jokerUsed? 'J' : ''}</li>
                                             ))}
                                         </ol>
                                     }
