@@ -4,7 +4,6 @@ import { useParticipant } from "./ParticipantProvider";
 
 export default function ParticipantChooser() {
     const { participant, setParticipant } = useParticipant();
-    const { setIsLoading } = useParticipant();
     const [participants, setParticipants] = useState([]);
 
     useEffect(() => {
@@ -17,7 +16,6 @@ export default function ParticipantChooser() {
         });
         const data = await response.json();
         setParticipants(data);
-        setIsLoading(false);
     }
 
     return (<>

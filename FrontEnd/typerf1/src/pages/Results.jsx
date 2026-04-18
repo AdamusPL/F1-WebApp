@@ -4,14 +4,12 @@ import { useYear } from '../components/YearProvider';
 import { Fragment } from 'react';
 
 export default function Results() {
-    const { year, isLoading } = useYear();
+    const { year } = useYear();
 
     const [scores, setScores] = useState([]);
 
     useEffect(() => {
-        if (!isLoading) {
-            getScores();
-        }
+        getScores();
     }, [year]);
 
     function getScores() {
@@ -50,7 +48,7 @@ export default function Results() {
                                     {
                                         <ol>
                                             {session.scores.map(item => (
-                                                <li>{item.participantName} {item.participantSurname} {item.points} {item.jokerUsed? 'J' : ''}</li>
+                                                <li>{item.participantName} {item.participantSurname} {item.points} {item.jokerUsed ? 'J' : ''}</li>
                                             ))}
                                         </ol>
                                     }

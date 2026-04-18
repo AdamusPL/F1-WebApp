@@ -4,7 +4,6 @@ import { useYear } from "./YearProvider";
 
 export default function SeasonYearChooser() {
     const { year, setYear } = useYear();
-    const { setIsLoading } = useYear();
     const [years, setYears] = useState([]);
 
     useEffect(() => {
@@ -17,7 +16,6 @@ export default function SeasonYearChooser() {
         });
         const data = await response.json();
         setYears(data);
-        setIsLoading(false);
     }
 
     return (<>

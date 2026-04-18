@@ -4,13 +4,11 @@ import { useYear } from '../components/YearProvider';
 import Plot from '../components/Plot';
 
 export default function Standings() {
-    const { year, isLoading } = useYear();
+    const { year } = useYear();
     const [standings, setStandings] = useState([]);
 
     useEffect(() => {
-        if (!isLoading) {
-            getStandings();
-        }
+        getStandings();
     }, [year]);
 
     function getStandings() {
