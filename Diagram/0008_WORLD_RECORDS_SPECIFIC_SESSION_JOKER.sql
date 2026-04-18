@@ -13,7 +13,7 @@ INNER JOIN GrandPrix gp ON ses.GrandPrixId = gp.Id
 INNER JOIN Season s ON gp.SeasonId = s.Id
 INNER JOIN Joker j ON j.ParticipantId = p.Id
 WHERE ses.Name = 'Race'
-AND gp.Id = (
+AND gp.Id IN (
 	SELECT GrandPrix.Id FROM Joker j
 	INNER JOIN GrandPrix ON GrandPrix.Id = j.GrandPrixId
 )
@@ -28,7 +28,7 @@ INNER JOIN GrandPrix gp ON ses.GrandPrixId = gp.Id
 INNER JOIN Season s ON gp.SeasonId = s.Id
 INNER JOIN Joker j ON j.ParticipantId = p.Id
 WHERE ses.Name = 'Qualifying'
-AND gp.Id = (
+AND gp.Id IN (
 	SELECT GrandPrix.Id FROM Joker j
 	INNER JOIN GrandPrix ON GrandPrix.Id = j.GrandPrixId
 );

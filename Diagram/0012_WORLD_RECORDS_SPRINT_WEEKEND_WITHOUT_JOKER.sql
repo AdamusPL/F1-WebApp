@@ -4,7 +4,7 @@ INNER JOIN Points ON Participant.Id = Points.ParticipantId
 INNER JOIN Session ON Points.SessionId = Session.Id
 INNER JOIN GrandPrix ON Session.GrandPrixId = GrandPrix.Id
 INNER JOIN Season ON GrandPrix.SeasonId = Season.Id
-WHERE GrandPrix.Id != (
+WHERE GrandPrix.Id NOT IN (
 	SELECT GrandPrix.Id FROM Joker j
 	INNER JOIN GrandPrix ON GrandPrix.Id = j.GrandPrixId
 )
@@ -17,7 +17,7 @@ HAVING SUM(Points.Number) = (
 	INNER JOIN Session ON Points.SessionId = Session.Id
 	INNER JOIN GrandPrix ON Session.GrandPrixId = GrandPrix.Id
 	INNER JOIN Season ON GrandPrix.SeasonId = Season.Id
-	WHERE GrandPrix.Id != (
+	WHERE GrandPrix.Id NOT IN (
 	SELECT GrandPrix.Id FROM Joker j
 	INNER JOIN GrandPrix ON GrandPrix.Id = j.GrandPrixId
 	)
@@ -32,7 +32,7 @@ INNER JOIN Points ON Participant.Id = Points.ParticipantId
 INNER JOIN Session ON Points.SessionId = Session.Id
 INNER JOIN GrandPrix ON Session.GrandPrixId = GrandPrix.Id
 INNER JOIN Season ON GrandPrix.SeasonId = Season.Id
-WHERE GrandPrix.Id != (
+WHERE GrandPrix.Id NOT IN (
 	SELECT GrandPrix.Id FROM Joker j
 	INNER JOIN GrandPrix ON GrandPrix.Id = j.GrandPrixId
 )
@@ -45,7 +45,7 @@ HAVING SUM(Points.Number) = (
 	INNER JOIN Session ON Points.SessionId = Session.Id
 	INNER JOIN GrandPrix ON Session.GrandPrixId = GrandPrix.Id
 	INNER JOIN Season ON GrandPrix.SeasonId = Season.Id
-	WHERE GrandPrix.Id != (
+	WHERE GrandPrix.Id NOT IN (
 	SELECT GrandPrix.Id FROM Joker j
 	INNER JOIN GrandPrix ON GrandPrix.Id = j.GrandPrixId
 	)
