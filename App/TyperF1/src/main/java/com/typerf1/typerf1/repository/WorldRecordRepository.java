@@ -58,7 +58,7 @@ public interface WorldRecordRepository extends JpaRepository<Points, Integer> {
             "JOIN gp.season s " +
             "JOIN p.jokers j " +
             "WHERE ses.name = :session " +
-            "AND gp.id = (SELECT gp2.id FROM Joker j2 " +
+            "AND gp.id IN (SELECT gp2.id FROM Joker j2 " +
             "JOIN j2.grandPrix gp2 ) " +
             "GROUP BY p.name, p.surname, gp.name, s.year ")
     List<Record> findHighestJoker(@Param("session") String session, Pageable pageable);
@@ -71,7 +71,7 @@ public interface WorldRecordRepository extends JpaRepository<Points, Integer> {
             "JOIN gp.season s " +
             "JOIN p.jokers j " +
             "WHERE ses.name = :session " +
-            "AND gp.id = (SELECT gp2.id FROM Joker j2 " +
+            "AND gp.id IN (SELECT gp2.id FROM Joker j2 " +
             "JOIN j2.grandPrix gp2 ) " +
             "GROUP BY p.name, p.surname, gp.name, s.year ")
     List<Record> findLowestJoker(@Param("session") String session, Pageable pageable);
@@ -168,7 +168,7 @@ public interface WorldRecordRepository extends JpaRepository<Points, Integer> {
                     "INNER JOIN GrandPrix gp ON ses.GrandPrixId = gp.Id " +
                     "INNER JOIN Season s ON gp.SeasonId = s.Id " +
                     "INNER JOIN Joker j ON p.Id = j.ParticipantId " +
-                    "WHERE gp.Id = ( " +
+                    "WHERE gp.Id IN ( " +
                     "    SELECT jgp.Id FROM Joker j " +
                     "    INNER JOIN GrandPrix jgp ON jgp.Id = j.GrandPrixId " +
                     ") " +
@@ -182,7 +182,7 @@ public interface WorldRecordRepository extends JpaRepository<Points, Integer> {
                     "        INNER JOIN GrandPrix jgp ON ses3.GrandPrixId = jgp.Id " +
                     "        INNER JOIN Season s3 ON jgp.SeasonId = s3.Id " +
                     "        INNER JOIN Joker j3 ON p3.Id = j3.ParticipantId " +
-                    "        WHERE jgp.Id = ( " +
+                    "        WHERE jgp.Id IN ( " +
                     "            SELECT jgp2.Id FROM Joker j2 " +
                     "            INNER JOIN GrandPrix jgp2 ON jgp2.Id = j2.GrandPrixId " +
                     "        ) " +
@@ -201,7 +201,7 @@ public interface WorldRecordRepository extends JpaRepository<Points, Integer> {
                     "INNER JOIN GrandPrix gp ON ses.GrandPrixId = gp.Id " +
                     "INNER JOIN Season s ON gp.SeasonId = s.Id " +
                     "INNER JOIN Joker j ON p.Id = j.ParticipantId " +
-                    "WHERE gp.Id = ( " +
+                    "WHERE gp.Id IN ( " +
                     "    SELECT jgp.Id FROM Joker j " +
                     "    INNER JOIN GrandPrix jgp ON jgp.Id = j.GrandPrixId " +
                     ") " +
@@ -215,7 +215,7 @@ public interface WorldRecordRepository extends JpaRepository<Points, Integer> {
                     "        INNER JOIN GrandPrix jgp ON ses3.GrandPrixId = jgp.Id " +
                     "        INNER JOIN Season s3 ON jgp.SeasonId = s3.Id " +
                     "        INNER JOIN Joker j3 ON p3.Id = j3.ParticipantId " +
-                    "        WHERE jgp.Id = ( " +
+                    "        WHERE jgp.Id IN ( " +
                     "            SELECT jgp2.Id FROM Joker j2 " +
                     "            INNER JOIN GrandPrix jgp2 ON jgp2.Id = j2.GrandPrixId " +
                     "        ) " +
