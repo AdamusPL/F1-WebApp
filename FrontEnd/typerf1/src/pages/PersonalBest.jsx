@@ -3,13 +3,11 @@ import ParticipantChooser from "../components/ParticipantChooser";
 import { useParticipant } from "../components/ParticipantProvider";
 
 export default function PersonalBest() {
-    const { participant, isLoading } = useParticipant();
+    const { participant } = useParticipant();
     const [personalBest, setPersonalBest] = useState([]);
 
     useEffect(() => {
-        if (!isLoading) {
-            fetchPersonalBest();
-        }
+        fetchPersonalBest();
     }, [participant]);
 
     function fetchPersonalBest() {

@@ -4,10 +4,9 @@ const YearContext = createContext();
 
 export function YearProvider({ children }) {
     const [year, setYear] = useState(0);
-    const [isLoading, setIsLoading] = useState(true);
 
     return (
-        <YearContext.Provider value={{ year, setYear, isLoading, setIsLoading }}>
+        <YearContext.Provider value={{ year, setYear }}>
             {children}
         </YearContext.Provider>
     );
