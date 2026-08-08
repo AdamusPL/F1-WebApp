@@ -14,8 +14,7 @@ import java.util.List;
 @Setter
 @Entity
 public class Participant {
-    @jakarta.persistence.Id
-    @Column(name = "Id")
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
     String name;

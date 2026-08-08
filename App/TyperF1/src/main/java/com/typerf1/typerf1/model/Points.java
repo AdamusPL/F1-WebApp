@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @Entity
 public class Points {
-    @jakarta.persistence.Id
+    @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     Integer id;
 

@@ -9,11 +9,9 @@ import com.typerf1.typerf1.model.*;
 import com.typerf1.typerf1.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -30,9 +28,6 @@ import static com.typerf1.typerf1.tools.StringUtils.stripAccents;
 
 @Service
 public class PredictService {
-
-    @Autowired
-    private ResourceLoader resourceLoader;
 
     private final GrandPrixRepository grandPrixRepository;
     private final SessionRepository sessionRepository;

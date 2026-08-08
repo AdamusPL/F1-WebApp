@@ -14,7 +14,7 @@ import java.util.List;
 @Setter
 @Entity
 public class GrandPrix {
-    @jakarta.persistence.Id
+    @Id
     Integer id;
     String name;
 

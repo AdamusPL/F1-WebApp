@@ -1,17 +1,13 @@
 package com.typerf1.typerf1.dto.grandprix;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
 @Getter
 @Setter
 @NoArgsConstructor
 public class GrandPrixScore {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     String grandPrixName;
     String sessionName;
     String participantName;

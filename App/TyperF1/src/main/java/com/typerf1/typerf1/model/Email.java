@@ -12,8 +12,7 @@ import lombok.Setter;
 @Setter
 @Entity
 public class Email {
-    @jakarta.persistence.Id
-    @Column(name = "Id")
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
     String email;

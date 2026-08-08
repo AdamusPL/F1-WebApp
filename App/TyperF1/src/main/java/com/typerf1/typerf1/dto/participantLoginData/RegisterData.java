@@ -1,12 +1,10 @@
 package com.typerf1.typerf1.dto.participantLoginData;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
-@Data
 @Getter
 @Setter
 @NoArgsConstructor
