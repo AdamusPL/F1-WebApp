@@ -8,6 +8,6 @@ import java.util.List;
 @Getter
 @Setter
 public class PredictionsPostDto {
-    List<String> drivers;
+    List<PredictionsOrder> drivers;
     String fastestLap;
 }

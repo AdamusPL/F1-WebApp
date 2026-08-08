@@ -133,3 +133,29 @@ INSERT INTO Points VALUES(24, 3, 14);
 INSERT INTO Points VALUES(26, 4, 14);
 
 INSERT INTO Joker VALUES(3, 6);
+
+INSERT INTO Driver VALUES
+('Verstappen'),
+('Perez'),
+('Hamilton'),
+('Russell'),
+('Leclerc'),
+('Sainz'),
+('Norris'),
+('Piastri'),
+('Alonso'),
+('Stroll'),
+('Gasly'),
+('Ocon'),
+--('Doohan'),
+('Hulkenberg'),
+('Magnussen'),
+--('Bearman'),
+('Tsunoda'),
+('Ricciardo'),
+--('Lawson'),
+('Albon'),
+('Sargeant'),
+--('Colapinto'),
+('Bottas'),
+('Zhou');

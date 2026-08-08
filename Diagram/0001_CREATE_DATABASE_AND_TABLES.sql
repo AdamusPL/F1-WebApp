@@ -115,3 +115,9 @@ CREATE TABLE Joker(
 	FOREIGN KEY(ParticipantId) REFERENCES Participant(Id),
 	FOREIGN KEY(GrandPrixId) REFERENCES GrandPrix(Id)
 );
+
+CREATE TABLE Driver(
+	Id INT UNIQUE NOT NULL IDENTITY(1,1),
+	Name VARCHAR(255)
+);
+

@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 public class PredictionsDto {
     Integer id;
-    List<String> drivers;
+    List<PredictionsOrder> drivers;
     String fastestLap;
     boolean jokerUsed;
     Double points;

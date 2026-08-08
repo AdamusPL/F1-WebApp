@@ -8,3 +8,4 @@ SELECT * FROM Session;
 SELECT * FROM Track;
 SELECT * FROM Points;
 SELECT * FROM Joker;
+SELECT * FROM Driver;
