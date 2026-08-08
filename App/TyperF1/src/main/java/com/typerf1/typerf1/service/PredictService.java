@@ -698,7 +698,6 @@ public class PredictService {
     }
 
     public List<com.typerf1.typerf1.model.Driver> getCurrentDriverList(){
-        var test = driverRepository.findAll();
-        return test;
+        return driverRepository.findAll();
     }
 }
