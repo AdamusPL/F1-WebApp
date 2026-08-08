@@ -10,9 +10,6 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 public class Record {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
     String participantName;
     String participantSurname;
     String grandPrixName;

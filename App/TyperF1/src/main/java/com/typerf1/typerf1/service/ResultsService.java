@@ -34,7 +34,7 @@ public class ResultsService {
                     numberOfJokersUsed = jokersUsed.getNumberOfJokersUsed();
                 }
             }
-            SeasonScoreWithJokers seasonScoreWithJokers = new SeasonScoreWithJokers(score.getParticipantName(), score.getParticipantSurname(), score.getPointsSum(), numberOfJokersUsed);
+            SeasonScoreWithJokers seasonScoreWithJokers = new SeasonScoreWithJokers(score.getParticipantId(), score.getParticipantName(), score.getParticipantSurname(), score.getPointsSum(), numberOfJokersUsed);
             seasonScoreWithJokersList.add(seasonScoreWithJokers);
         }
 

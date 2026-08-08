@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, React } from "react";
 import { Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
@@ -9,7 +9,7 @@ export default function SignIn() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-    const [cookies, setCookie] = useCookies(['token']);
+    const [, setCookie] = useCookies(['token']);
 
     const navigate = useNavigate();
 
@@ -68,7 +68,7 @@ export default function SignIn() {
 
                 <Form.Check type="checkbox" label="Remember me" id="flexCheckDefault" />
 
-                <p className="mb-4">Don't have an account? Register <a href="/register">here</a></p>
+                <p className="mb-4">Don&apos;t have an account? Register <a href="/register">here</a></p>
 
                 <Button onClick={submitForm} className="btn btn-primary w-100 py-2">Sign in</Button>
 

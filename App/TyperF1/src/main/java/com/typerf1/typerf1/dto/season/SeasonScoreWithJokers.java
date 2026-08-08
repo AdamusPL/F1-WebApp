@@ -10,15 +10,14 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 public class SeasonScoreWithJokers {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
     String participantName;
     String participantSurname;
     Double pointsSum;
     Long numberOfJokersUsed;
 
-    public SeasonScoreWithJokers(String participantName, String participantSurname, Double pointsSum, Long numberOfJokersUsed) {
+    public SeasonScoreWithJokers(int id, String participantName, String participantSurname, Double pointsSum, Long numberOfJokersUsed) {
+        this.id = id;
         this.participantName = participantName;
         this.participantSurname = participantSurname;
         this.pointsSum = pointsSum;

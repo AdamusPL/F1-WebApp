@@ -44,8 +44,10 @@ public class PersonalBestService {
             toFind = personalBestRepository.findLowest(find, id, pageable);
         }
         if (!toFind.isEmpty()) {
+            int worldRecordId = recordList.size() + 1;
             var worldRecord = new WorldRecord();
             worldRecord.setName(key);
+            worldRecord.setId(worldRecordId);
             worldRecord.setRecord(toFind.getFirst());
             recordList.add(worldRecord);
         }

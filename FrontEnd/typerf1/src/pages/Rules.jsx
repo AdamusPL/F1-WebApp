@@ -1,3 +1,5 @@
+import { React } from "react";
+
 export default function Rules() {
     return (<>
         <div className='container'>
@@ -17,7 +19,7 @@ export default function Rules() {
                     Precise prediction: If participant guessed the exact position of driver, he/she receives 2 points
                 </li>
                 <li className="lead">
-                    Prediction missed by one position: If participant's prediction differentiate by 1 position, he/she receives 1 point
+                    Prediction missed by one position: If participant&apos;s prediction differentiate by 1 position, he/she receives 1 point
                 </li>
             </ul>
 

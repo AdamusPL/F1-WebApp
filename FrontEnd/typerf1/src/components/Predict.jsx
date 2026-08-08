@@ -1,4 +1,5 @@
 import GrandPrixChooser from "../components/GrandPrixChooser";
+import { React } from "react";
 
 export default function Predict() {
 

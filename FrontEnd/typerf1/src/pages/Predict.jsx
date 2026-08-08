@@ -3,6 +3,7 @@ import { useGrandPrix } from "../components/GrandPrixProvider";
 import PredictionFields from "../components/PredictionFields";
 import SessionChooser from "../components/SessionChooser";
 import { useSession } from "../components/SessionProvider";
+import { React } from "react";
 
 export default function Predict() {
 

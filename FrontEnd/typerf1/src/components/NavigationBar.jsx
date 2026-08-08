@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, React } from 'react';
 import logo from '../assets/logo.png';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,14 +8,15 @@ import { useCookies } from 'react-cookie';
 export default function NavigationBar({ children }) {
     const navigate = useNavigate();
 
-    const [cookies, setCookie, removeCookie] = useCookies(['token']);
-    const [menuOpen, setMenuOpen] = useState(false);
+    const [cookies, , removeCookie] = useCookies(['token']);
 
     useEffect(() => {
-        checkCookieExpiration();
+        if (cookies.token) {
+            checkCookieExpiration();
+        }
     }, [cookies]);
 
-    async function checkCookieExpiration(){
+    async function checkCookieExpiration() {
         const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/check-cookie`, {
             credentials: 'include'
         });
@@ -24,10 +25,6 @@ export default function NavigationBar({ children }) {
             navigate('/sign-in');
         }
     }
-
-    const toggleMenu = () => {
-        setMenuOpen(!menuOpen);
-    };
 
     function logout() {
         removeCookie('token', { path: '/' });
@@ -49,14 +46,14 @@ export default function NavigationBar({ children }) {
                         <Nav.Link href="/about">About</Nav.Link>
                         {cookies.token ?
                             <>
-                            <Nav.Link href="/results">Results</Nav.Link>
-                            <Nav.Link href="/standings">Standings</Nav.Link>
-                            <Nav.Link href="/world-records">WorldRecords</Nav.Link>
-                            <Nav.Link href="/personal-best">Personal Best</Nav.Link>
-                            <Nav.Link href="/participants">Participants</Nav.Link>
-                            <Nav.Link href="/predict">Predict</Nav.Link>
+                                <Nav.Link href="/results">Results</Nav.Link>
+                                <Nav.Link href="/standings">Standings</Nav.Link>
+                                <Nav.Link href="/world-records">WorldRecords</Nav.Link>
+                                <Nav.Link href="/personal-best">Personal Best</Nav.Link>
+                                <Nav.Link href="/participants">Participants</Nav.Link>
+                                <Nav.Link href="/predict">Predict</Nav.Link>
                             </>
-                        :
+                            :
                             null
                         }
                     </Nav>

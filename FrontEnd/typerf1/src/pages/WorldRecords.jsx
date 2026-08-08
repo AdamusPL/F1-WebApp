@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState, React } from "react";
 
 export default function WorldRecords() {
 
@@ -28,53 +28,12 @@ export default function WorldRecords() {
 
         {worldRecords.length !== 0 ?
             worldRecords.map(record => (
-                <Fragment>
-                    {!record.jokerUsed ? (
-                        <Fragment>
-                            <h2>Without using Joker</h2>
-                            {record.best ? (
-                                <Fragment>
-                                    <h3>Best</h3>
-                                    {record.worldRecords.map(worldRecord => (
-                                        <Fragment>
-                                            <p>{worldRecord.name}: {worldRecord.record.points} ({worldRecord.record.participantName} {worldRecord.record.participantSurname}, {worldRecord.record.grandPrixName} {worldRecord.record.year})</p>
-                                        </Fragment>
-                                    ))}
-                                </Fragment>
-                            )
-                                :
-                                <Fragment>
-                                    <h3>Worst</h3>
-                                    {record.worldRecords.map(worldRecord => (
-                                        <Fragment>
-                                            <p>{worldRecord.name}: {worldRecord.record.points} ({worldRecord.record.participantName} {worldRecord.record.participantSurname}, {worldRecord.record.grandPrixName} {worldRecord.record.year})</p>
-                                        </Fragment>))}
-                                </Fragment>
-                            }
-                        </Fragment>
-                    )
-                        :
-                        (<Fragment>
-                            <h2>Using Joker</h2>
-                            {record.best ?
-                                <Fragment>
-                                    <h3>Best</h3>
-                                    {record.worldRecords.map(worldRecord => (<Fragment>
-                                        <p>{worldRecord.name}: {worldRecord.record.points} ({worldRecord.record.participantName} {worldRecord.record.participantSurname}, {worldRecord.record.grandPrixName} {worldRecord.record.year})</p>
-                                    </Fragment>))}
-                                </Fragment>
-                                :
-                                <Fragment>
-                                    <h3>Worst</h3>
-                                    {record.worldRecords.map(worldRecord => (
-                                        <Fragment>
-
-                                            <p>{worldRecord.name}: {worldRecord.record.points} ({worldRecord.record.participantName} {worldRecord.record.participantSurname}, {worldRecord.record.grandPrixName} {worldRecord.record.year})</p>
-                                        </Fragment>))}
-                                </Fragment>
-                            }
-                        </Fragment>)
-                    }
+                <Fragment key={record.id}>
+                    <h2>{record.jokerUsed ? "Using Joker" : "Without using Joker"}</h2>
+                    <h3>{record.best ? "Best" : "Worst"}</h3>
+                    {record.worldRecords.map(worldRecord => (
+                        <p key={worldRecord.id}>{worldRecord.name}: {worldRecord.record.points} ({worldRecord.record.participantName} {worldRecord.record.participantSurname}, {worldRecord.record.grandPrixName} {worldRecord.record.year})</p>
+                    ))}
                 </Fragment>
             )) :
             <p>No results at the moment</p>}

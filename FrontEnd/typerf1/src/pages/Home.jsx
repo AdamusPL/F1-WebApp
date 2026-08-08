@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react"
+import { useEffect, useState, React } from "react"
 
 import logo from '../assets/logo.png'
 import { Container } from "react-bootstrap";
@@ -34,7 +34,7 @@ export default function Home() {
                 :
                 <h3 id="welcome">Welcome in the place for real Formula 1 lovers!</h3>
             }
-            <svg className="bi" width="500" height="500" role="img" align="center">
+            <svg className="bi" width="500" height="500" role="img">
                 <image href={logo} width="500" height="500" />
             </svg>
         </Container>

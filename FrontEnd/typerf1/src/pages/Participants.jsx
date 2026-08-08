@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, React } from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 
 export default function Participants() {
@@ -10,23 +10,19 @@ export default function Participants() {
     }, []);
 
     function getParticipantsData() {
-        try {
-            fetch(`${import.meta.env.VITE_API_BASE_URL}/get-participants-for-subpage`, {
-                credentials: 'include'
+        fetch(`${import.meta.env.VITE_API_BASE_URL}/get-participants-for-subpage`, {
+            credentials: 'include'
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error');
+                }
+                return response.json();
             })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Error');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    
-                    setParticipantsData(data);
-                })
-        } catch (e) {
+            .then(data => {
 
-        }
+                setParticipantsData(data);
+            });
     }
 
     return (<>

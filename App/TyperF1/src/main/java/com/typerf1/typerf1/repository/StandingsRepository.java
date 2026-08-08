@@ -15,7 +15,7 @@ import java.util.List;
 @Repository
 public interface StandingsRepository extends JpaRepository<Points, Integer> {
 
-    @Query("SELECT new com.typerf1.typerf1.dto.points.Score(s.year, gp.name, ses.name, p.name, p.surname, pt.number) " +
+    @Query("SELECT new com.typerf1.typerf1.dto.points.Score(gp.id, s.year, gp.name, ses.id, ses.name, p.name, p.surname, pt.id, pt.number) " +
             "FROM Points pt " +
             "JOIN pt.participant p " +
             "JOIN pt.session ses " +
