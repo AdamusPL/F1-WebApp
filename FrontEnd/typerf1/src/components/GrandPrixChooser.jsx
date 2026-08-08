@@ -4,11 +4,12 @@ import { useGrandPrix } from "./GrandPrixProvider";
 import { Fragment } from "react";
 import { useSession } from "./SessionProvider";
 import { usePredictions } from "./PredictionProvider";
+import { React } from "react";
 
 export default function GrandPrixChooser() {
     const { grandPrix, setGrandPrix } = useGrandPrix();
-    const { session, setSession } = useSession();
-    const { predictions, setPredictions, arePredictionsPosted, setArePredictionsPosted, isDeadlinePassed, setIsDeadlinePassed } = usePredictions();
+    const { setSession } = useSession();
+    const { setPredictions, setArePredictionsPosted, setIsDeadlinePassed } = usePredictions();
     const [grandPrixs, setGrandPrixs] = useState([]);
 
     useEffect(() => {
@@ -39,7 +40,7 @@ export default function GrandPrixChooser() {
             >
                 {
                     grandPrixs.map(item => (
-                        <Dropdown.Item id={item.id} onClick={() => setGrandPrixAndResetSession(item)}>{item.name}</Dropdown.Item>
+                        <Dropdown.Item key={item.id} id={item.id} onClick={() => setGrandPrixAndResetSession(item)}>{item.name}</Dropdown.Item>
                     ))
                 }
             </DropdownButton>

@@ -5,6 +5,7 @@ import com.typerf1.typerf1.dto.grandprix.GrandPrixScoreWithJokers;
 import com.typerf1.typerf1.dto.joker.JokersUsage;
 import com.typerf1.typerf1.dto.joker.UsedJokersGP;
 import com.typerf1.typerf1.dto.points.Score;
+import com.typerf1.typerf1.dto.points.ScoreSpecific;
 import com.typerf1.typerf1.dto.standings.GrandPrixDto;
 import com.typerf1.typerf1.dto.standings.SessionDto;
 import com.typerf1.typerf1.repository.StandingsRepository;
@@ -12,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.LinkedHashMap;
 
@@ -27,39 +27,40 @@ public class StandingsService {
         this.standingsRepository = standingsRepository;
     }
 
-    private static final List<String> SESSION_ORDER = List.of(
-            "Free Practice 1",
-            "Free Practice 2",
-            "Free Practice 3",
-            "Qualifying",
-            "Sprint",
-            "Race"
-    );
-
-    Comparator<SessionDto> sessionComparator = Comparator.comparingInt(s -> {
-        int index = SESSION_ORDER.indexOf(s.getName());
-        return index == -1 ? Integer.MAX_VALUE : index;
-    });
-
     public List<GrandPrixDto> getScores(Integer year) {
         List<Score> scoreList = standingsRepository.findSeasonScores(year);
         var scores = scoreList.stream()
                 .collect(groupingBy(
-                        Score::getGrandPrixName,
+                        Score::getGrandPrixId,
                         LinkedHashMap::new, // This preserves the DB order for GPs
                         groupingBy(
-                                Score::getSessionName,
+                                Score::getSessionId,
                                 LinkedHashMap::new, // This preserves the DB order for Sessions
                                 toList()
                         )
                 ))
                 .entrySet().stream()
                 .map(gpEntry -> {
+                    String grandPrixName = gpEntry.getValue()
+                            .values().iterator().next().getFirst().getGrandPrixName();
                     var sessions = gpEntry.getValue().entrySet().stream()
-                            .map(sEntry -> new SessionDto(sEntry.getKey(), sEntry.getValue()))
+                            .map(sEntry -> {
+                                String sessionName = sEntry.getValue()
+                                        .getFirst().getSessionName();
+                                List<ScoreSpecific> specificScores = sEntry.getValue().stream()
+                                        .map(score -> new ScoreSpecific(
+                                                score.getPointsId(),
+                                                score.getParticipantName(),
+                                                score.getParticipantSurname(),
+                                                score.getPoints(),
+                                                score.isJokerUsed()
+                                        ))
+                                        .toList();
+                                return new SessionDto(sEntry.getKey(), sessionName, specificScores);
+                            })
                             .toList(); // No .sorted() needed if DB order is correct
 
-                    return new GrandPrixDto(gpEntry.getKey(), sessions);
+                    return new GrandPrixDto(gpEntry.getKey(), grandPrixName, sessions);
                 })
                 .toList(); // No .sorted() needed here either
 
@@ -69,7 +70,7 @@ public class StandingsService {
             for (var session : weekend.getSessionDto()) {
                 for (var score : session.getScores()) {
                     for (JokersUsage jokersUsed : usedJokersGPList) {
-                        if (jokersUsed.getParticipantName().equals(score.getParticipantName()) && jokersUsed.getParticipantSurname().equals(score.getParticipantSurname()) && jokersUsed.getGrandPrixName().equals(score.getGrandPrixName())) {
+                        if (jokersUsed.getParticipantName().equals(score.getParticipantName()) && jokersUsed.getParticipantSurname().equals(score.getParticipantSurname()) && jokersUsed.getGrandPrixName().equals(weekend.getName())) {
                             score.setJokerUsed(true);
                         }
                     }

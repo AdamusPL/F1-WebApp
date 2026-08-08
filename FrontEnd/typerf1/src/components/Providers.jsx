@@ -4,6 +4,7 @@ import { ParticipantProvider } from "./ParticipantProvider";
 import { PredictionProvider } from "./PredictionProvider";
 import { SessionProvider } from "./SessionProvider";
 import { YearProvider } from "./YearProvider";
+import { React } from "react";
 
 const Providers = ({ children }) => {
   return (

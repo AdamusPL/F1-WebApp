@@ -1,4 +1,4 @@
-import { useState, useEffect, Fragment } from "react";
+import { useState, useEffect, Fragment, React } from "react";
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useParticipant } from "./ParticipantProvider";
 
@@ -26,7 +26,7 @@ export default function ParticipantChooser() {
             >
                 {
                     participants.map(item => (
-                        <Dropdown.Item id={item.id} onClick={() => setParticipant(item)}>{item.firstName} {item.surname}</Dropdown.Item>
+                        <Dropdown.Item key={item.id} id={item.id} onClick={() => setParticipant(item)}>{item.firstName} {item.surname}</Dropdown.Item>
                     ))
                 }
             </DropdownButton>

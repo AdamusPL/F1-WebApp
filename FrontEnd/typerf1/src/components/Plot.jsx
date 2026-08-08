@@ -10,7 +10,7 @@ import {
   PointElement,
   LineElement
 } from 'chart.js';
-import { useEffect, useState } from "react";
+import { useEffect, useState, React } from "react";
 
 ChartJS.register(
   CategoryScale,

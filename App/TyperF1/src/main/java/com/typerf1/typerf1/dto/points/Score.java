@@ -1,8 +1,5 @@
 package com.typerf1.typerf1.dto.points;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.*;
 
 @Data
@@ -10,22 +7,26 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 public class Score {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    int grandPrixId;
     int year;
     String grandPrixName;
+    int sessionId;
     String sessionName;
     String participantName;
     String participantSurname;
+    int pointsId;
     double points;
     boolean jokerUsed;
 
-    public Score(int year, String grandPrixName, String sessionName, String participantName, String participantSurname, double points) {
+    public Score(int grandPrixId, int year, String grandPrixName, int sessionId, String sessionName, String participantName, String participantSurname, int pointsId, double points) {
+        this.grandPrixId = grandPrixId;
         this.year = year;
         this.grandPrixName = grandPrixName;
+        this.sessionId = sessionId;
         this.sessionName = sessionName;
         this.participantName = participantName;
         this.participantSurname = participantSurname;
+        this.pointsId = pointsId;
         this.points = points;
         this.jokerUsed = false;
     }

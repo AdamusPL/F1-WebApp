@@ -32,7 +32,8 @@ public class WorldRecordService {
         //weekend without joker
         putRecordWeekend(recordList, true, "The highest number of points gained in non-Sprint race weekend");
 
-        WorldRecordDto worldRecordDto = new WorldRecordDto(false, true, recordList);
+        int id = 1;
+        WorldRecordDto worldRecordDto = new WorldRecordDto(id, false, true, recordList);
         recordDtoList.add(worldRecordDto);
 
         recordList = new ArrayList<>();
@@ -41,7 +42,8 @@ public class WorldRecordService {
         putRecord(recordList, false, "Sprint", "The lowest number of points gained with prediction on Sprint");
         putRecordWeekend(recordList, false, "The lowest number of points gained in non-Sprint race weekend");
 
-        worldRecordDto = new WorldRecordDto(false, false, recordList);
+        id++;
+        worldRecordDto = new WorldRecordDto(id, false, false, recordList);
         recordDtoList.add(worldRecordDto);
 
         recordList = new ArrayList<>();
@@ -51,7 +53,8 @@ public class WorldRecordService {
         //weekend with joker
         putRecordSprintWeekendJoker(recordList, true, "The highest number of points gained in Sprint race weekend");
 
-        worldRecordDto = new WorldRecordDto(true, true, recordList);
+        id++;
+        worldRecordDto = new WorldRecordDto(id, true, true, recordList);
         recordDtoList.add(worldRecordDto);
 
         recordList = new ArrayList<>();
@@ -59,7 +62,8 @@ public class WorldRecordService {
         putRecordJoker(recordList, false, "Qualifying", "The lowest number of points gained with prediction on Qualifying");
         putRecordSprintWeekendJoker(recordList, false, "The lowest number of points gained in Sprint race weekend");
 
-        worldRecordDto = new WorldRecordDto(true, false, recordList);
+        id++;
+        worldRecordDto = new WorldRecordDto(id, true, false, recordList);
         recordDtoList.add(worldRecordDto);
 
         //sprint weekend without joker (to-do...)
@@ -75,12 +79,7 @@ public class WorldRecordService {
         } else {
             toFind = worldRecordRepository.findLowest(find, pageable);
         }
-        if (!toFind.isEmpty()) {
-            var worldRecord = new WorldRecord();
-            worldRecord.setName(key);
-            worldRecord.setRecord(toFind.getFirst());
-            recordList.add(worldRecord);
-        }
+        addRecordToList(recordList, key, toFind);
     }
 
     void putRecordJoker(List<WorldRecord> recordList, boolean highest, String find, String key) {
@@ -91,9 +90,15 @@ public class WorldRecordService {
         } else {
             toFind = worldRecordRepository.findLowestJoker(find, pageable);
         }
+        addRecordToList(recordList, key, toFind);
+    }
+
+    private void addRecordToList(List<WorldRecord> recordList, String key, List<Record> toFind) {
         if (!toFind.isEmpty()) {
+            int id = recordList.size() + 1;
             var worldRecord = new WorldRecord();
             worldRecord.setName(key);
+            worldRecord.setId(id);
             worldRecord.setRecord(toFind.getFirst());
             recordList.add(worldRecord);
         }
@@ -117,6 +122,7 @@ public class WorldRecordService {
             Integer pointsSum = ((Number) result[4]).intValue();
             var worldRecord = new WorldRecord();
             worldRecord.setName(key);
+            worldRecord.setId(recordList.size() + 1);
             Record record = new Record(name, surname, grandPrixName, year, pointsSum);
             worldRecord.setRecord(record);
             recordList.add(worldRecord);
@@ -141,6 +147,7 @@ public class WorldRecordService {
             Integer pointsSum = ((Number) result[4]).intValue();
             var worldRecord = new WorldRecord();
             worldRecord.setName(key);
+            worldRecord.setId(recordList.size() + 1);
             Record record = new Record(name, surname, grandPrixName, year, pointsSum);
             worldRecord.setRecord(record);
             recordList.add(worldRecord);

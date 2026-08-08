@@ -10,6 +10,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 public class WorldRecordDto {
+    int id;
     boolean isJokerUsed;
     boolean isBest;
     List<WorldRecord> worldRecords;

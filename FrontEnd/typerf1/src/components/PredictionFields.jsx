@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState, React } from "react";
 import { Button, Dropdown, DropdownButton, Form } from "react-bootstrap";
 import { useGrandPrix } from "./GrandPrixProvider";
 import { useSession } from "./SessionProvider";
@@ -144,7 +144,7 @@ export default function PredictionFields() {
                     {predictions.drivers.length !== 0 ?
                         isDeadlinePassed ?
                             <p>Points gained by participant: {predictions.points}</p>
-                            : <p>Session hasn't finished yet</p>
+                            : <p>Session hasn&apos;t finished yet</p>
                         : null}
                 </Fragment>
                     :

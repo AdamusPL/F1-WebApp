@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, React } from "react";
 import { Button, Form } from "react-bootstrap";
 
 import logo from '../assets/logo.png'
@@ -56,7 +56,7 @@ export default function Register() {
                 }
                 setError("Account created successfully! Redirecting to sign in page...");
             })
-            .then(data => {
+            .then(() => {
                 navigate('/sign-in');
             })
             .catch(error => {

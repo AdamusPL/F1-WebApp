@@ -1,4 +1,4 @@
-import { useState, useEffect, Fragment } from "react";
+import { useState, useEffect, Fragment, React } from "react";
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { useYear } from "./YearProvider";
 
@@ -26,7 +26,7 @@ export default function SeasonYearChooser() {
             >
                 {
                     years.map(item => (
-                        <Dropdown.Item id={item.id} onClick={() => setYear(item.year)}>{item.year}</Dropdown.Item>
+                        <Dropdown.Item key={item.id} id={item.id} onClick={() => setYear(item.year)}>{item.year}</Dropdown.Item>
                     ))
                 }
             </DropdownButton>

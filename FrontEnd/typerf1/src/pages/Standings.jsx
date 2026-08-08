@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState, React } from 'react';
 import SeasonYearChooser from '../components/SeasonYearChooser';
 import { useYear } from '../components/YearProvider';
 import Plot from '../components/Plot';
@@ -12,22 +12,18 @@ export default function Standings() {
     }, [year]);
 
     function getStandings() {
-        try {
-            fetch(`${import.meta.env.VITE_API_BASE_URL}/get-participant-standings?year=${year}`, {
-                credentials: 'include'
+        fetch(`${import.meta.env.VITE_API_BASE_URL}/get-participant-standings?year=${year}`, {
+            credentials: 'include'
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error');
+                }
+                return response.json();
             })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Error');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    setStandings(data);
-                })
-        } catch (e) {
-
-        }
+            .then(data => {
+                setStandings(data);
+            });
     }
 
     const printJokers = (item) => {
@@ -51,7 +47,7 @@ export default function Standings() {
                 <Fragment>
                     <ol>
                         {standings.map(item => (
-                            <li>{item.participantName} {item.participantSurname} {item.pointsSum} {printJokers(item)}</li>
+                            <li key={item.id}>{item.participantName} {item.participantSurname} {item.pointsSum} {printJokers(item)}</li>
                         ))}
                     </ol>
                     <Plot />

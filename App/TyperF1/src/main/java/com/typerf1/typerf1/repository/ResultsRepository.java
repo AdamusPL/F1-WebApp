@@ -14,14 +14,14 @@ import java.util.List;
 @Repository
 public interface ResultsRepository extends JpaRepository<Points, Integer> {
 
-    @Query("SELECT new com.typerf1.typerf1.dto.season.SeasonScore(s.id, p.name, p.surname, SUM(pt.number)) " +
+    @Query("SELECT new com.typerf1.typerf1.dto.season.SeasonScore(p.id, s.id, p.name, p.surname, SUM(pt.number)) " +
             "FROM Points pt " +
             "JOIN pt.participant p " +
             "JOIN pt.session ses " +
             "JOIN ses.grandPrix gp " +
             "JOIN gp.season s " +
             "WHERE s.year = :year " +
-            "GROUP BY s.id, p.name, p.surname " +
+            "GROUP BY p.id, s.id, p.name, p.surname " +
             "ORDER BY s.id, SUM(pt.number) DESC")
     List<SeasonScore> getParticipantStandings(@Param("year") Integer year);
 

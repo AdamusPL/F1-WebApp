@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, React } from 'react';
 import SeasonYearChooser from '../components/SeasonYearChooser';
 import { useYear } from '../components/YearProvider';
 import { Fragment } from 'react';
@@ -13,23 +13,18 @@ export default function Results() {
     }, [year]);
 
     function getScores() {
-        try {
-            fetch(`${import.meta.env.VITE_API_BASE_URL}/get-season-scores?year=${year}`, {
-                credentials: 'include'
+        fetch(`${import.meta.env.VITE_API_BASE_URL}/get-season-scores?year=${year}`, {
+            credentials: 'include'
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error');
+                }
+                return response.json();
             })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Error');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    setScores(data);
-                });
-        } catch (e) {
-
-        }
-
+            .then(data => {
+                setScores(data);
+            });
     }
 
     return (<>
@@ -39,16 +34,16 @@ export default function Results() {
         {year != 0 ?
             scores.length !== 0 ?
                 scores.map(gp => (
-                    <Fragment>
+                    <Fragment key={gp.id}>
                         <h2>{gp.name}</h2>
                         {
                             gp.sessionDto.map(session => (
-                                <Fragment>
+                                <Fragment key={session.id}>
                                     <h3>{session.name}</h3>
                                     {
                                         <ol>
                                             {session.scores.map(item => (
-                                                <li>{item.participantName} {item.participantSurname} {item.points} {item.jokerUsed ? 'J' : ''}</li>
+                                                <li key={item.id}>{item.participantName} {item.participantSurname} {item.points} {item.jokerUsed ? 'J' : ''}</li>
                                             ))}
                                         </ol>
                                     }
