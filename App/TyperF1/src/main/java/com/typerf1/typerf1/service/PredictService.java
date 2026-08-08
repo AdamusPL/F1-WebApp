@@ -3,6 +3,7 @@ package com.typerf1.typerf1.service;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.typerf1.typerf1.dto.predictions.PredictionsDto;
+import com.typerf1.typerf1.dto.predictions.PredictionsOrder;
 import com.typerf1.typerf1.dto.predictions.PredictionsPostDto;
 import com.typerf1.typerf1.model.*;
 import com.typerf1.typerf1.repository.*;
@@ -39,17 +40,19 @@ public class PredictService {
     private final ParticipantRepository participantRepository;
     private final PointsRepository pointsRepository;
     private final JokerRepository jokerRepository;
+    private final DriverRepository driverRepository;
 
     @Autowired
     public PredictService(GrandPrixRepository grandPrixRepository, SessionRepository sessionRepository,
                           PredictionsRepository predictionsRepository, ParticipantRepository participantRepository,
-                          PointsRepository pointsRepository, JokerRepository jokerRepository) {
+                          PointsRepository pointsRepository, JokerRepository jokerRepository, DriverRepository driverRepository) {
         this.grandPrixRepository = grandPrixRepository;
         this.sessionRepository = sessionRepository;
         this.predictionsRepository = predictionsRepository;
         this.participantRepository = participantRepository;
         this.pointsRepository = pointsRepository;
         this.jokerRepository = jokerRepository;
+        this.driverRepository = driverRepository;
     }
 
     public List<GrandPrix> getThisYearGrandPrix(int year) {
@@ -73,27 +76,27 @@ public class PredictService {
         predictions.setParticipant(participant);
 
         if (!predictionsPostDto.getDrivers().isEmpty()) {
-            predictions.setDriver1(predictionsPostDto.getDrivers().get(0));
-            predictions.setDriver2(predictionsPostDto.getDrivers().get(1));
-            predictions.setDriver3(predictionsPostDto.getDrivers().get(2));
-            predictions.setDriver4(predictionsPostDto.getDrivers().get(3));
-            predictions.setDriver5(predictionsPostDto.getDrivers().get(4));
-            predictions.setDriver6(predictionsPostDto.getDrivers().get(5));
-            predictions.setDriver7(predictionsPostDto.getDrivers().get(6));
-            predictions.setDriver8(predictionsPostDto.getDrivers().get(7));
-            predictions.setDriver9(predictionsPostDto.getDrivers().get(8));
-            predictions.setDriver10(predictionsPostDto.getDrivers().get(9));
-            predictions.setDriver11(predictionsPostDto.getDrivers().get(10));
-            predictions.setDriver12(predictionsPostDto.getDrivers().get(11));
-            predictions.setDriver13(predictionsPostDto.getDrivers().get(12));
-            predictions.setDriver14(predictionsPostDto.getDrivers().get(13));
-            predictions.setDriver15(predictionsPostDto.getDrivers().get(14));
-            predictions.setDriver16(predictionsPostDto.getDrivers().get(15));
-            predictions.setDriver17(predictionsPostDto.getDrivers().get(16));
-            predictions.setDriver18(predictionsPostDto.getDrivers().get(17));
-            predictions.setDriver19(predictionsPostDto.getDrivers().get(18));
+            predictions.setDriver1(predictionsPostDto.getDrivers().get(0).getName());
+            predictions.setDriver2(predictionsPostDto.getDrivers().get(1).getName());
+            predictions.setDriver3(predictionsPostDto.getDrivers().get(2).getName());
+            predictions.setDriver4(predictionsPostDto.getDrivers().get(3).getName());
+            predictions.setDriver5(predictionsPostDto.getDrivers().get(4).getName());
+            predictions.setDriver6(predictionsPostDto.getDrivers().get(5).getName());
+            predictions.setDriver7(predictionsPostDto.getDrivers().get(6).getName());
+            predictions.setDriver8(predictionsPostDto.getDrivers().get(7).getName());
+            predictions.setDriver9(predictionsPostDto.getDrivers().get(8).getName());
+            predictions.setDriver10(predictionsPostDto.getDrivers().get(9).getName());
+            predictions.setDriver11(predictionsPostDto.getDrivers().get(10).getName());
+            predictions.setDriver12(predictionsPostDto.getDrivers().get(11).getName());
+            predictions.setDriver13(predictionsPostDto.getDrivers().get(12).getName());
+            predictions.setDriver14(predictionsPostDto.getDrivers().get(13).getName());
+            predictions.setDriver15(predictionsPostDto.getDrivers().get(14).getName());
+            predictions.setDriver16(predictionsPostDto.getDrivers().get(15).getName());
+            predictions.setDriver17(predictionsPostDto.getDrivers().get(16).getName());
+            predictions.setDriver18(predictionsPostDto.getDrivers().get(17).getName());
+            predictions.setDriver19(predictionsPostDto.getDrivers().get(18).getName());
             if (predictionsPostDto.getDrivers().size() > 19) {
-                predictions.setDriver20(predictionsPostDto.getDrivers().get(19));
+                predictions.setDriver20(predictionsPostDto.getDrivers().get(19).getName());
             }
         }
 
@@ -134,27 +137,27 @@ public class PredictService {
             else {
                 predictionsDto.setJokerUsed(false);
             }
-            List<String> predictionsListDto = new ArrayList<>();
-            predictionsListDto.add(predictions.getDriver1());
-            predictionsListDto.add(predictions.getDriver2());
-            predictionsListDto.add(predictions.getDriver3());
-            predictionsListDto.add(predictions.getDriver4());
-            predictionsListDto.add(predictions.getDriver5());
-            predictionsListDto.add(predictions.getDriver6());
-            predictionsListDto.add(predictions.getDriver7());
-            predictionsListDto.add(predictions.getDriver8());
-            predictionsListDto.add(predictions.getDriver9());
-            predictionsListDto.add(predictions.getDriver10());
-            predictionsListDto.add(predictions.getDriver11());
-            predictionsListDto.add(predictions.getDriver12());
-            predictionsListDto.add(predictions.getDriver13());
-            predictionsListDto.add(predictions.getDriver14());
-            predictionsListDto.add(predictions.getDriver15());
-            predictionsListDto.add(predictions.getDriver16());
-            predictionsListDto.add(predictions.getDriver17());
-            predictionsListDto.add(predictions.getDriver18());
-            predictionsListDto.add(predictions.getDriver19());
-            predictionsListDto.add(predictions.getDriver20());
+            List<PredictionsOrder> predictionsListDto = new ArrayList<>();
+            predictionsListDto.add(new PredictionsOrder(1, predictions.getDriver1()));
+            predictionsListDto.add(new PredictionsOrder(2, predictions.getDriver2()));
+            predictionsListDto.add(new PredictionsOrder(3, predictions.getDriver3()));
+            predictionsListDto.add(new PredictionsOrder(4, predictions.getDriver4()));
+            predictionsListDto.add(new PredictionsOrder(5, predictions.getDriver5()));
+            predictionsListDto.add(new PredictionsOrder(6, predictions.getDriver6()));
+            predictionsListDto.add(new PredictionsOrder(7, predictions.getDriver7()));
+            predictionsListDto.add(new PredictionsOrder(8, predictions.getDriver8()));
+            predictionsListDto.add(new PredictionsOrder(9, predictions.getDriver9()));
+            predictionsListDto.add(new PredictionsOrder(10, predictions.getDriver10()));
+            predictionsListDto.add(new PredictionsOrder(11, predictions.getDriver11()));
+            predictionsListDto.add(new PredictionsOrder(12, predictions.getDriver12()));
+            predictionsListDto.add(new PredictionsOrder(13, predictions.getDriver13()));
+            predictionsListDto.add(new PredictionsOrder(14, predictions.getDriver14()));
+            predictionsListDto.add(new PredictionsOrder(15, predictions.getDriver15()));
+            predictionsListDto.add(new PredictionsOrder(16, predictions.getDriver16()));
+            predictionsListDto.add(new PredictionsOrder(17, predictions.getDriver17()));
+            predictionsListDto.add(new PredictionsOrder(18, predictions.getDriver18()));
+            predictionsListDto.add(new PredictionsOrder(19, predictions.getDriver19()));
+            predictionsListDto.add(new PredictionsOrder(20, predictions.getDriver20()));
             predictionsDto.setDrivers(predictionsListDto);
             return ResponseEntity.ok(predictionsDto);
         } else {
@@ -692,5 +695,10 @@ public class PredictService {
         }
 
         return true;
+    }
+
+    public List<com.typerf1.typerf1.model.Driver> getCurrentDriverList(){
+        var test = driverRepository.findAll();
+        return test;
     }
 }

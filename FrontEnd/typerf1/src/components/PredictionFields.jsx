@@ -3,6 +3,7 @@ import { Button, Dropdown, DropdownButton, Form } from "react-bootstrap";
 import { useGrandPrix } from "./GrandPrixProvider";
 import { useSession } from "./SessionProvider";
 import { usePredictions } from "./PredictionProvider";
+import { Reorder } from "motion/react";
 
 export default function PredictionFields() {
 
@@ -17,46 +18,10 @@ export default function PredictionFields() {
         }
     }, [session]);
 
-    const handleChange = (id, value) => {
-        setPredictions(prevState => {
-            const newDrivers = [...prevState.drivers];
-            newDrivers[id - 1] = value;
-
-            return {
-                ...prevState,
-                drivers: newDrivers
-            };
-        });
-    };
-
-    const handleFLChange = (value) => {
-        setPredictions(prevState => {
-            return {
-                ...prevState,
-                fastestLap: value
-            };
-        });
-    };
-
     const renderInputsPredictions = () => {
         return predictions?.drivers?.map((prediction, index) => (
-            <p key={index}>{index + 1}. {prediction}</p>
+            <p key={prediction.id}>{index + 1}. {prediction.name}</p>
         ));
-    };
-
-    const renderInputs = () => {
-        const inputs = [];
-        for (let i = 1; i <= 20; i++) {
-            inputs.push(
-                <div key={i} className="d-flex align-items-center mb-2">
-                    <span className="me-2">{i}.</span>
-                    <Form.Group className="flex-grow-1">
-                        <Form.Control onChange={(e) => handleChange(i, e.target.value)} id={`f-${i}`} />
-                    </Form.Group>
-                </div>
-            );
-        }
-        return inputs;
     };
 
     async function checkPredictionExistence() {
@@ -82,6 +47,11 @@ export default function PredictionFields() {
         else if (response.status === 202) {
             setArePredictionsPosted(false);
             setIsDeadlinePassed(false);
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/get-current-driver-list`, {
+                credentials: 'include'
+            });
+            const data = await response.json();
+            setPredictions({ ...predictions, drivers: data });
         }
         //406, predictions do not exist, deadline passed
         else {
@@ -102,14 +72,41 @@ export default function PredictionFields() {
 
         if (response.ok) {
             setArePredictionsPosted(true);
+            setPredictions(prevState => {
+                return {
+                    ...prevState,
+                    jokerUsed: joker
+                };
+            })
         }
     }
+
+    const handleFLChange = (value) => {
+        setPredictions(prevState => {
+            return {
+                ...prevState,
+                fastestLap: value
+            };
+        });
+    };
 
     return (
         <>
             {!arePredictionsPosted && !isDeadlinePassed ?
                 (<Fragment>
-                    {renderInputs()}
+                    <div className="mb-2">
+                        <p>Drag & Drop to change order</p>
+                        <Reorder.Group axis="y" values={predictions.drivers} onReorder={(newDrivers) => setPredictions({ ...predictions, drivers: newDrivers })}>
+                            {predictions.drivers.map((driver, i) => (
+                                <Reorder.Item key={driver.id} value={driver} style={{ listStyleType: "none" }}>
+                                    <div>
+                                        <span>{i + 1}. </span>
+                                        <span>{driver.name}</span>
+                                    </div>
+                                </Reorder.Item>
+                            ))}
+                        </Reorder.Group>
+                    </div>
                     <DropdownButton
                         id='season-year'
                         title='Joker'
@@ -117,7 +114,7 @@ export default function PredictionFields() {
                         <Dropdown.Item onClick={() => setJoker(true)}>Yes</Dropdown.Item>
                         <Dropdown.Item onClick={() => setJoker(false)}>No</Dropdown.Item>
                     </DropdownButton>
-                    <p>{joker ? "Yes" : "No"}</p>
+                    <p className="mt-2">{joker ? "Yes" : "No"}</p>
                     {session.name === 'Race' ?
                         <div className="d-flex align-items-center mb-2">
                             <span className="me-2">Fastest Lap:</span>

@@ -2,6 +2,7 @@ package com.typerf1.typerf1.controller;
 
 import com.typerf1.typerf1.dto.predictions.PredictionsDto;
 import com.typerf1.typerf1.dto.predictions.PredictionsPostDto;
+import com.typerf1.typerf1.model.Driver;
 import com.typerf1.typerf1.model.GrandPrix;
 import com.typerf1.typerf1.model.Session;
 import com.typerf1.typerf1.service.PredictService;
@@ -52,5 +53,10 @@ public class PredictController {
                                                                     @RequestParam int grandPrixId, @RequestParam int sessionId
                                                             ) throws ParseException {
         return predictService.checkPredictionsExistence(sessionType, year, grandPrixId, sessionId);
+    }
+
+    @GetMapping("/get-current-driver-list")
+    public @ResponseBody List<Driver> getCurrentDriverList(){
+        return predictService.getCurrentDriverList();
     }
 }
