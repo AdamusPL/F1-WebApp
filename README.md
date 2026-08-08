@@ -22,7 +22,7 @@ After registration/signing-in:
 ## Screenshots
 ### Predicting Qualifying
 - Predicting
-<img width="740" height="907" alt="image" src="https://github.com/user-attachments/assets/1105533f-dc1b-4a3c-bc32-cb70c2f5c901" />
+<img width="934" height="846" alt="image" src="https://github.com/user-attachments/assets/b33d109d-bcc2-4ddf-bf26-9fd143065b71" />
 
 - After posting predictions
 <img width="833" height="875" alt="image" src="https://github.com/user-attachments/assets/565af20b-5687-464f-af2f-3bec70db44ce" />
@@ -38,7 +38,7 @@ It's the same as with Qualifying
 
 ### Predicting Race
 - Predicting (you have to guess driver with fastest lap additionally)
-<img width="744" height="907" alt="image" src="https://github.com/user-attachments/assets/0f9a6cb9-8d21-4b10-86fc-ac2b3988317f" />
+<img width="927" height="878" alt="image" src="https://github.com/user-attachments/assets/f78036da-1311-433d-bdb1-208bb7d925c7" />
 
 - After session ended
 <img width="836" height="887" alt="image" src="https://github.com/user-attachments/assets/1ce31c04-47ec-4a53-901f-51233c364957" />
