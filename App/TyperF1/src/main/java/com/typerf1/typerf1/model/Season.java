@@ -1,6 +1,7 @@
 package com.typerf1.typerf1.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ import lombok.Setter;
 @Setter
 @Entity
 public class Season {
-    @jakarta.persistence.Id
+    @Id
     Integer id;
     Integer year;
 }

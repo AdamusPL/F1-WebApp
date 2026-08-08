@@ -1,17 +1,13 @@
 package com.typerf1.typerf1.dto.joker;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
 @Getter
 @Setter
 @NoArgsConstructor
 public class JokersUsed {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
     String participantName;
     String participantSurname;

@@ -1,11 +1,9 @@
 package com.typerf1.typerf1.dto.season;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
 @Getter
 @Setter
 @NoArgsConstructor

@@ -113,6 +113,10 @@ public class WorldRecordService {
         } else {
             results = worldRecordRepository.findLowestWeekend(pageable);
         }
+        addRecordWeekendToList(recordList, key, results);
+    }
+
+    private void addRecordWeekendToList(List<WorldRecord> recordList, String key, List<Object[]> results) {
         if (!results.isEmpty()) {
             Object[] result = results.get(0);
             String name = (String) result[0];
@@ -138,19 +142,6 @@ public class WorldRecordService {
         } else {
             results = worldRecordRepository.findLowestSprintWeekendJoker(pageable);
         }
-        if (!results.isEmpty()) {
-            Object[] result = results.get(0);
-            String name = (String) result[0];
-            String surname = (String) result[1];
-            String grandPrixName = (String) result[2];
-            Integer year = (Integer) result[3];
-            Integer pointsSum = ((Number) result[4]).intValue();
-            var worldRecord = new WorldRecord();
-            worldRecord.setName(key);
-            worldRecord.setId(recordList.size() + 1);
-            Record record = new Record(name, surname, grandPrixName, year, pointsSum);
-            worldRecord.setRecord(record);
-            recordList.add(worldRecord);
-        }
+        addRecordWeekendToList(recordList, key, results);
     }
 }

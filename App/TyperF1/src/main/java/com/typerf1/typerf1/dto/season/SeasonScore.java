@@ -1,8 +1,9 @@
 package com.typerf1.typerf1.dto.season;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
 @Getter
 @Setter
 @NoArgsConstructor
